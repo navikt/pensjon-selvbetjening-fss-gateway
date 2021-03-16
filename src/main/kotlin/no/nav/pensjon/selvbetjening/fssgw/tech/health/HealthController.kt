@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/internal")
 class HealthController {
 
-    @GetMapping("isAlive")
+    @GetMapping("liveness")
     fun isAlive(): String = "Alive"
 
-    @GetMapping("isReady")
+    @GetMapping("readiness")
     fun isReady() = "Ready"
 }

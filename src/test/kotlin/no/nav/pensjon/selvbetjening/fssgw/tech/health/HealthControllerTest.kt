@@ -17,13 +17,13 @@ internal class HealthControllerTest {
 
     @Test
     fun isAlive() {
-        mvc!!.perform(get(path + "isAlive"))
+        mvc!!.perform(get(path + "liveness"))
                 .andExpect(status().isOk)
     }
 
     @Test
     fun isReady() {
-        mvc!!.perform(get(path + "isReady"))
+        mvc!!.perform(get(path + "readiness"))
                 .andExpect(status().isOk)
     }
 }
