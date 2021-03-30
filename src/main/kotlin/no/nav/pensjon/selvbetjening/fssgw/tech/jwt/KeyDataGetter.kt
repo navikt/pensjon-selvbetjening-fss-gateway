@@ -1,8 +1,8 @@
 package no.nav.pensjon.selvbetjening.fssgw.tech.jwt
 
-interface CertificateGetter {
+interface KeyDataGetter {
 
-    fun getCertificate(id: String): String
+    fun getKeyData(id: String): JwtKeyDto
 
     fun refresh()
 }

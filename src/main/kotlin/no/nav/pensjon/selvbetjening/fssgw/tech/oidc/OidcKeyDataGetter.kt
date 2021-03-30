@@ -1,28 +1,27 @@
 package no.nav.pensjon.selvbetjening.fssgw.tech.oidc
 
-import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.CertificateGetter
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwtKeyDto
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwtKeysDto
+import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.KeyDataGetter
+import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.SigningKeyException
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
-import java.security.cert.CertificateException
 
 @Component
-class OidcCertificateGetter(val oidcConfigGetter: OidcConfigGetter) : CertificateGetter {
+class OidcKeyDataGetter(val oidcConfigGetter: OidcConfigGetter) : KeyDataGetter {
 
     private val webClient: WebClient = WebClient.create()
     private val log = LoggerFactory.getLogger(javaClass)
     private var keys: JwtKeysDto? = null
 
-    override fun getCertificate(id: String): String {
+    override fun getKeyData(id: String): JwtKeyDto {
         return cache.keys
                 .stream()
                 .filter { key -> match(key, id) }
                 .findFirst()
-                .map { key -> key.x509CertificateChain[0] }
-                .orElseThrow { noCertificateFound(id) }
+                .orElseThrow { noKeyDataFound(id) }
     }
 
     override fun refresh() {
@@ -61,7 +60,7 @@ class OidcCertificateGetter(val oidcConfigGetter: OidcConfigGetter) : Certificat
         private fun match(key: JwtKeyDto, keyId: String?): Boolean =
                 keyId?.equals(key.id) ?: throw IllegalArgumentException("Illegal keyId value: null")
 
-        private fun noCertificateFound(keyId: String?): CertificateException =
-                CertificateException(String.format("No certificate found for key ID '%s'", keyId))
+        private fun noKeyDataFound(keyId: String?): SigningKeyException =
+                SigningKeyException("No key data found for key ID '$keyId'")
     }
 }

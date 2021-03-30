@@ -2,6 +2,10 @@ package no.nav.pensjon.selvbetjening.fssgw.tech.jwt
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
+/**
+ * JSON Web Algorithms: https://tools.ietf.org/html/rfc7518#section-6.3
+ * JSON Web Key: https://tools.ietf.org/html/rfc7517
+ */
 data class JwtKeyDto(
 
         @JsonProperty("kid")
@@ -9,9 +13,6 @@ data class JwtKeyDto(
 
         @JsonProperty("kty")
         val type: String,
-
-        @JsonProperty("issuer")
-        val issuer: String,
 
         @JsonProperty("use")
         val use: String,
@@ -21,10 +22,4 @@ data class JwtKeyDto(
 
         @JsonProperty("e")
         val exponent: String,
-
-        @JsonProperty("x5c")
-        val x509CertificateChain: List<String>,
-
-        @JsonProperty("x5t")
-        val x509CertificateSha1Thumbprint: String
 )
