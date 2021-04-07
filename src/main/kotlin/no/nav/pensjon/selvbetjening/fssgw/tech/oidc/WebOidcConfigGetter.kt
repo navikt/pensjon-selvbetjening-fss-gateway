@@ -31,16 +31,16 @@ class WebOidcConfigGetter(@Value("\${openid.well-known-url}") private val config
 
     private val freshConfig: OidcConfigDto
         get() {
-            log.debug("Retrieving OIDC config")
+            log.debug("Retrieving OIDC config from $configUrl")
 
-            return try {
-                webClient
+            try {
+                return webClient
                         .get()
                         .uri(configUrl)
                         .retrieve()
                         .bodyToMono(OidcConfigDto::class.java)
                         .block()
-                        ?: throw OidcException("No config in response from well-known OIDC endpoint")
+                        ?: throw OidcException("No config in response from well-known OIDC endpoint at $configUrl")
             } catch (e: WebClientResponseException) {
                 val message = "Failed to acquire OIDC config from $configUrl: ${e.message} | Response: ${e.responseBodyAsString}"
                 log.error(message, e)
