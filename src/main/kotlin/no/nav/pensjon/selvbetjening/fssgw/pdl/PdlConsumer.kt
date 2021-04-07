@@ -22,6 +22,7 @@ class PdlConsumer(@Value("\${pdl.endpoint.url}") private val endpoint: String,
     fun callPdl(body: String, callId: String?): String {
         val auth = auth()
         val correlationId = callId ?: UUID.randomUUID().toString()
+        log.info("Calling PDL with correlation ID '$correlationId'")
 
         try {
             return webClient
@@ -36,7 +37,8 @@ class PdlConsumer(@Value("\${pdl.endpoint.url}") private val endpoint: String,
                     .bodyValue(body)
                     .retrieve()
                     .bodyToMono(String::class.java)
-                    .block()!!
+                    .block()
+                    ?: throw PdlException("No data in response from PDL at $endpoint")
         } catch (e: WebClientResponseException) {
             val message = "Failed to access PDL at $endpoint: ${e.message} | Response: ${e.responseBodyAsString}"
             log.error(message, e)
@@ -69,7 +71,7 @@ class PdlConsumer(@Value("\${pdl.endpoint.url}") private val endpoint: String,
     }
 
     private fun auth(): String {
-        val serviceUserToken = serviceUserTokenGetter.getServiceUserToken()
+        val serviceUserToken = serviceUserTokenGetter.getServiceUserToken().accessToken
         return "Bearer $serviceUserToken"
     }
 
