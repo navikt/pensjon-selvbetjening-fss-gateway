@@ -16,7 +16,7 @@ class JwsValidator(private val oidcConfigGetter: OidcConfigGetter,
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-    fun validate(jwsString: String): Jws<Claims> {
+    fun validate(jwsString: String): Claims {
         log.info("Validating '{}'", jwsString)
 
         val jws = Jwts.parserBuilder()
@@ -25,7 +25,7 @@ class JwsValidator(private val oidcConfigGetter: OidcConfigGetter,
                 .parseClaimsJws(jwsString)
 
         validate(jws.body)
-        return jws
+        return jws.body
     }
 
     private fun validate(claims: Claims) {
@@ -38,7 +38,7 @@ class JwsValidator(private val oidcConfigGetter: OidcConfigGetter,
             throw JwtException(message)
         }
 
-        if (!oidcConfigGetter.getIssuer().equals(issuer)) {
+        if (oidcConfigGetter.getIssuer() != issuer) {
             val message = "Invalid issuer '$issuer'"
             log.error(message)
             throw JwtException(message)
