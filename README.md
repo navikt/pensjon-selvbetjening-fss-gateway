@@ -1,6 +1,15 @@
 # pensjon-selvbetjening-fss-gateway
 
-Applikasjon basert på Java 11, Kotlin, Spring Boot og Maven.
+Gateway-/proxy-applikasjon for at pensjonsrelaterte applikasjoner i GCP skal kunne nå tjenester i FSS.
+
+Teknologi: Java 11, Kotlin, Spring Boot og Maven.
+
+Endepunkter:
+
+- /api/pdl (Persondataløsningen)
+- /api/pen (Pensjonsfaglig kjerne)
+
+For å benytte endepunktene kreves *bearer*-token utstedt av TokenDings.
 
 ## Henvendelser
 
