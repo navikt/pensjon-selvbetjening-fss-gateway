@@ -31,11 +31,18 @@ spec:
   prometheus:
     enabled: true
     path: /internal/prometheus
+  azure:
+    application:
+      enabled: true
+      tenant: nav.no
   tokenx:
     enabled: true
   accessPolicy:
     inbound:
       rules:
+        - application: pensjon-selvbetjening-opptjening-backend
+          namespace: pensjonselvbetjening
+          cluster: dev-fss
         - application: pensjon-selvbetjening-soknad-alder-backend
           namespace: pensjonselvbetjening
           cluster: dev-gcp
