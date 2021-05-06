@@ -16,15 +16,24 @@ class PenConsumer(@Value("\${pen.endpoint.url}") private val endpoint: String,
     private val log = LogFactory.getLog(javaClass)
     private val webClient: WebClient = WebClient.create()
 
-    fun callPen(body: String, callId: String?, pid: String): String {
-        val auth = auth()
+    fun callPen(urlSuffix: String, body: String, callId: String?, pid: String, fomDato: String): String {
+        return callPenClient(urlSuffix, body, callId, pid, fomDato)
+    }
 
+    fun callPen(urlSuffix: String, body: String, callId: String?, pid: String): String {
+        return callPenClient(urlSuffix, body, callId, pid, null)
+    }
+
+    fun callPenClient(urlSuffix: String, body: String, callId: String?, pid: String, fomDato: String?): String {
+        val auth = auth()
         try {
             return webClient
                     .post()
-                    .uri(endpoint)
+                    .uri(endpoint.plus(urlSuffix))
                     .header(HttpHeaders.AUTHORIZATION, auth)
                     .header("pid", pid)
+                    .header("fnr", pid)
+                    .header("fomDato", fomDato)
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                     .bodyValue(body)
