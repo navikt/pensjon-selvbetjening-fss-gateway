@@ -10,7 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpHeaders
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 
 @WebMvcTest(PenController::class)
@@ -30,11 +30,11 @@ internal class PenControllerTest {
 
     @Test
     fun penRequest() {
-        Mockito.`when`(penConsumer.callPen("foo", null, "fnr")).thenReturn("""{ "response": "bar"}""")
+        Mockito.`when`(penConsumer.callPen("/sak/sammendrag", "foo", null, "fnr")).thenReturn("""{ "response": "bar"}""")
         Mockito.`when`(jwsValidator.validate("jwt")).thenReturn(claims)
         Mockito.`when`(claims["pid"]).thenReturn("fnr")
 
-        mvc.perform(post("/api/pen")
+        mvc.perform(get("/api/pen/sak/sammendrag")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
                 .content("foo"))
                 .andExpect(status().isOk)

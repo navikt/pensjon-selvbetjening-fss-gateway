@@ -33,14 +33,14 @@ internal class PenConsumerTest : WebClientTest() {
     @Test
     fun shall_return_data_when_ok() {
         prepare(penDataResponse())
-        val response = consumer.callPen("{}", "id", "pid")
+        val response = consumer.callPen("", "{}", "id", "pid")
         assertNotNull(response)
     }
 
     @Test
     fun shall_throwPenException_when_pen_returns_error() {
         prepare(penErrorResponse())
-        val exception: PenException = assertThrows(PenException::class.java) { consumer.callPen("{}", "id", "pid") }
+        val exception: PenException = assertThrows(PenException::class.java) { consumer.callPen("","{}", "id", "pid") }
         assertEquals("Failed to access PEN at $baseUrl: 401 Unauthorized from POST $baseUrl | Response: oops", exception.message)
     }
 
