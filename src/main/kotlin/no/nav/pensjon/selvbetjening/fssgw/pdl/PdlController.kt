@@ -3,6 +3,7 @@ package no.nav.pensjon.selvbetjening.fssgw.pdl
 import io.jsonwebtoken.JwtException
 import io.micrometer.core.instrument.Metrics
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
+import no.nav.pensjon.selvbetjening.fssgw.tech.oauth2.Oauth2Exception
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -32,14 +33,20 @@ class PdlController(private val jwsValidator: JwsValidator, private val pdlConsu
         try {
             jwsValidator.validate(accessToken)
         } catch (e: JwtException) {
-            log.error("Unauthorized: ${e.message}")
-            Metrics.counter("pdl_request_counter", "status", "Unauthorized").increment()
-            return ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED)
+            return unauthorized(e)
+        } catch (e: Oauth2Exception) {
+            return unauthorized(e)
         }
 
         val responseBody = pdlConsumer.callPdl(body, callId)
         Metrics.counter("pdl_request_counter", "status", "OK").increment()
         return ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
+    }
+
+    private fun unauthorized(e: Exception): ResponseEntity<String> {
+        log.error("Unauthorized: ${e.message}")
+        Metrics.counter("pdl_request_counter", "status", "Unauthorized").increment()
+        return ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED)
     }
 
     private val jsonContentType: HttpHeaders

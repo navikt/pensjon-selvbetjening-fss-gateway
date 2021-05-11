@@ -1,6 +1,6 @@
-package no.nav.pensjon.selvbetjening.fssgw.tech.oidc
+package no.nav.pensjon.selvbetjening.fssgw.tech.oauth2
 
-interface OidcConfigGetter {
+interface Oauth2ConfigGetter {
 
     fun getIssuer(): String
 
