@@ -3,6 +3,7 @@ package no.nav.pensjon.selvbetjening.fssgw.pen
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.JwtException
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
+import no.nav.pensjon.selvbetjening.fssgw.tech.oauth2.Oauth2Exception
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -34,8 +35,9 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
             val responseBody = penConsumer.callPen("/krav?sakstype=".plus(sakstype), body, callId, pid)
             ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
         } catch (e: JwtException) {
-            log.error("Unauthorized: ${e.message}")
-            ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED)
+            unauthorized(e)
+        } catch (e: Oauth2Exception) {
+            unauthorized(e)
         }
     }
 
@@ -56,8 +58,9 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
             val responseBody = penConsumer.callPen("/krav/".plus(kravId), body, callId, pid)
             ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
         } catch (e: JwtException) {
-            log.error("Unauthorized: ${e.message}")
-            ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED)
+            unauthorized(e)
+        } catch (e: Oauth2Exception) {
+            unauthorized(e)
         }
     }
 
@@ -77,8 +80,9 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
             val responseBody = penConsumer.callPen("/sak/sammendrag", body, callId, pid)
             ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
         } catch (e: JwtException) {
-            log.error("Unauthorized: ${e.message}")
-            ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED)
+            unauthorized(e)
+        } catch (e: Oauth2Exception) {
+            unauthorized(e)
         }
     }
 
@@ -98,8 +102,9 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
             val responseBody = penConsumer.callPen("/person/uforehistorikk", body, callId, pid)
             ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
         } catch (e: JwtException) {
-            log.error("Unauthorized: ${e.message}")
-            ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED)
+            unauthorized(e)
+        } catch (e: Oauth2Exception) {
+            unauthorized(e)
         }
     }
 
@@ -120,8 +125,9 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
             val responseBody = penConsumer.callPen("/vedtak/bestemgjeldende", body, callId, pid, fomDato)
             ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
         } catch (e: JwtException) {
-            log.error("Unauthorized: ${e.message}")
-            ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED)
+            unauthorized(e)
+        } catch (e: Oauth2Exception) {
+            unauthorized(e)
         }
     }
 
@@ -142,9 +148,15 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
             val responseBody = penConsumer.callPen("/vedtak?=".plus(sakstype), body, callId, pid)
             ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
         } catch (e: JwtException) {
-            log.error("Unauthorized: ${e.message}")
-            ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED)
+            unauthorized(e)
+        } catch (e: Oauth2Exception) {
+            unauthorized(e)
         }
+    }
+
+    private fun unauthorized(e: Exception): ResponseEntity<String> {
+        log.error("Unauthorized: ${e.message}")
+        return ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED)
     }
 
     private fun getPid(claims: Claims) = claims["pid"] as String

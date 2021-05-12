@@ -1,45 +1,41 @@
 package no.nav.pensjon.selvbetjening.fssgw.tech.jwt
 
-import io.jsonwebtoken.*
-import no.nav.pensjon.selvbetjening.fssgw.tech.oidc.OidcConfigGetter
+import io.jsonwebtoken.Claims
+import io.jsonwebtoken.JwtException
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.SigningKeyResolver
+import no.nav.pensjon.selvbetjening.fssgw.tech.oauth2.MultiIssuerSupport
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 /**
  * Validator of JSON Web Signature (JWS) strings.
  */
 @Component
-class JwsValidator(private val oidcConfigGetter: OidcConfigGetter,
-                   private val signingKeyResolver: SigningKeyResolver,
-                   @Value("\${oauth2.audience}") private val acceptedAudience: String) {
+class JwsValidator(private val multiIssuerSupport: MultiIssuerSupport,
+                   private val signingKeyResolver: SigningKeyResolver) {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
     fun validate(jwsString: String): Claims {
-        log.info("Validating '{}'", jwsString)
+        log.debug("Validating '{}'", jwsString)
 
-        val jws = Jwts.parserBuilder()
+        val claims = Jwts.parserBuilder()
                 .setSigningKeyResolver(signingKeyResolver)
                 .build()
                 .parseClaimsJws(jwsString)
+                .body
 
-        validate(jws.body)
-        return jws.body
+        validate(claims)
+        return claims
     }
 
     private fun validate(claims: Claims) {
         val audience = claims.audience
-        val issuer = claims.issuer
+        val acceptedAudience = multiIssuerSupport.getOauth2HandlerForIssuer(claims.issuer).acceptedAudience
 
         if (acceptedAudience != audience) {
             val message = "Invalid audience '$audience'"
-            log.error(message)
-            throw JwtException(message)
-        }
-
-        if (oidcConfigGetter.getIssuer() != issuer) {
-            val message = "Invalid issuer '$issuer'"
             log.error(message)
             throw JwtException(message)
         }
