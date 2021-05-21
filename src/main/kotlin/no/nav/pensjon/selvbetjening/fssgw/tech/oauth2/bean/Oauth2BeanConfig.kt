@@ -15,15 +15,17 @@ class Oauth2BeanConfig {
             @Value("\${external-user.oauth2.well-known-url}") wellKnownUrl: String,
             @Value("\${external-user.oauth2.audience}") acceptedAudience: String)
             : Oauth2BasicData {
-        return Oauth2BasicData(wellKnownUrl, acceptedAudience)
+        return Oauth2BasicData(wellKnownUrl, false, "", acceptedAudience)
     }
 
     @Bean
     @Qualifier("\${internal-user}")
     fun internalUserOauth2BasicData(
             @Value("\${internal-user.oauth2.well-known-url}") wellKnownUrl: String,
+            @Value("\${http.proxy.uri}") proxyUri: String,
             @Value("\${internal-user.oauth2.audience}") acceptedAudience: String)
             : Oauth2BasicData {
-        return Oauth2BasicData(wellKnownUrl, acceptedAudience)
+        val requiresProxy = proxyUri != "notinuse"
+        return Oauth2BasicData(wellKnownUrl, requiresProxy, proxyUri, acceptedAudience)
     }
 }

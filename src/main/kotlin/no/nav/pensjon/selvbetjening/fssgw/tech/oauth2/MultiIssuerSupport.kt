@@ -1,8 +1,10 @@
 package no.nav.pensjon.selvbetjening.fssgw.tech.oauth2
 
+import no.nav.pensjon.selvbetjening.fssgw.tech.web.WebClientPreparer
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Component
+import org.springframework.web.reactive.function.client.WebClient
 
 /**
  * Support for handling multiple token issuers in OAuth2 flows.
@@ -22,10 +24,14 @@ class MultiIssuerSupport(@Qualifier("\${external-user}") private val externalUse
     private fun freshOauth2Handler(issuer: String): Oauth2Handler {
         var index = 0
         var found: Boolean
+        var basicConfig: Oauth2BasicData
         var configGetter: Oauth2ConfigGetter
+        var webClient: WebClient
 
         do {
-            configGetter = WebOauth2ConfigGetter(oauth2Basics[index].wellKnownUrl)
+            basicConfig = oauth2Basics[index]
+            webClient = WebClientPreparer.webClient(basicConfig.requiresProxy, basicConfig.proxyUri)
+            configGetter = WebOauth2ConfigGetter(webClient, basicConfig.wellKnownUrl)
             found = configGetter.getIssuer() == issuer
         } while (!found && ++index < oauth2Basics.size)
 
@@ -37,7 +43,7 @@ class MultiIssuerSupport(@Qualifier("\${external-user}") private val externalUse
 
         return Oauth2Handler(
                 configGetter,
-                Oauth2KeyDataGetter(configGetter),
-                oauth2Basics[index].acceptedAudience)
+                Oauth2KeyDataGetter(webClient, configGetter),
+                basicConfig.acceptedAudience)
     }
 }

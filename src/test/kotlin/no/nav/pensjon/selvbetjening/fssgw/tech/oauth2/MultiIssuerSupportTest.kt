@@ -15,8 +15,8 @@ internal class MultiIssuerSupportTest : WebClientTest() {
         setUp()
 
         support = MultiIssuerSupport(
-                Oauth2BasicData(baseUrl, "audience1"),
-                Oauth2BasicData(baseUrl, "audience2"))
+                Oauth2BasicData(baseUrl, false, "", "audience1"),
+                Oauth2BasicData(baseUrl, false, "", "audience2"))
     }
 
     @Test
