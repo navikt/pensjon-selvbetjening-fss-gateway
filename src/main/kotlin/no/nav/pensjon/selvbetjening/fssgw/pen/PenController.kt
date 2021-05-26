@@ -41,29 +41,6 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
         }
     }
 
-    @GetMapping("krav/{kravId}")
-    fun kravRequestId(
-            @RequestBody body: String,
-            request: HttpServletRequest,
-            @PathVariable kravId: Long): ResponseEntity<String> {
-        val auth: String? = request.getHeader(HttpHeaders.AUTHORIZATION)
-        val accessToken: String = auth?.substring("Bearer ".length) ?: ""
-        val callId: String? = request.getHeader("X-Correlation-ID")
-
-        log.debug("Received request for PEN with correlation ID '$callId'")
-
-        return try {
-            val claims = jwsValidator.validate(accessToken)
-            val pid: String = getPid(claims)
-            val responseBody = penConsumer.callPen("/krav/".plus(kravId), body, callId, pid)
-            ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
-        } catch (e: JwtException) {
-            unauthorized(e)
-        } catch (e: Oauth2Exception) {
-            unauthorized(e)
-        }
-    }
-
     @GetMapping("sak/sammendrag")
     fun sammendragRequest(
             @RequestBody body: String,
