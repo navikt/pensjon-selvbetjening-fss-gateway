@@ -145,7 +145,7 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
         return try {
             val claims = jwsValidator.validate(accessToken)
             val pid: String = getPid(claims)
-            val responseBody = penConsumer.callPen("/api/vedtak?=".plus(sakstype), body, callId, pid)
+            val responseBody = penConsumer.callPen("/api/soknad/alderspensjon/behandle", body, callId, pid)
             ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
         } catch (e: JwtException) {
             unauthorized(e)
