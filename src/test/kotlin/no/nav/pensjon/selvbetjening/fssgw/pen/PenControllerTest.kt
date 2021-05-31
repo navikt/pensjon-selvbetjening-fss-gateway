@@ -30,11 +30,11 @@ internal class PenControllerTest {
 
     @Test
     fun penRequest() {
-        Mockito.`when`(penConsumer.callPen("/sak/sammendrag", "foo", null, "fnr")).thenReturn("""{ "response": "bar"}""")
+        Mockito.`when`(penConsumer.callPen("/springapi/sak/sammendrag", "foo", null, "fnr")).thenReturn("""{ "response": "bar"}""")
         Mockito.`when`(jwsValidator.validate("jwt")).thenReturn(claims)
         Mockito.`when`(claims["pid"]).thenReturn("fnr")
 
-        mvc.perform(get("/api/pen/sak/sammendrag")
+        mvc.perform(get("/api/pen/springapi/sak/sammendrag")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
                 .content("foo"))
                 .andExpect(status().isOk)
