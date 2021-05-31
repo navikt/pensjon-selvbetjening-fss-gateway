@@ -132,7 +132,7 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
     }
 
     @GetMapping("api/soknad")
-    fun foregangsSoknad(
+    fun forstegangssoknad(
         @RequestBody body: String,
         request: HttpServletRequest): ResponseEntity<String> {
         val auth: String? = request.getHeader(HttpHeaders.AUTHORIZATION)
