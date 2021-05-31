@@ -18,7 +18,7 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-    @GetMapping("krav")
+    @GetMapping("springapi/krav")
     fun kravRequest(
             @RequestBody body: String,
             request: HttpServletRequest): ResponseEntity<String> {
@@ -32,7 +32,7 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
         return try {
             val claims = jwsValidator.validate(accessToken)
             val pid: String = getPid(claims)
-            val responseBody = penConsumer.callPen("/krav?sakstype=".plus(sakstype), body, callId, pid)
+            val responseBody = penConsumer.callPen("/springapi/krav?sakstype=".plus(sakstype), body, callId, pid)
             ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
         } catch (e: JwtException) {
             unauthorized(e)
@@ -41,7 +41,7 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
         }
     }
 
-    @GetMapping("sak/sammendrag")
+    @GetMapping("springapi/sak/sammendrag")
     fun sammendragRequest(
             @RequestBody body: String,
             request: HttpServletRequest): ResponseEntity<String> {
@@ -54,7 +54,7 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
         return try {
             val claims = jwsValidator.validate(accessToken)
             val pid: String = getPid(claims)
-            val responseBody = penConsumer.callPen("/sak/sammendrag", body, callId, pid)
+            val responseBody = penConsumer.callPen("/springapi/sak/sammendrag", body, callId, pid)
             ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
         } catch (e: JwtException) {
             unauthorized(e)
@@ -63,7 +63,7 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
         }
     }
 
-    @GetMapping("person/uforehistorikk")
+    @GetMapping("springapi/person/uforehistorikk")
     fun uforehistorikkRequest(
             @RequestBody body: String,
             request: HttpServletRequest): ResponseEntity<String> {
@@ -76,7 +76,7 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
         return try {
             val claims = jwsValidator.validate(accessToken)
             val pid: String = getPid(claims)
-            val responseBody = penConsumer.callPen("/person/uforehistorikk", body, callId, pid)
+            val responseBody = penConsumer.callPen("/springapi/person/uforehistorikk", body, callId, pid)
             ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
         } catch (e: JwtException) {
             unauthorized(e)
@@ -85,7 +85,7 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
         }
     }
 
-    @GetMapping("vedtak/bestemgjeldende")
+    @GetMapping("springapi/vedtak/bestemgjeldende")
     fun vedtakGjeldendeRequest(
             @RequestBody body: String,
             request: HttpServletRequest): ResponseEntity<String> {
@@ -99,7 +99,7 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
         return try {
             val claims = jwsValidator.validate(accessToken)
             val pid: String = getPid(claims)
-            val responseBody = penConsumer.callPen("/vedtak/bestemgjeldende", body, callId, pid, fomDato)
+            val responseBody = penConsumer.callPen("/springapi/vedtak/bestemgjeldende", body, callId, pid, fomDato)
             ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
         } catch (e: JwtException) {
             unauthorized(e)
@@ -108,7 +108,7 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
         }
     }
 
-    @GetMapping("vedtak")
+    @GetMapping("springapi/vedtak")
     fun vedtakRequestSakstype(
             @RequestBody body: String,
             request: HttpServletRequest): ResponseEntity<String> {
@@ -122,7 +122,30 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
         return try {
             val claims = jwsValidator.validate(accessToken)
             val pid: String = getPid(claims)
-            val responseBody = penConsumer.callPen("/vedtak?=".plus(sakstype), body, callId, pid)
+            val responseBody = penConsumer.callPen("/springapi/vedtak?=".plus(sakstype), body, callId, pid)
+            ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
+        } catch (e: JwtException) {
+            unauthorized(e)
+        } catch (e: Oauth2Exception) {
+            unauthorized(e)
+        }
+    }
+
+    @GetMapping("api/soknad")
+    fun forstegangssoknad(
+        @RequestBody body: String,
+        request: HttpServletRequest): ResponseEntity<String> {
+        val auth: String? = request.getHeader(HttpHeaders.AUTHORIZATION)
+        val accessToken: String = auth?.substring("Bearer ".length) ?: ""
+        val callId: String? = request.getHeader("X-Correlation-ID")
+        val sakstype = request.getParameter("sakstype")
+
+        log.debug("Received request for PEN with correlation ID '$callId'")
+
+        return try {
+            val claims = jwsValidator.validate(accessToken)
+            val pid: String = getPid(claims)
+            val responseBody = penConsumer.callPen("/api/soknad/alderspensjon/behandle", body, callId, pid)
             ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
         } catch (e: JwtException) {
             unauthorized(e)
