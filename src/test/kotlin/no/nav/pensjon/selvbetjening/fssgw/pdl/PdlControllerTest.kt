@@ -24,7 +24,7 @@ internal class PdlControllerTest {
     lateinit var pdlConsumer: PdlConsumer
 
     @Test
-    fun pdlRequest() {
+    fun `PDL request results in JSON response`() {
         Mockito.`when`(pdlConsumer.callPdl("foo", null)).thenReturn("""{ "response": "bar"}""")
 
         mvc.perform(post("/api/pdl")

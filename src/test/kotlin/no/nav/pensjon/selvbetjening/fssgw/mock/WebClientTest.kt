@@ -7,7 +7,7 @@ import org.junit.jupiter.api.AfterEach
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-
+import java.nio.charset.StandardCharsets
 
 open class WebClientTest {
 
@@ -32,9 +32,14 @@ open class WebClientTest {
         return server.takeRequest()
     }
 
-     fun jsonResponse(): MockResponse {
+    fun jsonResponse(): MockResponse {
         return MockResponse()
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+    }
+
+    fun xmlResponse(): MockResponse {
+        return MockResponse()
+                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType(MediaType.TEXT_XML, StandardCharsets.UTF_8))
     }
 
     internal fun plaintextResponse(): MockResponse {

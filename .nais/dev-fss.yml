@@ -26,6 +26,8 @@ spec:
   env:
     - name: STS_URL
       value: http://security-token-service.default.svc.nais.local/rest/v1/sts/token
+    - name: TPS_URL
+      value: https://tjenestebuss-q2.adeo.no
     - name: FSSGW_LOGGING_LEVEL
       value: debug
   prometheus:

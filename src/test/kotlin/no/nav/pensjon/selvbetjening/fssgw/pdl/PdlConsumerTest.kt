@@ -31,14 +31,14 @@ internal class PdlConsumerTest : WebClientTest() {
     }
 
     @Test
-    fun shall_return_data_when_ok() {
+    fun `callPdl shall return data when PDL responds OK`() {
         prepare(pdlDataResponse())
         val response = consumer.callPdl("{}", "id")
         assertNotNull(response)
     }
 
     @Test
-    fun shall_throwPdlException_when_pdl_returns_error() {
+    fun `callPdl shall throw PdlException when PDL returns error`() {
         prepare(pdlErrorResponse())
         val exception: PdlException = assertThrows(PdlException::class.java) { consumer.callPdl("{}", "id") }
         assertEquals("Failed to access PDL at $baseUrl: 401 Unauthorized from POST $baseUrl | Response: foo", exception.message)
