@@ -29,7 +29,7 @@ internal class PenControllerTest {
     lateinit var claims: Claims
 
     @Test
-    fun penRequest() {
+    fun `when OK then sakssammendrag request returns data`() {
         Mockito.`when`(penConsumer.callPen("/springapi/sak/sammendrag", "foo", null, "fnr")).thenReturn("""{ "response": "bar"}""")
         Mockito.`when`(jwsValidator.validate("jwt")).thenReturn(claims)
         Mockito.`when`(claims["pid"]).thenReturn("fnr")
@@ -39,5 +39,25 @@ internal class PenControllerTest {
                 .content("foo"))
                 .andExpect(status().isOk)
                 .andExpect(content().json("{'response':'bar'}"))
+    }
+
+    @Test
+    fun `when OK then ping request responds with OK`() {
+        Mockito.`when`(penConsumer.ping("/springapi/ping")).thenReturn("Ok")
+
+        mvc.perform(get("/api/pen/springapi/ping")
+                .content("foo"))
+                .andExpect(status().isOk)
+                .andExpect(content().string("Ok"))
+    }
+
+    @Test
+    fun `when error then ping request responds with bad gateway and error message`() {
+        Mockito.`when`(penConsumer.ping("/springapi/ping")).thenAnswer { throw PenException("oops") }
+
+        mvc.perform(get("/api/pen/springapi/ping")
+                .content(""))
+                .andExpect(status().isBadGateway)
+                .andExpect(content().json("{'error': 'oops'}"))
     }
 }

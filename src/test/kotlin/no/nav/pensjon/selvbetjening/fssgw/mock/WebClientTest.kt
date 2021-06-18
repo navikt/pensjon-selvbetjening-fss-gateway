@@ -42,6 +42,11 @@ open class WebClientTest {
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType(MediaType.TEXT_XML, StandardCharsets.UTF_8))
     }
 
+    fun jsonIso88591Response(): MockResponse {
+        return MockResponse()
+                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType(MediaType.APPLICATION_JSON, StandardCharsets.ISO_8859_1))
+    }
+
     internal fun plaintextResponse(): MockResponse {
         return MockResponse()
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE)

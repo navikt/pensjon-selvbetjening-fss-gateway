@@ -2,6 +2,7 @@ package no.nav.pensjon.selvbetjening.fssgw.pen
 
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.JwtException
+import io.micrometer.core.instrument.Metrics
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.oauth2.Oauth2Exception
 import org.slf4j.LoggerFactory
@@ -133,8 +134,8 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
 
     @GetMapping("api/soknad")
     fun forstegangssoknad(
-        @RequestBody body: String,
-        request: HttpServletRequest): ResponseEntity<String> {
+            @RequestBody body: String,
+            request: HttpServletRequest): ResponseEntity<String> {
         val auth: String? = request.getHeader(HttpHeaders.AUTHORIZATION)
         val accessToken: String = auth?.substring("Bearer ".length) ?: ""
         val callId: String? = request.getHeader("X-Correlation-ID")
@@ -151,6 +152,20 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
             unauthorized(e)
         } catch (e: Oauth2Exception) {
             unauthorized(e)
+        }
+    }
+
+    @GetMapping("springapi/ping")
+    fun pingRequest(request: HttpServletRequest): ResponseEntity<String> {
+        log.debug("Received PEN ping request")
+
+        return try {
+            val responseBody = penConsumer.ping("/springapi/ping")
+            Metrics.counter("pen_request_counter", "action", "ping", "status", "OK").increment()
+            ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
+        } catch (e: PenException) {
+            Metrics.counter("pen_request_counter", "action", "ping", "status", "error").increment()
+            ResponseEntity("""{"error": "${e.message}"}""", jsonContentType, HttpStatus.BAD_GATEWAY)
         }
     }
 

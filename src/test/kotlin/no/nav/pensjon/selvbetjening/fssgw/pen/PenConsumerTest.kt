@@ -31,28 +31,37 @@ internal class PenConsumerTest : WebClientTest() {
     }
 
     @Test
-    fun shall_return_data_when_ok() {
-        prepare(penDataResponse())
+    fun `shall return data when OK`() {
+        prepare(penDataResponse)
         val response = consumer.callPen("", "{}", "id", "pid")
         assertNotNull(response)
     }
 
     @Test
-    fun shall_throwPenException_when_pen_returns_error() {
-        prepare(penErrorResponse())
-        val exception: PenException = assertThrows(PenException::class.java) { consumer.callPen("","{}", "id", "pid") }
+    fun `shall throw PenException when PEN returns error`() {
+        prepare(penErrorResponse)
+        val exception: PenException = assertThrows(PenException::class.java) { consumer.callPen("", "{}", "id", "pid") }
         assertEquals("Failed to access PEN at $baseUrl: 401 Unauthorized from POST $baseUrl | Response: oops", exception.message)
     }
 
-    private fun penDataResponse(): MockResponse {
-        return jsonResponse()
+    @Test
+    fun `ping shall return data when PEN responds OK`() {
+        prepare(penPingResponse)
+        val response = consumer.ping("path")
+        assertEquals("Ok", response)
+    }
+
+    private val penDataResponse: MockResponse
+        get() = jsonResponse()
                 .setBody("""{
   "foo": "bar"
 }""")
-    }
 
-    private fun penErrorResponse(): MockResponse {
-        return jsonResponse(HttpStatus.UNAUTHORIZED)
+    private val penErrorResponse: MockResponse
+        get() = jsonResponse(HttpStatus.UNAUTHORIZED)
                 .setBody("oops")
-    }
+
+    private val penPingResponse: MockResponse
+        // Note: PEN uses content type 'JSON' despite plain-text body
+        get() = jsonIso88591Response().setBody("Ok")
 }

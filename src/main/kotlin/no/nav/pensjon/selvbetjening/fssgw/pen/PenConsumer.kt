@@ -3,7 +3,6 @@ package no.nav.pensjon.selvbetjening.fssgw.pen
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.apache.commons.logging.LogFactory
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
@@ -24,18 +23,19 @@ class PenConsumer(@Value("\${pen.endpoint.url}") private val endpoint: String,
         return callPenClient(urlSuffix, body, callId, pid, null)
     }
 
-    fun callPenClient(urlSuffix: String, body: String, callId: String?, pid: String, fomDato: String?): String {
-        val auth = auth()
+    private fun callPenClient(urlSuffix: String, body: String, callId: String?, pid: String, fomDato: String?): String {
         try {
             return webClient
                     .post()
                     .uri(endpoint.plus(urlSuffix))
-                    .header(HttpHeaders.AUTHORIZATION, auth)
-                    .header("pid", pid)
-                    .header("fnr", pid)
-                    .header("fomDato", fomDato)
-                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+                    .headers {
+                        it.setBearerAuth(auth)
+                        it.contentType = MediaType.APPLICATION_JSON
+                        it.accept = listOf(MediaType.APPLICATION_JSON)
+                        it.set("pid", pid)
+                        it.set("fnr", pid)
+                        it.set("fomDato", fomDato)
+                    }
                     .bodyValue(body)
                     .retrieve()
                     .bodyToMono(String::class.java)
@@ -52,8 +52,27 @@ class PenConsumer(@Value("\${pen.endpoint.url}") private val endpoint: String,
         }
     }
 
-    private fun auth(): String {
-        val serviceUserToken = serviceUserTokenGetter.getServiceUserToken().accessToken
-        return "Bearer $serviceUserToken"
+    fun ping(urlSuffix: String): String {
+        try {
+            return webClient
+                    .get()
+                    .uri(endpoint.plus(urlSuffix))
+                    .headers { it.setBearerAuth(auth) }
+                    .retrieve()
+                    .bodyToMono(String::class.java)
+                    .block()
+                    ?: throw PenException("No data in response from PEN at $endpoint")
+        } catch (e: WebClientResponseException) {
+            val message = "Failed to access PEN at $endpoint: ${e.message} | Response: ${e.responseBodyAsString}"
+            log.error(message, e)
+            throw PenException(message, e)
+        } catch (e: RuntimeException) { // e.g. when connection broken
+            val message = "Failed to access PEN at $endpoint: ${e.message}"
+            log.error(message, e)
+            throw PenException(message, e)
+        }
     }
+
+    private val auth: String
+        get() = serviceUserTokenGetter.getServiceUserToken().accessToken
 }
