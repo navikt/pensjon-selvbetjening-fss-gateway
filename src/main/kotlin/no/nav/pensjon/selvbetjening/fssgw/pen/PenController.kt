@@ -160,7 +160,7 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
         log.debug("Received PEN ping request")
 
         return try {
-            val responseBody = penConsumer.ping("/springapi/ping")
+            val responseBody = penConsumer.ping("/pen/springapi/ping")
             Metrics.counter("pen_request_counter", "action", "ping", "status", "OK").increment()
             ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
         } catch (e: PenException) {

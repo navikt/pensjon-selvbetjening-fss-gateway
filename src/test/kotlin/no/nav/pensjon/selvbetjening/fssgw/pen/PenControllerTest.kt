@@ -18,13 +18,10 @@ internal class PenControllerTest {
 
     @Autowired
     lateinit var mvc: MockMvc
-
     @MockBean
     lateinit var jwsValidator: JwsValidator
-
     @MockBean
     lateinit var penConsumer: PenConsumer
-
     @Mock
     lateinit var claims: Claims
 
@@ -43,7 +40,7 @@ internal class PenControllerTest {
 
     @Test
     fun `when OK then ping request responds with OK`() {
-        Mockito.`when`(penConsumer.ping("/springapi/ping")).thenReturn("Ok")
+        Mockito.`when`(penConsumer.ping("/pen/springapi/ping")).thenReturn("Ok")
 
         mvc.perform(get("/api/pen/springapi/ping")
                 .content("foo"))
@@ -53,7 +50,7 @@ internal class PenControllerTest {
 
     @Test
     fun `when error then ping request responds with bad gateway and error message`() {
-        Mockito.`when`(penConsumer.ping("/springapi/ping")).thenAnswer { throw PenException("oops") }
+        Mockito.`when`(penConsumer.ping("/pen/springapi/ping")).thenAnswer { throw PenException("oops") }
 
         mvc.perform(get("/api/pen/springapi/ping")
                 .content(""))
