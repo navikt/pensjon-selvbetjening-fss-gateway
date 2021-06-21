@@ -13,17 +13,17 @@ internal class HealthControllerTest {
     private val path = "/internal/"
 
     @Autowired
-    private val mvc: MockMvc? = null
+    lateinit var mvc: MockMvc
 
     @Test
-    fun isAlive() {
-        mvc!!.perform(get(path + "liveness"))
+    fun `liveness shall respond with status OK`() {
+        mvc.perform(get(path + "liveness"))
                 .andExpect(status().isOk)
     }
 
     @Test
-    fun isReady() {
-        mvc!!.perform(get(path + "readiness"))
+    fun `readiness shall respond with status OK`() {
+        mvc.perform(get(path + "readiness"))
                 .andExpect(status().isOk)
     }
 }
