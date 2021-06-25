@@ -110,20 +110,20 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
     }
 
     @GetMapping("springapi/vedtak")
-    fun vedtakRequestSakstype(
+    fun alleVedtakRequest(
             @RequestBody body: String,
             request: HttpServletRequest): ResponseEntity<String> {
         val auth: String? = request.getHeader(HttpHeaders.AUTHORIZATION)
         val accessToken: String = auth?.substring("Bearer ".length) ?: ""
         val callId: String? = request.getHeader("X-Correlation-ID")
         val sakstype = request.getParameter("sakstype")
-
+        val alleVedtak = request.getParameter("alleVedtak")
         log.debug("Received request for PEN with correlation ID '$callId'")
 
         return try {
             val claims = jwsValidator.validate(accessToken)
             val pid: String = getPid(claims)
-            val responseBody = penConsumer.callPen("/springapi/vedtak?=".plus(sakstype), body, callId, pid)
+            val responseBody = penConsumer.callPen("/springapi/vedtak?=".plus(sakstype).plus("&alleVedtak=").plus(alleVedtak), body, callId, pid)
             ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
         } catch (e: JwtException) {
             unauthorized(e)
