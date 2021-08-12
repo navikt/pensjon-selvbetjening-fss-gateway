@@ -25,7 +25,7 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
             request: HttpServletRequest): ResponseEntity<String> {
         val auth: String? = request.getHeader(HttpHeaders.AUTHORIZATION)
         val accessToken: String = auth?.substring("Bearer ".length) ?: ""
-        val callId: String? = request.getHeader("X-Correlation-ID")
+        val callId: String? = request.getHeader("Nav-Call-Id")
         val sakstype = request.getParameter("sakstype")
 
         log.debug("Received request for PEN with correlation ID '$callId'")
@@ -48,7 +48,7 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
             request: HttpServletRequest): ResponseEntity<String> {
         val auth: String? = request.getHeader(HttpHeaders.AUTHORIZATION)
         val accessToken: String = auth?.substring("Bearer ".length) ?: ""
-        val callId: String? = request.getHeader("X-Correlation-ID")
+        val callId: String? = request.getHeader("Nav-Call-Id")
 
         log.debug("Received request for PEN with correlation ID '$callId'")
 
@@ -70,7 +70,7 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
             request: HttpServletRequest): ResponseEntity<String> {
         val auth: String? = request.getHeader(HttpHeaders.AUTHORIZATION)
         val accessToken: String = auth?.substring("Bearer ".length) ?: ""
-        val callId: String? = request.getHeader("X-Correlation-ID")
+        val callId: String? = request.getHeader("Nav-Call-Id")
 
         log.debug("Received request for PEN with correlation ID '$callId'")
 
@@ -92,7 +92,7 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
             request: HttpServletRequest): ResponseEntity<String> {
         val auth: String? = request.getHeader(HttpHeaders.AUTHORIZATION)
         val accessToken: String = auth?.substring("Bearer ".length) ?: ""
-        val callId: String? = request.getHeader("X-Correlation-ID")
+        val callId: String? = request.getHeader("Nav-Call-Id")
         val fomDato = request.getParameter("fomDato")
 
         log.debug("Received request for PEN with correlation ID '$callId'")
@@ -115,7 +115,7 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
             request: HttpServletRequest): ResponseEntity<String> {
         val auth: String? = request.getHeader(HttpHeaders.AUTHORIZATION)
         val accessToken: String = auth?.substring("Bearer ".length) ?: ""
-        val callId: String? = request.getHeader("X-Correlation-ID")
+        val callId: String? = request.getHeader("Nav-Call-Id")
         val sakstype = request.getParameter("sakstype")
 
         log.debug("Received request for PEN with correlation ID '$callId'")
@@ -138,8 +138,7 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
             request: HttpServletRequest): ResponseEntity<String> {
         val auth: String? = request.getHeader(HttpHeaders.AUTHORIZATION)
         val accessToken: String = auth?.substring("Bearer ".length) ?: ""
-        val callId: String? = request.getHeader("X-Correlation-ID")
-        val sakstype = request.getParameter("sakstype")
+        val callId: String? = request.getHeader("Nav-Call-Id")
 
         log.debug("Received request for PEN with correlation ID '$callId'")
 

@@ -29,7 +29,7 @@ class JournalforingConsumer(@Value("\${journalforing.endpoint.url}") private val
                     .uri("$endpoint?forsoekFerdigstill=$forsoekFerdigstill")
                     .header(HttpHeaders.AUTHORIZATION, auth)
                     .header(CONSUMER_TOKEN, auth)
-                    .header(CORRELATION_ID, correlationId)
+                    .header(NAV_CALL_ID, callId)
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                     .bodyValue(body)
@@ -72,8 +72,8 @@ class JournalforingConsumer(@Value("\${journalforing.endpoint.url}") private val
         return "Bearer $serviceUserToken"
     }
 
-    companion object PdlHttpHeaders {
+    companion object JournalforingHttpHeaders {
         private const val CONSUMER_TOKEN = "Nav-Consumer-Token"
-        private const val CORRELATION_ID = "X-Correlation-ID"
+        private const val NAV_CALL_ID = "Nav-Call-Id"
     }
 }

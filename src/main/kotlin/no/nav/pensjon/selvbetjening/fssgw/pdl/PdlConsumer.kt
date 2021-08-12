@@ -30,7 +30,7 @@ class PdlConsumer(@Value("\${pdl.endpoint.url}") private val endpoint: String,
                     .uri(endpoint)
                     .header(HttpHeaders.AUTHORIZATION, auth)
                     .header(CONSUMER_TOKEN, auth)
-                    .header(CORRELATION_ID, correlationId)
+                    .header(NAV_CALL_ID, correlationId)
                     .header(THEME, PDL_THEME)
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
@@ -77,7 +77,7 @@ class PdlConsumer(@Value("\${pdl.endpoint.url}") private val endpoint: String,
 
     companion object PdlHttpHeaders{
         private const val CONSUMER_TOKEN = "Nav-Consumer-Token"
-        private const val CORRELATION_ID = "X-Correlation-ID"
+        private const val NAV_CALL_ID = "Nav-Call-Id"
         private const val THEME = "Tema"
     }
 }

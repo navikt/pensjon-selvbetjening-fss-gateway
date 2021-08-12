@@ -24,8 +24,8 @@ class JournalforingController(private val jwsValidator: JwsValidator, private va
             request: HttpServletRequest): ResponseEntity<String> {
         val auth: String? = request.getHeader(HttpHeaders.AUTHORIZATION)
         val accessToken: String = auth?.substring("Bearer ".length) ?: ""
-        val callId: String? = request.getHeader("X-Correlation-ID")
-        log.debug("Received request for Journalforing with correlation ID '$callId'")
+        val navCallId: String? = request.getHeader("Nav-Call-Id")
+        log.debug("Received request for Journalforing with correlation ID '$navCallId")
 
         try {
             jwsValidator.validate(accessToken)
@@ -35,7 +35,7 @@ class JournalforingController(private val jwsValidator: JwsValidator, private va
             return unauthorized(e)
         }
 
-        val responseBody = journalforingConsumer.opprettJournalpost(body, callId, forsoekFerdigstill)
+        val responseBody = journalforingConsumer.opprettJournalpost(body, navCallId, forsoekFerdigstill)
         return ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
     }
 

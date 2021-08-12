@@ -27,7 +27,7 @@ class PdlController(private val jwsValidator: JwsValidator, private val pdlConsu
             request: HttpServletRequest): ResponseEntity<String> {
         val auth: String? = request.getHeader(HttpHeaders.AUTHORIZATION)
         val accessToken: String = auth?.substring("Bearer ".length) ?: ""
-        val callId: String? = request.getHeader("X-Correlation-ID")
+        val callId: String? = request.getHeader("Nav-Call-Id")
         log.debug("Received request for PDL with correlation ID '$callId'")
 
         try {
