@@ -1,5 +1,6 @@
-package no.nav.pensjon.selvbetjening.fssgw.pdl
+package no.nav.pensjon.selvbetjening.fssgw.journalforing
 
+import no.nav.pensjon.selvbetjening.fssgw.pdl.PdlException
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.apache.commons.logging.LogFactory
 import org.springframework.beans.factory.annotation.Value
@@ -10,43 +11,40 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
 import java.util.*
 
-private const val PDL_THEME = "PEN"
-
 @Component
-class PdlConsumer(@Value("\${pdl.endpoint.url}") private val endpoint: String,
-                  private val serviceUserTokenGetter: ServiceTokenGetter) {
+class JournalforingConsumer(@Value("\${journalforing.endpoint.url}") private val endpoint: String,
+                            private val serviceUserTokenGetter: ServiceTokenGetter) {
 
     private val log = LogFactory.getLog(javaClass)
     private val webClient: WebClient = WebClient.create()
 
-    fun callPdl(body: String, callId: String?): String {
+    fun opprettJournalpost(body: String, callId: String?, forsoekFerdigstill: Boolean): String {
         val auth = auth()
         val correlationId = callId ?: UUID.randomUUID().toString()
-        log.info("Calling PDL with correlation ID '$correlationId'")
+        log.info("Calling Journalforing with correlation ID '$correlationId'")
 
         try {
             return webClient
                     .post()
-                    .uri(endpoint)
+                    .uri("$endpoint?forsoekFerdigstill=$forsoekFerdigstill")
                     .header(HttpHeaders.AUTHORIZATION, auth)
                     .header(CONSUMER_TOKEN, auth)
-                    .header(NAV_CALL_ID, correlationId)
-                    .header(THEME, PDL_THEME)
+                    .header(NAV_CALL_ID, callId)
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                     .bodyValue(body)
                     .retrieve()
                     .bodyToMono(String::class.java)
                     .block()
-                    ?: throw PdlException("No data in response from PDL at $endpoint")
+                    ?: throw JournalforingException("No data in response from Journalforing at $endpoint")
         } catch (e: WebClientResponseException) {
-            val message = "Failed to access PDL at $endpoint: ${e.message} | Response: ${e.responseBodyAsString}"
+            val message = "Failed to access Journalforing at $endpoint: ${e.message} | Response: ${e.responseBodyAsString}"
             log.error(message, e)
-            throw PdlException(message, e)
+            throw JournalforingException(message, e)
         } catch (e: RuntimeException) { // e.g. when connection broken
-            val message = "Failed to access PDL at $endpoint: ${e.message}"
+            val message = "Failed to access Journalforing at $endpoint: ${e.message}"
             log.error(message, e)
-            throw PdlException(message, e)
+            throw JournalforingException(message, e)
         }
     }
 
@@ -55,18 +53,17 @@ class PdlConsumer(@Value("\${pdl.endpoint.url}") private val endpoint: String,
             webClient
                     .options()
                     .uri(endpoint)
-                    .header(THEME, PDL_THEME)
                     .retrieve()
                     .toBodilessEntity()
                     .block()
         } catch (e: WebClientResponseException) {
-            val message = "Failed to ping PDL at $endpoint: ${e.message} | Response: ${e.responseBodyAsString}"
+            val message = "Failed to ping Journalforing at $endpoint: ${e.message} | Response: ${e.responseBodyAsString}"
             log.error(message, e)
-            throw PdlException(message, e)
+            throw JournalforingException(message, e)
         } catch (e: RuntimeException) { // e.g. when connection broken
-            val message = "Failed to ping PDL at $endpoint: ${e.message}"
+            val message = "Failed to ping Journalforing at $endpoint: ${e.message}"
             log.error(message, e)
-            throw PdlException(message, e)
+            throw JournalforingException(message, e)
         }
     }
 
@@ -75,9 +72,8 @@ class PdlConsumer(@Value("\${pdl.endpoint.url}") private val endpoint: String,
         return "Bearer $serviceUserToken"
     }
 
-    companion object PdlHttpHeaders{
+    companion object JournalforingHttpHeaders {
         private const val CONSUMER_TOKEN = "Nav-Consumer-Token"
         private const val NAV_CALL_ID = "Nav-Call-Id"
-        private const val THEME = "Tema"
     }
 }

@@ -30,6 +30,8 @@ spec:
       value: https://tjenestebuss-q2.adeo.no
     - name: FSSGW_LOGGING_LEVEL
       value: debug
+    - name: JOURNALFORING_URL
+      value: https://dokarkiv-q2.dev.intern.nav.no/rest/journalpostapi/v1/journalpost
   prometheus:
     enabled: true
     path: /internal/prometheus

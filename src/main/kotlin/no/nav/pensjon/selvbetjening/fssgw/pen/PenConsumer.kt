@@ -7,6 +7,7 @@ import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
+import java.util.*
 
 @Component
 class PenConsumer(@Value("\${pen.endpoint.url}") private val endpoint: String,
@@ -24,6 +25,7 @@ class PenConsumer(@Value("\${pen.endpoint.url}") private val endpoint: String,
     }
 
     private fun callPenClient(urlSuffix: String, body: String, callId: String?, pid: String, fomDato: String?): String {
+        val correlationId = callId ?: UUID.randomUUID().toString()
         try {
             return webClient
                     .post()
@@ -32,6 +34,7 @@ class PenConsumer(@Value("\${pen.endpoint.url}") private val endpoint: String,
                         it.setBearerAuth(auth)
                         it.contentType = MediaType.APPLICATION_JSON
                         it.accept = listOf(MediaType.APPLICATION_JSON)
+                        it.set("Nav-Call-Id", correlationId)
                         it.set("pid", pid)
                         it.set("fnr", pid)
                         it.set("fomDato", fomDato)
