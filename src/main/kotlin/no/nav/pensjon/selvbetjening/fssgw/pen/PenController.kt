@@ -140,29 +140,6 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
         val accessToken: String = auth?.substring("Bearer ".length) ?: ""
         val callId: String? = request.getHeader("Nav-Call-Id")
         val sakstype = request.getParameter("sakstype")
-
-        log.debug("Received request for PEN with correlation ID '$callId'")
-
-        return try {
-            val claims = jwsValidator.validate(accessToken)
-            val pid: String = getPid(claims)
-            val responseBody = penConsumer.callPen("/springapi/vedtak?sakstype=".plus(sakstype), body, callId, pid)
-            ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
-        } catch (e: JwtException) {
-            unauthorized(e)
-        } catch (e: Oauth2Exception) {
-            unauthorized(e)
-        }
-    }
-
-    @GetMapping("springapi/vedtak")
-    fun vedtakRequestSakstypeByKravId(
-        @RequestBody body: String,
-        request: HttpServletRequest): ResponseEntity<String> {
-        val auth: String? = request.getHeader(HttpHeaders.AUTHORIZATION)
-        val accessToken: String = auth?.substring("Bearer ".length) ?: ""
-        val callId: String? = request.getHeader("Nav-Call-Id")
-        val sakstype = request.getParameter("sakstype")
         val alleVedtak = request.getParameter("alleVedtak")
         val kravId = request.getParameter("kravId");
 
@@ -172,7 +149,9 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
             val claims = jwsValidator.validate(accessToken)
             val pid: String = getPid(claims)
             val responseBody = penConsumer.callPen("/springapi/vedtak?sakstype=".plus(sakstype)
-                .plus("&alleVedtak=$alleVedtak").plus("&kravId=$kravId"), body, callId, pid)
+                .plus("&alleVedtak=$alleVedtak")
+                .plus(if(kravId.isNullOrEmpty()) "" else "&kravId=$kravId")
+                , body, callId, pid)
             ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
         } catch (e: JwtException) {
             unauthorized(e)
