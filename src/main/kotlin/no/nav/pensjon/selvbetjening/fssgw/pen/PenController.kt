@@ -117,13 +117,18 @@ class PenController(private val jwsValidator: JwsValidator, private val penConsu
         val accessToken: String = auth?.substring("Bearer ".length) ?: ""
         val callId: String? = request.getHeader("Nav-Call-Id")
         val sakstype = request.getParameter("sakstype")
+        val alleVedtak = request.getParameter("alleVedtak")
+        val kravId = request.getParameter("kravId");
 
         log.debug("Received request for PEN with correlation ID '$callId'")
 
         return try {
             val claims = jwsValidator.validate(accessToken)
             val pid: String = getPid(claims)
-            val responseBody = penConsumer.callPen("/springapi/vedtak?=".plus(sakstype), body, callId, pid)
+            val responseBody = penConsumer.callPen("/springapi/vedtak?sakstype=".plus(sakstype)
+                .plus("&alleVedtak=$alleVedtak")
+                .plus(if(kravId.isNullOrEmpty()) "" else "&kravId=$kravId")
+                , body, callId, pid)
             ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
         } catch (e: JwtException) {
             unauthorized(e)
