@@ -9,7 +9,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import java.nio.charset.StandardCharsets
 
 @Component
-class TpsConsumer(@Value("\${tps.endpoint.url}") private val endpoint: String) {
+class TpsConsumer(@Value("\${esb.endpoint.url}") private val endpoint: String) {
 
     private val log = LogFactory.getLog(javaClass)
 
