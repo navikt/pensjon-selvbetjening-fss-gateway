@@ -39,7 +39,7 @@ internal class DkifConsumerTest : WebClientTest(){
     @Test
     fun `getKontaktinfo should throw DkifException when Dkif returns error`() {
         prepare(dkifErrorResponse())
-        val expectedUrl = "$baseUrl"
+        val expectedUrl = baseUrl
         val exception: DkifException = assertThrows(DkifException::class.java) { consumer.getKontaktinfo(null,"", false,"nb") }
         assertEquals("Failed to access Dkif at ${expectedUrl}: 401 Unauthorized from GET $expectedUrl?inkluderSikkerDigitalPost=false | Response: foo", exception.message)
     }
