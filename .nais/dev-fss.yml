@@ -38,7 +38,7 @@ spec:
   azure:
     application:
       enabled: true
-      tenant: nav.no
+      tenant: trygdeetaten.no
   webproxy: true
   tokenx:
     enabled: true
