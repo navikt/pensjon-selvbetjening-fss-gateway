@@ -3,6 +3,7 @@ package no.nav.pensjon.selvbetjening.fssgw.pen
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.apache.commons.logging.LogFactory
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
@@ -16,34 +17,36 @@ class PenConsumer(@Value("\${pen.endpoint.url}") private val endpoint: String,
     private val log = LogFactory.getLog(javaClass)
     private val webClient: WebClient = WebClient.create()
 
-    fun callPen(urlSuffix: String, body: String, callId: String?, pid: String, fomDato: String): String {
-        return callPenClient(urlSuffix, body, callId, pid, fomDato)
+    fun callPen(urlSuffix: String, body: String?, callId: String?, pid: String, method: HttpMethod, fomDato: String): String {
+        return callPenClient(urlSuffix, body, callId, pid, method, fomDato)
     }
 
-    fun callPen(urlSuffix: String, body: String, callId: String?, pid: String): String {
-        return callPenClient(urlSuffix, body, callId, pid, null)
+    fun callPen(urlSuffix: String, body: String?, callId: String?, pid: String, method: HttpMethod): String {
+        return callPenClient(urlSuffix, body, callId, pid, method, null)
     }
 
-    private fun callPenClient(urlSuffix: String, body: String, callId: String?, pid: String, fomDato: String?): String {
+    private fun callPenClient(urlSuffix: String, body: String?, callId: String?, pid: String, method: HttpMethod, fomDato: String?): String {
         val correlationId = callId ?: UUID.randomUUID().toString()
         try {
-            return webClient
-                    .post()
-                    .uri(endpoint.plus(urlSuffix))
-                    .headers {
-                        it.setBearerAuth(auth)
-                        it.contentType = MediaType.APPLICATION_JSON
-                        it.accept = listOf(MediaType.APPLICATION_JSON)
-                        it.set("Nav-Call-Id", correlationId)
-                        it.set("pid", pid)
-                        it.set("fnr", pid)
-                        it.set("fomDato", fomDato)
-                    }
-                    .bodyValue(body)
-                    .retrieve()
-                    .bodyToMono(String::class.java)
-                    .block()
-                    ?: throw PenException("No data in response from PEN at $endpoint")
+            val webClientLocal = (webClient
+                .method(method)
+                .uri(endpoint.plus(urlSuffix))
+                .headers {
+                    it.setBearerAuth(auth)
+                    it.contentType = MediaType.APPLICATION_JSON
+                    it.accept = listOf(MediaType.APPLICATION_JSON)
+                    it.set("Nav-Call-Id", correlationId)
+                    it.set("pid", pid)
+                    it.set("fnr", pid)
+                    it.set("fomDato", fomDato)
+                })
+            if(body!=null)
+                webClientLocal.bodyValue(body)
+
+            return webClientLocal.retrieve()
+                .bodyToMono(String::class.java)
+                .block()
+                ?: throw PenException("No data in response from PEN at $endpoint")
         } catch (e: WebClientResponseException) {
             val message = "Failed to access PEN at $endpoint: ${e.message} | Response: ${e.responseBodyAsString}"
             log.error(message, e)

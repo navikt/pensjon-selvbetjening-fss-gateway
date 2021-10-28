@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.LocalDateTime
@@ -33,14 +34,14 @@ internal class PenConsumerTest : WebClientTest() {
     @Test
     fun `shall return data when OK`() {
         prepare(penDataResponse)
-        val response = consumer.callPen("", "{}", "id", "pid")
+        val response = consumer.callPen("", "{}", "id", "pid", HttpMethod.POST)
         assertNotNull(response)
     }
 
     @Test
     fun `shall throw PenException when PEN returns error`() {
         prepare(penErrorResponse)
-        val exception: PenException = assertThrows(PenException::class.java) { consumer.callPen("", "{}", "id", "pid") }
+        val exception: PenException = assertThrows(PenException::class.java) { consumer.callPen("", "{}", "id", "pid", HttpMethod.POST) }
         assertEquals("Failed to access PEN at $baseUrl: 401 Unauthorized from POST $baseUrl | Response: oops", exception.message)
     }
 
@@ -54,8 +55,8 @@ internal class PenConsumerTest : WebClientTest() {
     private val penDataResponse: MockResponse
         get() = jsonResponse()
                 .setBody("""{
-  "foo": "bar"
-}""")
+                  "foo": "bar"
+                }""")
 
     private val penErrorResponse: MockResponse
         get() = jsonResponse(HttpStatus.UNAUTHORIZED)

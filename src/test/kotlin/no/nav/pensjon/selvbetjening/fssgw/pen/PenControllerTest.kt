@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
@@ -27,15 +28,16 @@ internal class PenControllerTest {
 
     @Test
     fun `when OK then sakssammendrag request returns data`() {
-        Mockito.`when`(penConsumer.callPen("/springapi/sak/sammendrag", "foo", null, "fnr")).thenReturn("""{ "response": "bar"}""")
+        val nav_call_id = "nav-call-id";
+        Mockito.`when`(penConsumer.callPen("/springapi/sak/sammendrag", null, nav_call_id, "fnr", HttpMethod.GET)).thenReturn("""{ "response": "bar"}""")
         Mockito.`when`(jwsValidator.validate("jwt")).thenReturn(claims)
         Mockito.`when`(claims["pid"]).thenReturn("fnr")
-
-        mvc.perform(get("/api/pen/springapi/sak/sammendrag")
+        mvc.perform(
+            get("/api/pen/springapi/sak/sammendrag")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
-                .content("foo"))
-                .andExpect(status().isOk)
-                .andExpect(content().json("{'response':'bar'}"))
+                .header("Nav-Call-Id", nav_call_id))
+            .andExpect(status().isOk)
+            .andExpect(content().json("{'response':'bar'}"))
     }
 
     @Test
