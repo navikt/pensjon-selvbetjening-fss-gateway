@@ -17,15 +17,7 @@ class PenConsumer(@Value("\${pen.endpoint.url}") private val endpoint: String,
     private val log = LogFactory.getLog(javaClass)
     private val webClient: WebClient = WebClient.create()
 
-    fun callPen(urlSuffix: String, body: String?, callId: String?, pid: String, method: HttpMethod, fomDato: String): String {
-        return callPenClient(urlSuffix, body, callId, pid, method, fomDato)
-    }
-
-    fun callPen(urlSuffix: String, body: String?, callId: String?, pid: String, method: HttpMethod): String {
-        return callPenClient(urlSuffix, body, callId, pid, method, null)
-    }
-
-    private fun callPenClient(urlSuffix: String, body: String?, callId: String?, pid: String, method: HttpMethod, fomDato: String?): String {
+    fun callPen(urlSuffix: String, callId: String?, pid: String, method: HttpMethod, fomDato: String? = null): String {
         val correlationId = callId ?: UUID.randomUUID().toString()
         try {
             val webClientLocal = (webClient
@@ -40,8 +32,6 @@ class PenConsumer(@Value("\${pen.endpoint.url}") private val endpoint: String,
                     it.set("fnr", pid)
                     it.set("fomDato", fomDato)
                 })
-            if(body!=null)
-                webClientLocal.bodyValue(body)
 
             return webClientLocal.retrieve()
                 .bodyToMono(String::class.java)

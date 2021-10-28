@@ -23,13 +23,15 @@ internal class PenControllerTest {
     lateinit var jwsValidator: JwsValidator
     @MockBean
     lateinit var penConsumer: PenConsumer
+    @MockBean
+    lateinit var penConsumerBody: PenConsumerBody
     @Mock
     lateinit var claims: Claims
 
     @Test
     fun `when OK then sakssammendrag request returns data`() {
         val nav_call_id = "nav-call-id";
-        Mockito.`when`(penConsumer.callPen("/springapi/sak/sammendrag", null, nav_call_id, "fnr", HttpMethod.GET)).thenReturn("""{ "response": "bar"}""")
+        Mockito.`when`(penConsumer.callPen("/springapi/sak/sammendrag", nav_call_id, "fnr", HttpMethod.GET)).thenReturn("""{ "response": "bar"}""")
         Mockito.`when`(jwsValidator.validate("jwt")).thenReturn(claims)
         Mockito.`when`(claims["pid"]).thenReturn("fnr")
         mvc.perform(
