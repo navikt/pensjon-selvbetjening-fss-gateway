@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.LocalDateTime
@@ -17,7 +18,7 @@ import java.time.LocalDateTime
 @ExtendWith(SpringExtension::class)
 internal class PenConsumerTest : WebClientTest() {
 
-    private lateinit var consumer: PenConsumer
+    private lateinit var bodilessPenConsumer: BodilessPenConsumer
 
     @Mock
     lateinit var serviceUserTokenGetter: ServiceTokenGetter
@@ -27,35 +28,35 @@ internal class PenConsumerTest : WebClientTest() {
         setUp()
         val token = ServiceTokenData("token", "type", LocalDateTime.MIN, 1L)
         Mockito.`when`(serviceUserTokenGetter.getServiceUserToken()).thenReturn(token)
-        consumer = PenConsumer(baseUrl(), serviceUserTokenGetter)
+        bodilessPenConsumer = BodilessPenConsumer(baseUrl(), serviceUserTokenGetter)
     }
 
     @Test
     fun `shall return data when OK`() {
         prepare(penDataResponse)
-        val response = consumer.callPen("", "{}", "id", "pid")
+        val response = bodilessPenConsumer.callPen("", "id", "pid", HttpMethod.GET)
         assertNotNull(response)
     }
 
     @Test
     fun `shall throw PenException when PEN returns error`() {
         prepare(penErrorResponse)
-        val exception: PenException = assertThrows(PenException::class.java) { consumer.callPen("", "{}", "id", "pid") }
-        assertEquals("Failed to access PEN at $baseUrl: 401 Unauthorized from POST $baseUrl | Response: oops", exception.message)
+        val exception: PenException = assertThrows(PenException::class.java) { bodilessPenConsumer.callPen("", "id", "pid", HttpMethod.GET) }
+        assertEquals("Failed to access PEN at $baseUrl: 401 Unauthorized from ${HttpMethod.GET.name} $baseUrl | Response: oops", exception.message)
     }
 
     @Test
     fun `ping shall return data when PEN responds OK`() {
         prepare(penPingResponse)
-        val response = consumer.ping("path")
+        val response = bodilessPenConsumer.ping("path")
         assertEquals("Ok", response)
     }
 
     private val penDataResponse: MockResponse
         get() = jsonResponse()
                 .setBody("""{
-  "foo": "bar"
-}""")
+                  "foo": "bar"
+                }""")
 
     private val penErrorResponse: MockResponse
         get() = jsonResponse(HttpStatus.UNAUTHORIZED)
