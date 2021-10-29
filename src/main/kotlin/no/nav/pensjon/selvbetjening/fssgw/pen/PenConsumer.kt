@@ -20,7 +20,7 @@ class PenConsumer(@Value("\${pen.endpoint.url}") private val endpoint: String,
     fun callPen(urlSuffix: String, callId: String?, pid: String, method: HttpMethod, fomDato: String? = null): String {
         val correlationId = callId ?: UUID.randomUUID().toString()
         try {
-            webClient
+            return webClient
                 .method(method)
                 .uri(endpoint.plus(urlSuffix))
                 .headers {
