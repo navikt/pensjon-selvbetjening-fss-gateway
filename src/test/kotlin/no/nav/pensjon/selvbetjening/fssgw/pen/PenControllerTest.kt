@@ -22,29 +22,29 @@ internal class PenControllerTest {
     @MockBean
     lateinit var jwsValidator: JwsValidator
     @MockBean
-    lateinit var penConsumer: PenConsumer
+    lateinit var bodilessPenConsumer: BodilessPenConsumer
     @MockBean
-    lateinit var penConsumerBody: PenConsumerBody
+    lateinit var penConsumer: PenConsumer
     @Mock
     lateinit var claims: Claims
 
     @Test
     fun `when OK then sakssammendrag request returns data`() {
-        val nav_call_id = "nav-call-id";
-        Mockito.`when`(penConsumer.callPen("/springapi/sak/sammendrag", nav_call_id, "fnr", HttpMethod.GET)).thenReturn("""{ "response": "bar"}""")
+        val NAV_CALL_ID = "nav-call-id";
+        Mockito.`when`(bodilessPenConsumer.callPen("/springapi/sak/sammendrag", NAV_CALL_ID, "fnr", HttpMethod.GET)).thenReturn("""{ "response": "bar"}""")
         Mockito.`when`(jwsValidator.validate("jwt")).thenReturn(claims)
         Mockito.`when`(claims["pid"]).thenReturn("fnr")
         mvc.perform(
             get("/api/pen/springapi/sak/sammendrag")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
-                .header("Nav-Call-Id", nav_call_id))
+                .header("Nav-Call-Id", NAV_CALL_ID))
             .andExpect(status().isOk)
             .andExpect(content().json("{'response':'bar'}"))
     }
 
     @Test
     fun `when OK then ping request responds with OK`() {
-        Mockito.`when`(penConsumer.ping("/pen/springapi/ping")).thenReturn("Ok")
+        Mockito.`when`(bodilessPenConsumer.ping("/pen/springapi/ping")).thenReturn("Ok")
 
         mvc.perform(get("/api/pen/springapi/ping")
                 .content("foo"))
@@ -54,7 +54,7 @@ internal class PenControllerTest {
 
     @Test
     fun `when error then ping request responds with bad gateway and error message`() {
-        Mockito.`when`(penConsumer.ping("/pen/springapi/ping")).thenAnswer { throw PenException("oops") }
+        Mockito.`when`(bodilessPenConsumer.ping("/pen/springapi/ping")).thenAnswer { throw PenException("oops") }
 
         mvc.perform(get("/api/pen/springapi/ping")
                 .content(""))
