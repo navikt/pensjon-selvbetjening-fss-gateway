@@ -20,7 +20,7 @@ class PenConsumer(@Value("\${pen.endpoint.url}") private val endpoint: String,
     fun callPen(urlSuffix: String, callId: String?, pid: String, method: HttpMethod, fomDato: String? = null): String {
         val correlationId = callId ?: UUID.randomUUID().toString()
         try {
-            val webClientLocal = (webClient
+            webClient
                 .method(method)
                 .uri(endpoint.plus(urlSuffix))
                 .headers {
@@ -31,9 +31,8 @@ class PenConsumer(@Value("\${pen.endpoint.url}") private val endpoint: String,
                     it.set("pid", pid)
                     it.set("fnr", pid)
                     it.set("fomDato", fomDato)
-                })
-
-            return webClientLocal.retrieve()
+                }
+                .retrieve()
                 .bodyToMono(String::class.java)
                 .block()
                 ?: throw PenException("No data in response from PEN at $endpoint")
