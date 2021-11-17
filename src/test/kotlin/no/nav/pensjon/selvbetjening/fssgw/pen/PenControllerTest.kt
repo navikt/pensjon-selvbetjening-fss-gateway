@@ -30,14 +30,14 @@ internal class PenControllerTest {
 
     @Test
     fun `when OK then sakssammendrag request returns data`() {
-        val NAV_CALL_ID = "nav-call-id";
-        Mockito.`when`(bodilessPenConsumer.callPen("/springapi/sak/sammendrag", NAV_CALL_ID, "fnr", HttpMethod.GET)).thenReturn("""{ "response": "bar"}""")
+        val callId = "nav-call-id"
+        Mockito.`when`(bodilessPenConsumer.callPen("/springapi/sak/sammendrag", callId, "fnr", HttpMethod.GET)).thenReturn("""{ "response": "bar"}""")
         Mockito.`when`(jwsValidator.validate("jwt")).thenReturn(claims)
-        Mockito.`when`(claims["pid"]).thenReturn("fnr")
+        Mockito.`when`(claims["sub"]).thenReturn("fnr")
         mvc.perform(
             get("/api/pen/springapi/sak/sammendrag")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
-                .header("Nav-Call-Id", NAV_CALL_ID))
+                .header("Nav-Call-Id", callId))
             .andExpect(status().isOk)
             .andExpect(content().json("{'response':'bar'}"))
     }

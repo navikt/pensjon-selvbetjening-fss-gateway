@@ -112,7 +112,7 @@ class PenController(private val jwsValidator: JwsValidator,
         val callId: String? = request.getHeader("Nav-Call-Id")
         val sakstype = request.getParameter("sakstype")
         val alleVedtak = request.getParameter("alleVedtak")
-        val kravId = request.getParameter("kravId");
+        val kravId = request.getParameter("kravId")
 
         log.debug("Received request for PEN with correlation ID '$callId'")
 
@@ -171,7 +171,7 @@ class PenController(private val jwsValidator: JwsValidator,
         return ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED)
     }
 
-    private fun getPid(claims: Claims) = claims["pid"] as String
+    private fun getPid(claims: Claims) = claims["sub"] as String
 
     private val jsonContentType: HttpHeaders
         get() {
