@@ -24,10 +24,11 @@ internal class KodeverkControllerTest{
 
     @Test
     fun `Kodeverk request results in JSON response`() {
-        Mockito.`when`(kodeverkConsumer.getBetydningerForPostnummer(null,"nb")).thenReturn("""{ "response": "bar"}""")
+        Mockito.`when`(kodeverkConsumer.getBetydningerForPostnummer(null, "id","nb")).thenReturn("""{ "response": "bar"}""")
 
         mvc.perform(MockMvcRequestBuilders.get("/api/kodeverk/Postnummer/koder/betydninger?spraak=nb")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
+                .header("Nav-Consumer-Id", "id")
                 .content("foo"))
                 .andExpect(MockMvcResultMatchers.status().isOk)
                 .andExpect(MockMvcResultMatchers.content().json("{'response':'bar'}"))

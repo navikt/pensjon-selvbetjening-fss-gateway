@@ -14,7 +14,7 @@ class KodeverkConsumer(@Value("\${kodeverk.url}") private val endpoint: String) 
     private val log = LogFactory.getLog(javaClass)
     private val webClient: WebClient = WebClient.create()
 
-    fun getBetydningerForPostnummer(callId: String?, sprak: String): String {
+    fun getBetydningerForPostnummer(callId: String?, consumerId: String?, sprak: String): String {
         val url  = "$endpoint/Postnummer/koder/betydninger?spraak=$sprak"
         log.info("Calling Journalforing with correlation ID '$callId'")
 
@@ -23,6 +23,7 @@ class KodeverkConsumer(@Value("\${kodeverk.url}") private val endpoint: String) 
                     .get()
                     .uri(url)
                     .header(NAV_CALL_ID, callId)
+                    .header(NAV_CONSUMER_ID, consumerId)
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                     .retrieve()
@@ -42,5 +43,6 @@ class KodeverkConsumer(@Value("\${kodeverk.url}") private val endpoint: String) 
 
     companion object JournalforingHttpHeaders {
         private const val NAV_CALL_ID = "Nav-Call-Id"
+        private const val NAV_CONSUMER_ID = "Nav-Consumer-Id"
     }
 }

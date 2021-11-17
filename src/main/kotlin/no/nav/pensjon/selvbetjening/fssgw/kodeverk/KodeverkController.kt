@@ -23,6 +23,7 @@ class KodeverkController(private val jwsValidator: JwsValidator, private val kod
         val auth: String? = request.getHeader(HttpHeaders.AUTHORIZATION)
         val accessToken: String = auth?.substring("Bearer ".length) ?: ""
         val navCallId: String? = request.getHeader("Nav-Call-Id")
+        val navConsumerId: String? = request.getHeader("Nav-Consumer-Id")
         log.debug("Received request for Kodeverk with correlation ID '$navCallId")
 
         try {
@@ -33,7 +34,7 @@ class KodeverkController(private val jwsValidator: JwsValidator, private val kod
             return unauthorized(e)
         }
 
-        val response = kodeverkConsumer.getBetydningerForPostnummer(navCallId, sprak)
+        val response = kodeverkConsumer.getBetydningerForPostnummer(navCallId, navConsumerId, sprak)
         return ResponseEntity(response, jsonContentType, HttpStatus.OK)
     }
 
