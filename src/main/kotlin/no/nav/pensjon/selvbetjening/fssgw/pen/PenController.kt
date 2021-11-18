@@ -1,6 +1,5 @@
 package no.nav.pensjon.selvbetjening.fssgw.pen
 
-import io.jsonwebtoken.Claims
 import io.jsonwebtoken.JwtException
 import io.micrometer.core.instrument.Metrics
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
@@ -24,14 +23,14 @@ class PenController(
     fun kravRequest(request: HttpServletRequest): ResponseEntity<String> {
         val auth: String? = request.getHeader(HttpHeaders.AUTHORIZATION)
         val accessToken: String = auth?.substring("Bearer ".length) ?: ""
+        val pid: String = request.getHeader("fnr") ?: ""
         val callId: String? = request.getHeader("Nav-Call-Id")
         val sakstype = request.getParameter("sakstype")
         log.debug("Received request for PEN with correlation ID '$callId'")
 
         return try {
-            val claims = jwsValidator.validate(accessToken)
-            val pid: String = getPid(claims)
-            val urlSuffix = request.requestURI.plus("?sakstype=").plus(sakstype)
+            jwsValidator.validate(accessToken)
+            val urlSuffix = "${request.requestURI}?sakstype=$sakstype"
             val responseBody = bodilessPenConsumer.callPen(urlSuffix, callId, pid, HttpMethod.GET)
             ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
         } catch (e: JwtException) {
@@ -45,12 +44,12 @@ class PenController(
     fun sammendragOrUforehistorikkRequest(request: HttpServletRequest): ResponseEntity<String> {
         val auth: String? = request.getHeader(HttpHeaders.AUTHORIZATION)
         val accessToken: String = auth?.substring("Bearer ".length) ?: ""
+        val pid: String = request.getHeader("fnr") ?: request.getHeader("pid") ?: ""
         val callId: String? = request.getHeader("Nav-Call-Id")
         log.debug("Received request for PEN with correlation ID '$callId'")
 
         return try {
-            val claims = jwsValidator.validate(accessToken)
-            val pid: String = getPid(claims)
+            jwsValidator.validate(accessToken)
             val responseBody = bodilessPenConsumer.callPen(request.requestURI, callId, pid, HttpMethod.GET)
             ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
         } catch (e: JwtException) {
@@ -64,15 +63,14 @@ class PenController(
     fun vedtakGjeldendeRequest(request: HttpServletRequest): ResponseEntity<String> {
         val auth: String? = request.getHeader(HttpHeaders.AUTHORIZATION)
         val accessToken: String = auth?.substring("Bearer ".length) ?: ""
+        val pid: String = request.getHeader("fnr") ?: ""
         val callId: String? = request.getHeader("Nav-Call-Id")
         val fomDato = request.getParameter("fomDato")
         log.debug("Received request for PEN with correlation ID '$callId'")
 
         return try {
-            val urlSuffix = request.requestURI.plus("/vedtak/bestemgjeldende")
-            val claims = jwsValidator.validate(accessToken)
-            val pid: String = getPid(claims)
-            val responseBody = bodilessPenConsumer.callPen(urlSuffix, callId, pid, HttpMethod.GET, fomDato)
+            jwsValidator.validate(accessToken)
+            val responseBody = bodilessPenConsumer.callPen(request.requestURI, callId, pid, HttpMethod.GET, fomDato)
             ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
         } catch (e: JwtException) {
             unauthorized(e)
@@ -85,6 +83,7 @@ class PenController(
     fun vedtakRequestSakstype(request: HttpServletRequest): ResponseEntity<String> {
         val auth: String? = request.getHeader(HttpHeaders.AUTHORIZATION)
         val accessToken: String = auth?.substring("Bearer ".length) ?: ""
+        val pid: String = request.getHeader("fnr") ?: ""
         val callId: String? = request.getHeader("Nav-Call-Id")
         val sakstype = request.getParameter("sakstype")
         val alleVedtak = request.getParameter("alleVedtak")
@@ -92,12 +91,11 @@ class PenController(
         log.debug("Received request for PEN with correlation ID '$callId'")
 
         return try {
-            val urlSuffix = request.requestURI
-                .plus("/vedtak?sakstype=$sakstype&alleVedtak=$alleVedtak")
+            jwsValidator.validate(accessToken)
+
+            val urlSuffix = "${request.requestURI}?sakstype=$sakstype&alleVedtak=$alleVedtak"
                 .plus(if (kravId.isNullOrEmpty()) "" else "&kravId=$kravId")
 
-            val claims = jwsValidator.validate(accessToken)
-            val pid: String = getPid(claims)
             val responseBody = bodilessPenConsumer.callPen(urlSuffix, callId, pid, HttpMethod.GET)
             ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
         } catch (e: JwtException) {
@@ -143,8 +141,6 @@ class PenController(
         log.error("Unauthorized: ${e.message}")
         return ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED)
     }
-
-    private fun getPid(claims: Claims) = claims["sub"] as String
 
     private val jsonContentType: HttpHeaders
         get() {
