@@ -1,15 +1,26 @@
 package no.nav.pensjon.selvbetjening.fssgw.tech.web
 
+import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
 
 object WebClientPreparer {
 
+    private const val MAX_IN_MEMORY_SIZE = 2 * 1024 * 1024 // 2 MB
+
     fun webClient(requiresProxy: Boolean, proxyUri: String) =
-            if (requiresProxy) proxyAwareWebClient(proxyUri)
-            else WebClient.create()
+        if (requiresProxy) proxyAwareWebClient(proxyUri)
+        else WebClient.create()
+
+    fun largeBufferWebClient(): WebClient {
+        val strategies = ExchangeStrategies.builder()
+            .codecs { it.defaultCodecs().maxInMemorySize(MAX_IN_MEMORY_SIZE) }
+            .build()
+
+        return WebClient.builder().exchangeStrategies(strategies).build()
+    }
 
     private fun proxyAwareWebClient(proxyUri: String) =
-            WebClient.builder()
-                    .clientConnector(WebClientProxyConfig.clientHttpConnector(proxyUri))
-                    .build()
+        WebClient.builder()
+            .clientConnector(WebClientProxyConfig.clientHttpConnector(proxyUri))
+            .build()
 }

@@ -1,5 +1,6 @@
 package no.nav.pensjon.selvbetjening.fssgw.kodeverk
 
+import no.nav.pensjon.selvbetjening.fssgw.tech.web.WebClientPreparer
 import org.apache.commons.logging.LogFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
@@ -12,11 +13,14 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 class KodeverkConsumer(@Value("\${kodeverk.url}") private val endpoint: String) {
 
     private val log = LogFactory.getLog(javaClass)
-    private val webClient: WebClient = WebClient.create()
+
+    // Use large buffer, since response from kodeverk/Postnummer/koder/betydninger is 600 KB
+    // (which is more than the default 262 KB)
+    private val webClient: WebClient = WebClientPreparer.largeBufferWebClient()
 
     fun getBetydningerForPostnummer(callId: String?, consumerId: String?, sprak: String): String {
         val url  = "$endpoint/Postnummer/koder/betydninger?spraak=$sprak"
-        log.info("Calling Journalforing with correlation ID '$callId'")
+        log.info("Calling Kodeverk with correlation ID '$callId'")
 
         try {
             return webClient
@@ -41,7 +45,7 @@ class KodeverkConsumer(@Value("\${kodeverk.url}") private val endpoint: String) 
         }
     }
 
-    companion object JournalforingHttpHeaders {
+    companion object KodeverkHttpHeaders {
         private const val NAV_CALL_ID = "Nav-Call-Id"
         private const val NAV_CONSUMER_ID = "Nav-Consumer-Id"
     }

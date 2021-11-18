@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
 
 internal class KodeverkConsumerTest : WebClientTest() {
+
     private lateinit var consumer: KodeverkConsumer
 
     @BeforeEach
@@ -18,14 +19,14 @@ internal class KodeverkConsumerTest : WebClientTest() {
 
     @Test
     fun `getBetydningerForPostnummer shall return data when Kodeverk responds OK`() {
-        prepare(journalforingDataResponse())
+        prepare(kodeverkDataResponse())
         val response = consumer.getBetydningerForPostnummer(null, "", "nb")
-        assertNotNull(response)
+        assertTrue(response.contains("OSLO"))
     }
 
     @Test
     fun `getBetydningerForPostnummer shall throw KodeverkException when Kodeverk returns error`() {
-        prepare(journalforingErrorResponse())
+        prepare(kodeverkErrorResponse())
         val expectedUrl = "$baseUrl/Postnummer/koder/betydninger?spraak=nb"
 
         val exception: KodeverkException =
@@ -37,11 +38,52 @@ internal class KodeverkConsumerTest : WebClientTest() {
         )
     }
 
-    private fun journalforingDataResponse(): MockResponse {
-        return jsonResponse().setBody("{}")
+    private fun kodeverkDataResponse(): MockResponse {
+        return jsonResponse().setBody("""
+{
+    "betydninger": {
+        "0507": [
+            {
+                "gyldigFra": "2014-01-06",
+                "gyldigTil": "9999-12-31",
+                "beskrivelser": {
+                    "nb": {
+                        "term": "OSLO",
+                        "tekst": "OSLO"
+                    }
+                }
+            }
+        ],
+        "8488": [
+            {
+                "gyldigFra": "1900-01-01",
+                "gyldigTil": "9999-12-31",
+                "beskrivelser": {
+                    "nb": {
+                        "term": "NØSS",
+                        "tekst": "NØSS"
+                    }
+                }
+            }
+        ],
+        "4957": [
+            {
+                "gyldigFra": "2016-09-15",
+                "gyldigTil": "9999-12-31",
+                "beskrivelser": {
+                    "nb": {
+                        "term": "RISØR",
+                        "tekst": "RISØR"
+                    }
+                }
+            }
+        ]
+    }
+}            
+        """.trimMargin())
     }
 
-    private fun journalforingErrorResponse(): MockResponse {
+    private fun kodeverkErrorResponse(): MockResponse {
         return jsonResponse(HttpStatus.INTERNAL_SERVER_ERROR)
             .setBody("foo")
     }
