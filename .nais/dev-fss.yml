@@ -56,5 +56,5 @@ spec:
   vault:
     enabled: true
     paths:
-      - kvPath: /serviceuser/data/dev/srvpensjon
+      - kvPath: /serviceuser/data/dev/srvpselv
         mountPath: /secrets/serviceuser
