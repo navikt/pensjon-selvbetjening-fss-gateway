@@ -17,7 +17,7 @@ class BodilessPenConsumer(@Value("\${pen.endpoint.url}") private val endpoint: S
     private val log = LogFactory.getLog(javaClass)
     private val webClient: WebClient = WebClient.create()
 
-    fun callPen(urlSuffix: String, callId: String?, pid: String, method: HttpMethod, fomDato: String? = null): String {
+    fun callPen(urlSuffix: String, callId: String?, pid: String, method: HttpMethod, fomDato: String? = null): String? {
         val correlationId = callId ?: UUID.randomUUID().toString()
         try {
             return webClient
@@ -35,7 +35,6 @@ class BodilessPenConsumer(@Value("\${pen.endpoint.url}") private val endpoint: S
                 .retrieve()
                 .bodyToMono(String::class.java)
                 .block()
-                ?: throw PenException("No data in response from PEN at $endpoint")
         } catch (e: WebClientResponseException) {
             val message = "Failed to access PEN at $endpoint: ${e.message} | Response: ${e.responseBodyAsString}"
             log.error(message, e)
@@ -47,7 +46,7 @@ class BodilessPenConsumer(@Value("\${pen.endpoint.url}") private val endpoint: S
         }
     }
 
-    fun ping(urlSuffix: String): String {
+    fun ping(urlSuffix: String): String? {
         try {
             return webClient
                     .get()
@@ -56,7 +55,6 @@ class BodilessPenConsumer(@Value("\${pen.endpoint.url}") private val endpoint: S
                     .retrieve()
                     .bodyToMono(String::class.java)
                     .block()
-                    ?: throw PenException("No data in response from PEN at $endpoint")
         } catch (e: WebClientResponseException) {
             val message = "Failed to access PEN at $endpoint: ${e.message} | Response: ${e.responseBodyAsString}"
             log.error(message, e)

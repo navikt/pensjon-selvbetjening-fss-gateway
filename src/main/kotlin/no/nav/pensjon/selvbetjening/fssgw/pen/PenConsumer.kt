@@ -1,12 +1,12 @@
 package no.nav.pensjon.selvbetjening.fssgw.pen
 
-import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Value;
+import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
+import org.apache.commons.logging.LogFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
-import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.stereotype.Component
+import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
 import java.util.*
 
@@ -17,7 +17,7 @@ class PenConsumer(@Value("\${pen.endpoint.url}") private val endpoint: String,
     private val log = LogFactory.getLog(javaClass)
     private val webClient: WebClient = WebClient.create()
 
-    fun callPenClient(urlSuffix: String, body: String, callId: String?, method: HttpMethod): String {
+    fun callPenClient(urlSuffix: String, body: String, callId: String?, method: HttpMethod): String? {
         val correlationId = callId ?: UUID.randomUUID().toString()
         try {
             return webClient
@@ -33,7 +33,6 @@ class PenConsumer(@Value("\${pen.endpoint.url}") private val endpoint: String,
                 .retrieve()
                 .bodyToMono(String::class.java)
                 .block()
-                ?: throw PenException("No data in response from PEN at $endpoint")
         } catch (e: WebClientResponseException) {
             val message = "Failed to access PEN at $endpoint: ${e.message} | Response: ${e.responseBodyAsString}"
             log.error(message, e)
