@@ -28,7 +28,6 @@ class JournalforingConsumer(@Value("\${journalforing.endpoint.url}") private val
                     .post()
                     .uri("$endpoint?forsoekFerdigstill=$forsoekFerdigstill")
                     .header(HttpHeaders.AUTHORIZATION, auth)
-                    .header(CONSUMER_TOKEN, auth)
                     .header(NAV_CALL_ID, callId)
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
