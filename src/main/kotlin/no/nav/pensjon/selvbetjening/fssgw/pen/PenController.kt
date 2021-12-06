@@ -12,9 +12,9 @@ import javax.servlet.http.HttpServletRequest
 @RestController
 @RequestMapping("/pen")
 class PenController(
-    private val jwsValidator: JwsValidator,
-    private val bodilessPenConsumer: BodilessPenConsumer,
-    private val penConsumer: PenConsumer
+        private val jwsValidator: JwsValidator,
+        private val bodilessPenConsumer: BodilessPenConsumer,
+        private val penConsumer: PenConsumer
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -87,6 +87,7 @@ class PenController(
         val callId: String? = request.getHeader("Nav-Call-Id")
         val sakstype = request.getParameter("sakstype")
         val alleVedtak = request.getParameter("alleVedtak")
+        val fomDato = request.getParameter("fom")
         val kravId = request.getParameter("kravId")
         log.debug("Received request for PEN with correlation ID '$callId'")
 
@@ -94,7 +95,8 @@ class PenController(
             jwsValidator.validate(accessToken)
 
             val urlSuffix = "${request.requestURI}?sakstype=$sakstype&alleVedtak=$alleVedtak"
-                .plus(if (kravId.isNullOrEmpty()) "" else "&kravId=$kravId")
+                    .plus(if (kravId.isNullOrEmpty()) "" else "&kravId=$kravId")
+                    .plus(if (fomDato.isNullOrEmpty()) "" else "&fom=$fomDato")
 
             val responseBody = bodilessPenConsumer.callPen(urlSuffix, callId, pid, HttpMethod.GET)
             ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
