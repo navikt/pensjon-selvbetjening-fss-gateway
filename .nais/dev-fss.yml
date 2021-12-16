@@ -30,6 +30,8 @@ spec:
       value: https://dokarkiv-q2.dev.intern.nav.no/rest/journalpostapi/v1/journalpost
     - name: PEN_URL
       value: https://pensjon-pen-q2.dev.adeo.no
+    - name: SKJERMING_URL
+      value: https://skjermede-personer-pip.dev.adeo.no
     - name: STS_URL
       value: http://security-token-service.default.svc.nais.local/rest/v1/sts/token
     - name: FSSGW_LOGGING_LEVEL
