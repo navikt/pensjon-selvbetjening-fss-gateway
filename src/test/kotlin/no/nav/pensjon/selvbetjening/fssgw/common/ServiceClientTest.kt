@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.http.HttpHeaders
+import java.util.*
 
 internal class ServiceClientTest : WebClientTest() {
 
@@ -21,7 +22,7 @@ internal class ServiceClientTest : WebClientTest() {
     @Test
     fun callService_returns_data_when_ok() {
         prepare(response())
-        val ingressHeaders = HashMap<String, String>()
+        val ingressHeaders = TreeMap<String, String>()
         ingressHeaders[HttpHeaders.AUTHORIZATION] = "Bearer jwt"
         ingressHeaders["key"] = "value"
 

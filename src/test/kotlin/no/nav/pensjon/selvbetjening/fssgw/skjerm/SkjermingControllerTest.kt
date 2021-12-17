@@ -2,6 +2,7 @@ package no.nav.pensjon.selvbetjening.fssgw.skjerm
 
 import io.jsonwebtoken.JwtException
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
+import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil.anyObject
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenData
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
@@ -52,13 +53,5 @@ internal class SkjermingControllerTest {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer jwt"))
             .andExpect(MockMvcResultMatchers.status().isUnauthorized)
             .andExpect(MockMvcResultMatchers.content().string("Unauthorized"))
-    }
-
-    /**
-     * Hack to make Mockito argument matchers work with Kotlin
-     */
-    private fun <T> anyObject(): T {
-        Mockito.anyObject<T>()
-        return null as T
     }
 }

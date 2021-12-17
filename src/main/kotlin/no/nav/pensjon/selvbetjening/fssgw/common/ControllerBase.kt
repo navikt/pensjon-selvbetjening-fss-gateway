@@ -13,9 +13,10 @@ import org.springframework.util.StringUtils.hasText
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 
+
 abstract class ControllerBase(
     private val jwsValidator: JwsValidator,
-    private val consumer: ServiceClient,
+    private val serviceClient: ServiceClient,
     private val egressTokenGetter: ServiceTokenGetter,
     private val egressEndpoint: String) {
 
@@ -36,7 +37,7 @@ abstract class ControllerBase(
             val headersToRelay = getEgressHeaders(request)
             val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
             val urlSuffix = "$egressEndpoint${request.requestURI}$queryPart"
-            val responseBody = consumer.callService(urlSuffix, headersToRelay)
+            val responseBody = serviceClient.callService(urlSuffix, headersToRelay)
             ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
         } catch (e: JwtException) {
             unauthorized(e)
@@ -47,15 +48,15 @@ abstract class ControllerBase(
 
     protected abstract fun egressAuthWaived(): Boolean
 
-    private fun getEgressHeaders(request: HttpServletRequest): HashMap<String, String> {
-        val egressHeaders = HashMap<String, String>()
+    private fun getEgressHeaders(request: HttpServletRequest): TreeMap<String, String> {
+        val egressHeaders = TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER)
         request.headerNames.toList().forEach { copyHeader(request, it, egressHeaders) }
         addAuthHeaderIfNeeded(egressHeaders)
         addCallIdHeaderIfNeeded(egressHeaders)
         return egressHeaders
     }
 
-    private fun addAuthHeaderIfNeeded(headers: HashMap<String, String>) {
+    private fun addAuthHeaderIfNeeded(headers: TreeMap<String, String>) {
         if (egressAuthWaived()) {
             return
         }
@@ -64,7 +65,7 @@ abstract class ControllerBase(
         headers[HttpHeaders.AUTHORIZATION] = "$authType $token"
     }
 
-    private fun addCallIdHeaderIfNeeded(headers: HashMap<String, String>) {
+    private fun addCallIdHeaderIfNeeded(headers: TreeMap<String, String>) {
         if (headers.containsKey(callIdHeaderName)) {
             return
         }
@@ -72,7 +73,7 @@ abstract class ControllerBase(
         headers[callIdHeaderName] = UUID.randomUUID().toString()
     }
 
-    private fun copyHeader(request: HttpServletRequest, headerName: String, headers: HashMap<String, String>) {
+    private fun copyHeader(request: HttpServletRequest, headerName: String, headers: TreeMap<String, String>) {
         if (notRelayedHeaders.contains(headerName.toLowerCase())) {
             return
         }
@@ -83,6 +84,11 @@ abstract class ControllerBase(
     private fun checkIngressAuth(request: HttpServletRequest) {
         val auth: String? = request.getHeader(HttpHeaders.AUTHORIZATION)
         val accessToken: String = auth?.substring(authType.length + 1) ?: ""
+
+        if (!hasText(accessToken)) {
+            throw JwtException("Missing access token")
+        }
+
         jwsValidator.validate(accessToken)
     }
 

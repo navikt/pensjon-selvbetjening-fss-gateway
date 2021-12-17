@@ -26,10 +26,16 @@ spec:
   env:
     - name: AAREG_URL
       value: https://modapp-q2.adeo.no
+    - name: DKIF_URL
+      value: https://dkif.dev.intern.nav.no
+    - name: EREG_URL
+      value: https://modapp-q2.adeo.no
     - name: ESB_URL
       value: https://tjenestebuss-q2.adeo.no
     - name: JOURNALFORING_URL
       value: https://dokarkiv-q2.dev.intern.nav.no/rest/journalpostapi/v1/journalpost
+    - name: KODEVERK_URL
+      value: https://kodeverk.dev.adeo.no
     - name: PEN_URL
       value: https://pensjon-pen-q2.dev.adeo.no
     - name: SKJERMING_URL

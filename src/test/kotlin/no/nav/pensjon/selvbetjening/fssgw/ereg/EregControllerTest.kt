@@ -1,6 +1,10 @@
 package no.nav.pensjon.selvbetjening.fssgw.ereg
 
+import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
+import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil
+import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil.anyObject
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
+import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,7 +16,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
 @WebMvcTest(EregController::class)
-internal class EregControllerTest{
+internal class EregControllerTest {
+
     @Autowired
     lateinit var mvc: MockMvc
 
@@ -20,18 +25,23 @@ internal class EregControllerTest{
     lateinit var jwsValidator: JwsValidator
 
     @MockBean
-    lateinit var eregConsumer: EregConsumer
+    lateinit var egressTokenGetter: ServiceTokenGetter
+
+    @MockBean
+    lateinit var serviceClient: ServiceClient
 
     @Test
     fun `Ereg request results in JSON response`() {
         val expectedIdent = "00000000000"
-        Mockito.`when`(eregConsumer.getOrganisasjonNoekkelinfo(null, expectedIdent)).thenReturn("""{ "response": "bar"}""")
+        Mockito.`when`(serviceClient.callService(anyObject(), anyObject())).thenReturn("""{ "response": "bar"}""")
+        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
-        mvc.perform(MockMvcRequestBuilders
-                .get("/api/ereg/v1/organisasjon/$expectedIdent/noekkelinfo")
+        mvc.perform(
+            MockMvcRequestBuilders
+                .get("/ereg/api/v1/organisasjon/$expectedIdent/noekkelinfo")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
                 .content("foo"))
-                .andExpect(MockMvcResultMatchers.status().isOk)
-                .andExpect(MockMvcResultMatchers.content().json("{'response':'bar'}"))
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.content().json("{'response':'bar'}"))
     }
 }

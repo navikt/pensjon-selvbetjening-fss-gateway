@@ -1,20 +1,23 @@
 package no.nav.pensjon.selvbetjening.fssgw.common
 
+import no.nav.pensjon.selvbetjening.fssgw.tech.web.WebClientPreparer
 import org.apache.commons.logging.LogFactory
 import org.springframework.http.HttpHeaders
-import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
-import reactor.netty.http.client.HttpClient
+import java.util.*
 
 @Component
 class ServiceClient {
 
     private val log = LogFactory.getLog(javaClass)
-    private val webClient = webClient()
 
-    fun callService(uri: String, headers: HashMap<String, String>): String {
+    // Use large buffer, since response from kodeverk/Postnummer/koder/betydninger is 600 KB
+    // (which is more than the default 262 KB)
+    private val webClient: WebClient = WebClientPreparer.largeBufferWebClient()
+
+    fun callService(uri: String, headers: TreeMap<String, String>): String {
         if (log.isDebugEnabled) {
             log.debug("URI: '$uri'")
             log(headers)
@@ -40,19 +43,11 @@ class ServiceClient {
         }
     }
 
-    private fun webClient(): WebClient {
-        val httpClient = HttpClient.create().wiretap(true)
-
-        return WebClient.builder()
-            .clientConnector(ReactorClientHttpConnector(httpClient))
-            .build()
-    }
-
-    private fun copyHeaders(ingressHeaders: HashMap<String, String>, egressHeaders: HttpHeaders) {
+    private fun copyHeaders(ingressHeaders: TreeMap<String, String>, egressHeaders: HttpHeaders) {
         ingressHeaders.entries.stream().forEach { (k, v) -> egressHeaders.set(k, v) }
     }
 
-    private fun log(headers: HashMap<String, String>) {
+    private fun log(headers: TreeMap<String, String>) {
         log.debug("Egress headers:")
         headers.entries.stream().forEach { (k, v) -> log.debug("$k: $v") }
     }
