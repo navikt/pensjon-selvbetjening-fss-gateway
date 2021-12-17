@@ -34,27 +34,28 @@ open class WebClientTest {
 
     fun jsonResponse(): MockResponse {
         return MockResponse()
-                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
     }
 
     fun xmlResponse(): MockResponse {
         return MockResponse()
-                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType(MediaType.TEXT_XML, StandardCharsets.UTF_8))
+            .addHeader(HttpHeaders.CONTENT_TYPE, MediaType(MediaType.TEXT_XML, StandardCharsets.UTF_8))
     }
 
     fun jsonIso88591Response(): MockResponse {
         return MockResponse()
-                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType(MediaType.APPLICATION_JSON, StandardCharsets.ISO_8859_1))
+            .addHeader(HttpHeaders.CONTENT_TYPE, MediaType(MediaType.APPLICATION_JSON, StandardCharsets.ISO_8859_1))
     }
 
-    internal fun plaintextResponse(): MockResponse {
+    internal fun htmlResponse(status: HttpStatus): MockResponse {
         return MockResponse()
-                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE)
+            .addHeader(HttpHeaders.CONTENT_TYPE, MediaType(MediaType.TEXT_HTML, StandardCharsets.UTF_8))
+            .setResponseCode(status.value())
     }
 
     internal fun jsonResponse(status: HttpStatus): MockResponse {
         return jsonResponse()
-                .setResponseCode(status.value())
+            .setResponseCode(status.value())
     }
 
     internal fun baseUrl(): String {

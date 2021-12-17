@@ -24,7 +24,7 @@ class AaregConsumer(@Value("\${aareg.url}") private val endpoint: String,
         try {
             return webClient
                     .get()
-                    .uri("$endpoint/v1/arbeidstaker/arbeidsforhold")
+                    .uri("$endpoint/aareg-services/api/v1/arbeidstaker/arbeidsforhold")
                     .header(HttpHeaders.AUTHORIZATION, auth)
                     .header(CONSUMER_TOKEN, auth)
                     .header(NAV_CALL_ID, correlationId)

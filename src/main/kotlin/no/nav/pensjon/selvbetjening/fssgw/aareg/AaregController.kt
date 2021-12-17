@@ -1,10 +1,13 @@
 package no.nav.pensjon.selvbetjening.fssgw.aareg
 
 import io.jsonwebtoken.JwtException
-import no.nav.pensjon.selvbetjening.fssgw.dkif.DkifController
+import no.nav.pensjon.selvbetjening.fssgw.common.ControllerBase
+import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.oauth2.Oauth2Exception
+import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -15,8 +18,27 @@ import org.springframework.web.bind.annotation.RestController
 import javax.servlet.http.HttpServletRequest
 
 @RestController
+@RequestMapping("aareg-services")
+class AaregController(
+    jwsValidator: JwsValidator,
+    egressTokenGetter: ServiceTokenGetter,
+    serviceClient: ServiceClient,
+    @Value("\${aareg.url}") egressEndpoint: String) :
+    ControllerBase(jwsValidator, serviceClient, egressTokenGetter, egressEndpoint) {
+
+    @GetMapping("api/v1/arbeidstaker/arbeidsforhold")
+    fun getArbeidsgivere(request: HttpServletRequest): ResponseEntity<String> {
+        return super.handle(request)
+    }
+
+    override fun egressAuthWaived(): Boolean {
+        return false
+    }
+}
+
+@RestController
 @RequestMapping("/api/aareg")
-class AaregController(private val jwsValidator: JwsValidator, private val aaregConsumer : AaregConsumer) {
+class DeprecatedAaregController(private val jwsValidator: JwsValidator, private val aaregConsumer : AaregConsumer) {
     private val log = LoggerFactory.getLogger(javaClass)
 
     @GetMapping("/v1/arbeidstaker/arbeidsforhold")

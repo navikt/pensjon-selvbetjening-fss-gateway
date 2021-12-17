@@ -24,6 +24,8 @@ spec:
     path: "/internal/readiness"
     periodSeconds: 30
   env:
+    - name: AAREG_URL
+      value: https://modapp-q2.adeo.no
     - name: ESB_URL
       value: https://tjenestebuss-q2.adeo.no
     - name: JOURNALFORING_URL
