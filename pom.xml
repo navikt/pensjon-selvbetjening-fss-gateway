@@ -17,8 +17,8 @@
         <java.version>11</java.version>
         <kotlin.version>1.4.30</kotlin.version>
         <jjwt-version>0.11.2</jjwt-version>
-        <log4j2.version>2.16.0</log4j2.version>
-        <okhttp3.version>4.9.1</okhttp3.version>
+        <log4j2.version>2.17.0</log4j2.version>
+        <okhttp3.version>4.9.3</okhttp3.version>
     </properties>
     <dependencies>
         <dependency>
@@ -53,7 +53,7 @@
         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>oauth2-oidc-sdk</artifactId>
-            <version>9.5</version>
+            <version>9.20</version>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
