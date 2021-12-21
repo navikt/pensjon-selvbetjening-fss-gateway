@@ -22,7 +22,7 @@ class EregController(
 
     @GetMapping("api/v1/organisasjon/{organisasjonsnummer}/noekkelinfo")
     fun getOrganisasjonNoekkelinfo(request: HttpServletRequest): ResponseEntity<String> {
-        return super.handle(request)
+        return super.doGet(request)
     }
 
     override fun egressAuthWaived(): Boolean {

@@ -1,6 +1,7 @@
 package no.nav.pensjon.selvbetjening.fssgw.common
 
 import io.jsonwebtoken.JwtException
+import io.micrometer.core.instrument.Metrics
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.oauth2.Oauth2Exception
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
@@ -12,7 +13,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.util.StringUtils.hasText
 import java.util.*
 import javax.servlet.http.HttpServletRequest
-
 
 abstract class ControllerBase(
     private val jwsValidator: JwsValidator,
@@ -31,13 +31,32 @@ abstract class ControllerBase(
         HttpHeaders.USER_AGENT.toLowerCase()
     )
 
-    fun handle(request: HttpServletRequest): ResponseEntity<String> {
+    fun doGet(request: HttpServletRequest): ResponseEntity<String> {
         return try {
             checkIngressAuth(request)
             val headersToRelay = getEgressHeaders(request)
             val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
             val urlSuffix = "$egressEndpoint${request.requestURI}$queryPart"
-            val responseBody = serviceClient.callService(urlSuffix, headersToRelay)
+            val responseBody = serviceClient.doGet(urlSuffix, headersToRelay)
+            Metrics.counter("request_counter", "action", "get", "status", "OK").increment()
+            ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
+        } catch (e: JwtException) {
+            unauthorized(e)
+        } catch (e: Oauth2Exception) {
+            unauthorized(e)
+        } catch (e: ConsumerException) {
+            Metrics.counter("request_counter", "action", "get", "status", "error").increment()
+            ResponseEntity("""{"error": "${e.message}"}""", jsonContentType, HttpStatus.BAD_GATEWAY)
+        }
+    }
+
+    fun doPost(request: HttpServletRequest, body: String): ResponseEntity<String> {
+        return try {
+            checkIngressAuth(request)
+            val headersToRelay = getEgressHeaders(request)
+            val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
+            val urlSuffix = "$egressEndpoint${request.requestURI}$queryPart"
+            val responseBody = serviceClient.doPost(urlSuffix, headersToRelay, body)
             ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
         } catch (e: JwtException) {
             unauthorized(e)

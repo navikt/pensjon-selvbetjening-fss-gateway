@@ -21,8 +21,8 @@ class AaregController(
     ControllerBase(jwsValidator, serviceClient, egressTokenGetter, egressEndpoint) {
 
     @GetMapping("api/v1/arbeidstaker/arbeidsforhold")
-    fun getArbeidsgivere(request: HttpServletRequest): ResponseEntity<String> {
-        return super.handle(request)
+    fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> {
+        return super.doGet(request)
     }
 
     override fun egressAuthWaived(): Boolean {

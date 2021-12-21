@@ -22,7 +22,7 @@ class DkifController(
 
     @GetMapping("personer/kontaktinformasjon")
     fun getKontaktinformasjon(request: HttpServletRequest): ResponseEntity<String> {
-        return super.handle(request)
+        return super.doGet(request)
     }
 
     override fun egressAuthWaived(): Boolean {

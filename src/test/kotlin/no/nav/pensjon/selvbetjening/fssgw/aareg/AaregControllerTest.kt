@@ -33,7 +33,7 @@ internal class AaregControllerTest {
     @Test
     fun `Aareg request results in JSON response`() {
         val expectedIdent = "00000000000"
-        Mockito.`when`(serviceClient.callService(anyObject(), anyObject())).thenReturn("""{ "response": "bar"}""")
+        Mockito.`when`(serviceClient.doGet(anyObject(), anyObject())).thenReturn("""{ "response": "bar"}""")
         Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
 
         mvc.perform(
@@ -43,6 +43,6 @@ internal class AaregControllerTest {
                 .header("Nav-Personident", expectedIdent)
                 .content("foo"))
             .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.content().json("{'response':'bar'}"))
+            .andExpect(MockMvcResultMatchers.content().json("""{ "response": "bar"}"""))
     }
 }

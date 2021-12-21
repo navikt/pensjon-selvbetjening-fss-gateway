@@ -34,7 +34,7 @@ internal class SkjermingControllerTest {
 
     @Test
     fun `isSkjermet returns data when valid token`() {
-        Mockito.`when`(serviceClient.callService(anyObject(), anyObject())).thenReturn("false")
+        Mockito.`when`(serviceClient.doGet(anyObject(), anyObject())).thenReturn("false")
         Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(ServiceTokenData("j.w.t","JWT", LocalDateTime.now(), 60L))
 
         mvc.perform(

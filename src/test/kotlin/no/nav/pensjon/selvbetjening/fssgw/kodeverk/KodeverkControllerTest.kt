@@ -32,7 +32,7 @@ internal class KodeverkControllerTest {
 
     @Test
     fun `Kodeverk request results in JSON response`() {
-        Mockito.`when`(serviceClient.callService(anyObject(), anyObject())).thenReturn("""{ "response": "bar"}""")
+        Mockito.`when`(serviceClient.doGet(anyObject(), anyObject())).thenReturn("""{ "response": "bar"}""")
         Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
         mvc.perform(
@@ -41,6 +41,6 @@ internal class KodeverkControllerTest {
                 .header("Nav-Consumer-Id", "id")
                 .content("foo"))
             .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.content().json("{'response':'bar'}"))
+            .andExpect(MockMvcResultMatchers.content().json("""{ "response": "bar"}"""))
     }
 }

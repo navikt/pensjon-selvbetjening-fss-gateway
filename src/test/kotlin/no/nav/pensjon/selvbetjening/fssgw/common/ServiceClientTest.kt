@@ -26,7 +26,7 @@ internal class ServiceClientTest : WebClientTest() {
         ingressHeaders[HttpHeaders.AUTHORIZATION] = "Bearer jwt"
         ingressHeaders["key"] = "value"
 
-        val response = client.callService(baseUrl(), ingressHeaders)
+        val response = client.doGet(baseUrl(), ingressHeaders)
 
         val egressHeaders = takeRequest().headers
         assertEquals("""{ "foo": "bar" }""", response)

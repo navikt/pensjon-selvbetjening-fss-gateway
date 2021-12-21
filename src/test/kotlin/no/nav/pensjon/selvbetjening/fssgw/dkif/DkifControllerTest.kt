@@ -36,7 +36,7 @@ internal class DkifControllerTest {
     fun `DKIF request results in JSON response`() {
         val expectedIdent = "00000000000"
         val expectedConsumerId = "cid"
-        Mockito.`when`(serviceClient.callService(anyObject(), anyObject())).thenReturn("""{ "response": "bar"}""")
+        Mockito.`when`(serviceClient.doGet(anyObject(), anyObject())).thenReturn("""{ "response": "bar"}""")
         Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
         mvc.perform(
@@ -47,13 +47,13 @@ internal class DkifControllerTest {
                 .header("Nav-Consumer-Id", expectedConsumerId)
                 .content("foo"))
             .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.content().json("{'response':'bar'}"))
+            .andExpect(MockMvcResultMatchers.content().json("""{ "response": "bar"}"""))
     }
 
     @Test
     fun `DKIF request should use srvpselv as default consumer ID`() {
         val expectedIdent = "00000000000"
-        Mockito.`when`(serviceClient.callService(anyObject(), anyObject())).thenReturn("""{ "response": "bar"}""")
+        Mockito.`when`(serviceClient.doGet(anyObject(), anyObject())).thenReturn("""{ "response": "bar"}""")
         Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
         mvc.perform(
@@ -63,6 +63,6 @@ internal class DkifControllerTest {
                 .header("Nav-Personidenter", expectedIdent)
                 .content("foo"))
             .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.content().json("{'response':'bar'}"))
+            .andExpect(MockMvcResultMatchers.content().json("""{ "response": "bar"}"""))
     }
 }

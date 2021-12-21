@@ -17,9 +17,9 @@ class ServiceClient {
     // (which is more than the default 262 KB)
     private val webClient: WebClient = WebClientPreparer.largeBufferWebClient()
 
-    fun callService(uri: String, headers: TreeMap<String, String>): String {
+    fun doGet(uri: String, headers: TreeMap<String, String>): String {
         if (log.isDebugEnabled) {
-            log.debug("URI: '$uri'")
+            log.debug("GET from URI: '$uri'")
             log(headers)
         }
 
@@ -28,6 +28,33 @@ class ServiceClient {
                 .get()
                 .uri(uri)
                 .headers { h -> copyHeaders(headers, h) }
+                .retrieve()
+                .bodyToMono(String::class.java)
+                .block()
+                ?: throw ConsumerException("No data in response from service")
+        } catch (e: WebClientResponseException) {
+            val message = "Failed to access service at $uri: ${e.message} | Response: ${e.responseBodyAsString}"
+            log.error(message, e)
+            throw ConsumerException(message, e)
+        } catch (e: RuntimeException) { // e.g. when connection broken
+            val message = "Failed to access service at $uri: ${e.message}"
+            log.error(message, e)
+            throw ConsumerException(message, e)
+        }
+    }
+
+    fun doPost(uri: String, headers: TreeMap<String, String>, body: String): String {
+        if (log.isDebugEnabled) {
+            log.debug("POST to URI: '$uri'")
+            log(headers)
+        }
+
+        try {
+            return webClient
+                .post()
+                .uri(uri)
+                .headers { h -> copyHeaders(headers, h) }
+                .bodyValue(body)
                 .retrieve()
                 .bodyToMono(String::class.java)
                 .block()

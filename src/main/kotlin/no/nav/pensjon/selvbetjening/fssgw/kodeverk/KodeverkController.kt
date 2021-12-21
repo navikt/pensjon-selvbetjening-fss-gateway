@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 import javax.servlet.http.HttpServletRequest
 
 @RestController
-@RequestMapping("api/v1")
+@RequestMapping("api/v1/kodeverk")
 class KodeverkController(
     jwsValidator: JwsValidator,
     egressTokenGetter: ServiceTokenGetter,
@@ -20,9 +20,9 @@ class KodeverkController(
     @Value("\${kodeverk.url}") egressEndpoint: String) :
     ControllerBase(jwsValidator, serviceClient, egressTokenGetter, egressEndpoint) {
 
-    @GetMapping("kodeverk/Postnummer/koder/betydninger")
+    @GetMapping("Postnummer/koder/betydninger")
     fun getBetydningerForPostnummer(request: HttpServletRequest): ResponseEntity<String> {
-        return super.handle(request)
+        return super.doGet(request)
     }
 
     override fun egressAuthWaived(): Boolean {

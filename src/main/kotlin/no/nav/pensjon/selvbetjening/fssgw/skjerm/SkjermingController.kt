@@ -22,7 +22,7 @@ class SkjermingController(
 
     @GetMapping
     fun isSkjermet(request: HttpServletRequest): ResponseEntity<String> {
-        return super.handle(request)
+        return super.doGet(request)
     }
 
     override fun egressAuthWaived(): Boolean {
