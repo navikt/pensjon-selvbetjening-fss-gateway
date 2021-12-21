@@ -36,8 +36,8 @@ abstract class ControllerBase(
             checkIngressAuth(request)
             val headersToRelay = getEgressHeaders(request)
             val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
-            val urlSuffix = "$egressEndpoint${request.requestURI}$queryPart"
-            val responseBody = serviceClient.doGet(urlSuffix, headersToRelay)
+            val url = "$egressEndpoint${request.requestURI}$queryPart"
+            val responseBody = serviceClient.doGet(url, headersToRelay)
             Metrics.counter("request_counter", "action", "get", "status", "OK").increment()
             ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
         } catch (e: JwtException) {
@@ -55,13 +55,17 @@ abstract class ControllerBase(
             checkIngressAuth(request)
             val headersToRelay = getEgressHeaders(request)
             val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
-            val urlSuffix = "$egressEndpoint${request.requestURI}$queryPart"
-            val responseBody = serviceClient.doPost(urlSuffix, headersToRelay, body)
+            val url = "$egressEndpoint${request.requestURI}$queryPart"
+            val responseBody = serviceClient.doPost(url, headersToRelay, body)
+            Metrics.counter("request_counter", "action", "post", "status", "OK").increment()
             ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
         } catch (e: JwtException) {
             unauthorized(e)
         } catch (e: Oauth2Exception) {
             unauthorized(e)
+        } catch (e: ConsumerException) {
+            Metrics.counter("request_counter", "action", "post", "status", "error").increment()
+            ResponseEntity("""{"error": "${e.message}"}""", jsonContentType, HttpStatus.BAD_GATEWAY)
         }
     }
 

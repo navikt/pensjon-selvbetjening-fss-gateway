@@ -30,7 +30,7 @@ class PenController(
         return super.doGet(request)
     }
 
-    @PostMapping("/api/soknad/alderspensjon/behandle")
+    @PostMapping("api/soknad/alderspensjon/behandle")
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
         return super.doPost(request, body)
     }

@@ -1,6 +1,10 @@
 package no.nav.pensjon.selvbetjening.fssgw.journalforing
 
+import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
+import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil.anyObject
+import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil.serviceTokenData
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
+import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,7 +16,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
 @WebMvcTest(JournalforingController::class)
-internal class JournalforingControllerTest{
+internal class JournalforingControllerTest {
+
     @Autowired
     lateinit var mvc: MockMvc
 
@@ -20,16 +25,22 @@ internal class JournalforingControllerTest{
     lateinit var jwsValidator: JwsValidator
 
     @MockBean
-    lateinit var journalforingConsumer: JournalforingConsumer
+    lateinit var egressTokenGetter: ServiceTokenGetter
+
+    @MockBean
+    lateinit var serviceClient: ServiceClient
 
     @Test
     fun `Journalforing request results in JSON response`() {
-        Mockito.`when`(journalforingConsumer.opprettJournalpost("foo", null, true)).thenReturn("""{ "response": "bar"}""")
+        Mockito.`when`(serviceClient.doPost(anyObject(), anyObject(), anyObject()))
+            .thenReturn("""{ "response": "bar"}""")
+        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
 
-        mvc.perform(MockMvcRequestBuilders.post("/api/journalforing?forsoekFerdigstill=true")
+        mvc.perform(
+            MockMvcRequestBuilders.post("/rest/journalpostapi/v1/journalpost?forsoekFerdigstill=true")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
                 .content("foo"))
-                .andExpect(MockMvcResultMatchers.status().isOk)
-                .andExpect(MockMvcResultMatchers.content().json("{'response':'bar'}"))
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.content().json("""{ "response": "bar"}"""))
     }
 }

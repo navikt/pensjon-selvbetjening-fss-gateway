@@ -1,6 +1,9 @@
 package no.nav.pensjon.selvbetjening.fssgw.pdl
 
+import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
+import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
+import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,16 +24,21 @@ internal class PdlControllerTest {
     lateinit var jwsValidator: JwsValidator
 
     @MockBean
-    lateinit var pdlConsumer: PdlConsumer
+    lateinit var egressTokenGetter: ServiceTokenGetter
+
+    @MockBean
+    lateinit var serviceClient: ServiceClient
 
     @Test
     fun `PDL request results in JSON response`() {
-        Mockito.`when`(pdlConsumer.callPdl("foo", null)).thenReturn("""{ "response": "bar"}""")
+        Mockito.`when`(serviceClient.doPost(MockUtil.anyObject(), MockUtil.anyObject(), MockUtil.anyObject()))
+            .thenReturn("""{ "response": "bar"}""")
+        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
-        mvc.perform(post("/api/pdl")
+        mvc.perform(post("/graphql")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
                 .content("foo"))
                 .andExpect(status().isOk)
-                .andExpect(content().json("{'response':'bar'}"))
+                .andExpect(content().json("""{ "response": "bar"}"""))
     }
 }

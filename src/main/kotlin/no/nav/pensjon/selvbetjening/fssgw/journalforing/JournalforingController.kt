@@ -1,53 +1,32 @@
 package no.nav.pensjon.selvbetjening.fssgw.journalforing
 
-import io.jsonwebtoken.JwtException
-import io.micrometer.core.instrument.Metrics
+import no.nav.pensjon.selvbetjening.fssgw.common.ControllerBase
+import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
-import no.nav.pensjon.selvbetjening.fssgw.tech.oauth2.Oauth2Exception
-import org.slf4j.LoggerFactory
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType
+import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import javax.servlet.http.HttpServletRequest
 
 @RestController
-@RequestMapping("/api")
-class JournalforingController(private val jwsValidator: JwsValidator, private val journalforingConsumer: JournalforingConsumer) {
-    private val log = LoggerFactory.getLogger(javaClass)
+@RequestMapping("rest/journalpostapi")
+class JournalforingController(
+    jwsValidator: JwsValidator,
+    egressTokenGetter: ServiceTokenGetter,
+    serviceClient: ServiceClient,
+    @Value("\${journalforing.url}") egressEndpoint: String) :
+    ControllerBase(jwsValidator, serviceClient, egressTokenGetter, egressEndpoint) {
 
-    @PostMapping("journalforing")
-    fun opprettJournalpost(
-            @RequestBody body: String,
-            @RequestParam("forsoekFerdigstill") forsoekFerdigstill : Boolean,
-            request: HttpServletRequest): ResponseEntity<String> {
-        val auth: String? = request.getHeader(HttpHeaders.AUTHORIZATION)
-        val accessToken: String = auth?.substring("Bearer ".length) ?: ""
-        val navCallId: String? = request.getHeader("Nav-Call-Id")
-        log.debug("Received request for Journalforing with correlation ID '$navCallId")
-
-        try {
-            jwsValidator.validate(accessToken)
-        } catch (e: JwtException) {
-            return unauthorized(e)
-        } catch (e: Oauth2Exception) {
-            return unauthorized(e)
-        }
-
-        val responseBody = journalforingConsumer.opprettJournalpost(body, navCallId, forsoekFerdigstill)
-        return ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
+    @PostMapping("v1/journalpost")
+    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
+        return super.doPost(request, body)
     }
 
-    private fun unauthorized(e: Exception): ResponseEntity<String> {
-        log.error("Unauthorized: ${e.message}")
-        return ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED)
+    override fun egressAuthWaived(): Boolean {
+        return false
     }
-
-    private val jsonContentType: HttpHeaders
-        get() {
-            val httpHeaders = HttpHeaders()
-            httpHeaders.contentType = MediaType.APPLICATION_JSON
-            return httpHeaders
-        }
 }
