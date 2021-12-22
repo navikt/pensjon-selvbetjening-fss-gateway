@@ -30,6 +30,7 @@ abstract class ControllerBase(
         HttpHeaders.AUTHORIZATION.toLowerCase(),
         HttpHeaders.HOST.toLowerCase(),
         HttpHeaders.USER_AGENT.toLowerCase(),
+        HttpHeaders.CONTENT_LENGTH.toLowerCase(),
         consumerTokenHeaderName.toLowerCase()
     )
 
@@ -89,10 +90,11 @@ abstract class ControllerBase(
         }
 
         val token = egressTokenGetter.getServiceUserToken().accessToken
-        headers[HttpHeaders.AUTHORIZATION] = "$authType $token"
+        val auth = "$authType $token"
+        headers[HttpHeaders.AUTHORIZATION] = auth
 
         if (consumerTokenRequired()) {
-            headers[consumerTokenHeaderName] = token
+            headers[consumerTokenHeaderName] = auth
         }
     }
 
