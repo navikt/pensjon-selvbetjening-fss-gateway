@@ -13,10 +13,14 @@ import java.util.*
 
 @Component
 class StsConsumer(private val expirationChecker: ExpirationChecker,
-                  @Value("\${sts.endpoint.url}") private val endpointUrl: String,
+                  @Value("\${sts.url}") private val baseUrl: String,
                   @Value("\${sts.username}") private val serviceUsername: String,
                   @Value("\${sts.password}") private val servicePassword: String) : ServiceTokenGetter {
 
+    private val tokenPath = "rest/v1/sts/token"
+    private val authType = "Basic"
+    private val grantType = "client_credentials"
+    private val scope = "openid"
     private val webClient: WebClient = WebClient.create()
     private val log = LoggerFactory.getLogger(javaClass)
     private var tokenData: ServiceTokenData? = null
@@ -27,9 +31,9 @@ class StsConsumer(private val expirationChecker: ExpirationChecker,
     private val freshTokenData: ServiceTokenData
         get() {
             log.debug("Retrieving new token for service user")
-            val uriBuilder = UriComponentsBuilder.fromHttpUrl(endpointUrl)
-                    .queryParam(GRANT_TYPE, "client_credentials")
-                    .queryParam(SCOPE, "openid")
+            val uriBuilder = UriComponentsBuilder.fromHttpUrl("$baseUrl/$tokenPath")
+                    .queryParam(GRANT_TYPE, grantType)
+                    .queryParam(SCOPE, scope)
             val uri = uriBuilder.toUriString()
 
             return try {
@@ -58,5 +62,5 @@ class StsConsumer(private val expirationChecker: ExpirationChecker,
         get() = tokenData?.let { !expirationChecker.isExpired(it.issuedTime, it.expiresInSeconds) } ?: false
 
     private val authHeader: String
-        get() = "Basic " + Base64.getEncoder().encodeToString("$serviceUsername:$servicePassword".toByteArray())
+        get() = authType + " " + Base64.getEncoder().encodeToString("$serviceUsername:$servicePassword".toByteArray())
 }
