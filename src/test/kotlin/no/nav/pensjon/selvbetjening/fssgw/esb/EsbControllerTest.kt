@@ -1,6 +1,10 @@
 package no.nav.pensjon.selvbetjening.fssgw.esb
 
+import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
+import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil.anyObject
+import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil.serviceTokenData
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
+import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,42 +29,49 @@ internal class EsbControllerTest {
     lateinit var jwsValidator: JwsValidator
 
     @MockBean
-    lateinit var esbConsumer: EsbConsumer
+    lateinit var egressTokenGetter: ServiceTokenGetter
+
+    @MockBean
+    lateinit var serviceClient: ServiceClient
 
     @Test
     fun `fullmakt request results in fullmakt response XML`() {
-        Mockito.`when`(esbConsumer.callEsb(fullmaktPath, "foo")).thenReturn(EsbXml.fullmaktResponseBody)
+        Mockito.`when`(serviceClient.doPost(anyObject(), anyObject(), anyObject()))
+            .thenReturn(EsbXml.fullmaktResponseBody)
+        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
 
         mvc.perform(
-            MockMvcRequestBuilders.post("/api/esb/fullmakt")
+            MockMvcRequestBuilders.post(fullmaktPath)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
-                .content("foo")
-        )
+                .content("foo"))
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.content().xml(EsbXml.fullmaktResponseBody))
     }
 
     @Test
     fun `person request results in person response XML`() {
-        Mockito.`when`(esbConsumer.callEsb(personPath, "foo")).thenReturn(EsbXml.personResponseBody)
+        Mockito.`when`(serviceClient.doPost(anyObject(), anyObject(), anyObject()))
+            .thenReturn(EsbXml.personResponseBody)
+        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
 
         mvc.perform(
-            MockMvcRequestBuilders.post("/api/esb/person")
+            MockMvcRequestBuilders.post(personPath)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
-                .content("foo")
-        )
+                .content("foo"))
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.content().xml(EsbXml.personResponseBody))
     }
 
     @Test
     fun `ping request results in ping response XML`() {
-        Mockito.`when`(esbConsumer.callEsb(pingPath, "foo")).thenReturn(EsbXml.pingResponseBody)
+        Mockito.`when`(serviceClient.doPost(anyObject(), anyObject(), anyObject()))
+            .thenReturn(EsbXml.pingResponseBody)
+        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
 
         mvc.perform(
-            MockMvcRequestBuilders.post("/api/esb/ping")
-                .content("foo")
-        )
+            MockMvcRequestBuilders.post(pingPath)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
+                .content("foo"))
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.content().xml(EsbXml.pingResponseBody))
     }
