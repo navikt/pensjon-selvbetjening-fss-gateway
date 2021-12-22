@@ -28,4 +28,8 @@ class DkifController(
     override fun egressAuthWaived(): Boolean {
         return false
     }
+
+    override fun consumerTokenRequired(): Boolean {
+        return false
+    }
 }

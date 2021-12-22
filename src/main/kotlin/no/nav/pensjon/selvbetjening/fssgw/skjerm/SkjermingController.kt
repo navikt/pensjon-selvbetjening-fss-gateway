@@ -28,4 +28,8 @@ class SkjermingController(
     override fun egressAuthWaived(): Boolean {
         return true
     }
+
+    override fun consumerTokenRequired(): Boolean {
+        return false
+    }
 }

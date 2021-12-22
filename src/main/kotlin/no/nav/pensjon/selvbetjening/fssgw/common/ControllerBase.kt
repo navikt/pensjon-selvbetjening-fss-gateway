@@ -22,13 +22,15 @@ abstract class ControllerBase(
 
     private val authType = "Bearer"
     private val callIdHeaderName = "Nav-Call-Id"
+    private val consumerTokenHeaderName = "Nav-Consumer-Token"
     private val log = LoggerFactory.getLogger(javaClass)
 
     private val notRelayedHeaders = listOf(
         HttpHeaders.ACCEPT.toLowerCase(),
         HttpHeaders.AUTHORIZATION.toLowerCase(),
         HttpHeaders.HOST.toLowerCase(),
-        HttpHeaders.USER_AGENT.toLowerCase()
+        HttpHeaders.USER_AGENT.toLowerCase(),
+        consumerTokenHeaderName.toLowerCase()
     )
 
     fun doGet(request: HttpServletRequest): ResponseEntity<String> {
@@ -71,6 +73,8 @@ abstract class ControllerBase(
 
     protected abstract fun egressAuthWaived(): Boolean
 
+    protected abstract fun consumerTokenRequired(): Boolean
+
     private fun getEgressHeaders(request: HttpServletRequest): TreeMap<String, String> {
         val egressHeaders = TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER)
         request.headerNames.toList().forEach { copyHeader(request, it, egressHeaders) }
@@ -86,6 +90,10 @@ abstract class ControllerBase(
 
         val token = egressTokenGetter.getServiceUserToken().accessToken
         headers[HttpHeaders.AUTHORIZATION] = "$authType $token"
+
+        if (consumerTokenRequired()) {
+            headers[consumerTokenHeaderName] = token
+        }
     }
 
     private fun addCallIdHeaderIfNeeded(headers: TreeMap<String, String>) {
