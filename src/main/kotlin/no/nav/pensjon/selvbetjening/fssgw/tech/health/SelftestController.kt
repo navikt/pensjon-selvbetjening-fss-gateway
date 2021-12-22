@@ -1,6 +1,6 @@
 package no.nav.pensjon.selvbetjening.fssgw.tech.health
 
-import no.nav.pensjon.selvbetjening.fssgw.tech.oauth2.WebOauth2ConfigGetter
+import no.nav.pensjon.selvbetjening.fssgw.tech.oauth2.Oauth2ConfigClient
 import no.nav.pensjon.selvbetjening.fssgw.tech.web.WebClientPreparer
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -28,7 +28,7 @@ class SelftestController(
     private fun testExternalUserOauth2WellKnownUrl(): String {
         log.debug("Testing OAuth2 well-known URL for external users")
         val webClient = WebClientPreparer.webClient(false, "notinuse")
-        val issuer = WebOauth2ConfigGetter(webClient, externalUserWellKnownUrl).getIssuer()
+        val issuer = Oauth2ConfigClient(webClient, externalUserWellKnownUrl).getIssuer()
         val status = if (hasLength(issuer)) "up" else "down"
         return "TokenDings: $status"
     }
@@ -37,7 +37,7 @@ class SelftestController(
         log.debug("Testing OAuth2 well-known URL for internal users")
         val requiresProxy = proxyUri != "notinuse"
         val webClient = WebClientPreparer.webClient(requiresProxy, proxyUri)
-        val issuer = WebOauth2ConfigGetter(webClient, internalUserWellKnownUrl).getIssuer()
+        val issuer = Oauth2ConfigClient(webClient, internalUserWellKnownUrl).getIssuer()
         val status = if (hasLength(issuer)) "up" else "down"
         return "Azure AD: $status"
     }

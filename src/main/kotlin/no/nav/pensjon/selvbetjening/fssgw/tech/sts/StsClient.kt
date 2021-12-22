@@ -12,10 +12,10 @@ import org.springframework.web.util.UriComponentsBuilder
 import java.util.*
 
 @Component
-class StsConsumer(private val expirationChecker: ExpirationChecker,
-                  @Value("\${sts.url}") private val baseUrl: String,
-                  @Value("\${sts.username}") private val serviceUsername: String,
-                  @Value("\${sts.password}") private val servicePassword: String) : ServiceTokenGetter {
+class StsClient(private val expirationChecker: ExpirationChecker,
+                @Value("\${sts.url}") private val baseUrl: String,
+                @Value("\${sts.username}") private val serviceUsername: String,
+                @Value("\${sts.password}") private val servicePassword: String) : ServiceTokenGetter {
 
     private val tokenPath = "rest/v1/sts/token"
     private val authType = "Basic"

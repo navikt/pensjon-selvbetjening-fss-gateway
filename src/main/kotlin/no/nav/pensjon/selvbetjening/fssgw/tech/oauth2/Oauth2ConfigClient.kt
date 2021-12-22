@@ -6,8 +6,8 @@ import org.slf4j.LoggerFactory
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
 
-class WebOauth2ConfigGetter(private val webClient: WebClient,
-                            private val configUrl: String) : Oauth2ConfigGetter {
+class Oauth2ConfigClient(private val webClient: WebClient,
+                         private val configUrl: String) : Oauth2ConfigGetter {
 
     private val log = LoggerFactory.getLogger(javaClass)
     private var config: Oauth2ConfigDto? = null
@@ -49,13 +49,4 @@ class WebOauth2ConfigGetter(private val webClient: WebClient,
                 throw StsException(message, e)
             }
         }
-
-    // private val webClient: WebClient
-    //     get() = if (requiresProxy) proxyAwareWebClient else WebClient.create()
-//
-    // private val proxyAwareWebClient: WebClient
-    //     get() = WebClient
-    //             .builder()
-    //             .clientConnector(WebClientProxyConfig().clientHttpConnector(proxyUri))
-    //             .build()
 }

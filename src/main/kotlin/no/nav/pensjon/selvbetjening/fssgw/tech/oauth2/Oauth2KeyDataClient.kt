@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
 
-class Oauth2KeyDataGetter(private val webClient: WebClient,
+class Oauth2KeyDataClient(private val webClient: WebClient,
                           private val configGetter: Oauth2ConfigGetter) : KeyDataGetter {
 
     private val log = LoggerFactory.getLogger(javaClass)

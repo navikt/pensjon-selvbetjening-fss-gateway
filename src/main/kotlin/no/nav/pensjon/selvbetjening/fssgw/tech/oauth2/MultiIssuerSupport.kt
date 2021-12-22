@@ -31,7 +31,7 @@ class MultiIssuerSupport(@Qualifier("\${external-user}") private val externalUse
         do {
             basicConfig = oauth2Basics[index]
             webClient = WebClientPreparer.webClient(basicConfig.requiresProxy, basicConfig.proxyUri)
-            configGetter = WebOauth2ConfigGetter(webClient, basicConfig.wellKnownUrl)
+            configGetter = Oauth2ConfigClient(webClient, basicConfig.wellKnownUrl)
             found = configGetter.getIssuer() == issuer
         } while (!found && ++index < oauth2Basics.size)
 
@@ -43,7 +43,7 @@ class MultiIssuerSupport(@Qualifier("\${external-user}") private val externalUse
 
         return Oauth2Handler(
                 configGetter,
-                Oauth2KeyDataGetter(webClient, configGetter),
+                Oauth2KeyDataClient(webClient, configGetter),
                 basicConfig.acceptedAudience)
     }
 }

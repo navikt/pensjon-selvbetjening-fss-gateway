@@ -13,9 +13,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.LocalDateTime
 
 @ExtendWith(SpringExtension::class)
-internal class StsConsumerTest : WebClientTest() {
+internal class StsClientTest : WebClientTest() {
 
-    private lateinit var consumer: StsConsumer
+    private lateinit var consumer: StsClient
     private val issuedAt = LocalDateTime.of(2021, 2, 3, 4, 5, 6)
 
     @Mock
@@ -25,7 +25,7 @@ internal class StsConsumerTest : WebClientTest() {
     fun initialize() {
         setUp()
         Mockito.`when`(expirationChecker.time()).thenReturn(issuedAt)
-        consumer = StsConsumer(expirationChecker, baseUrl(), "username", "password")
+        consumer = StsClient(expirationChecker, baseUrl(), "username", "password")
     }
 
     @Test
