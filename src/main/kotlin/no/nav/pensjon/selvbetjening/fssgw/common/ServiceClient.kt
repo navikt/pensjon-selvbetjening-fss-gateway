@@ -31,7 +31,7 @@ class ServiceClient {
                 .retrieve()
                 .bodyToMono(String::class.java)
                 .block()
-                ?: throw ConsumerException("No data in response from service")
+                ?: ""
         } catch (e: WebClientResponseException) {
             val message = "Failed to access service at $uri: ${e.message} | Response: ${e.responseBodyAsString}"
             log.error(message, e)
@@ -58,7 +58,7 @@ class ServiceClient {
                 .retrieve()
                 .bodyToMono(String::class.java)
                 .block()
-                ?: throw ConsumerException("No data in response from service")
+                ?: ""
         } catch (e: WebClientResponseException) {
             val message = "Failed to access service at $uri: ${e.message} | Response: ${e.responseBodyAsString}"
             log.error(message, e)

@@ -20,21 +20,63 @@ internal class ServiceClientTest : WebClientTest() {
     }
 
     @Test
-    fun callService_returns_data_when_ok() {
-        prepare(response())
-        val ingressHeaders = TreeMap<String, String>()
-        ingressHeaders[HttpHeaders.AUTHORIZATION] = "Bearer jwt"
-        ingressHeaders["key"] = "value"
+    fun doGet_returns_data_when_serviceReturnsData() {
+        prepare(dataResponse())
 
-        val response = client.doGet(baseUrl(), ingressHeaders)
+        val response = client.doGet(baseUrl(), ingressHeaders())
 
-        val egressHeaders = takeRequest().headers
+        assertEgressHeaders()
         assertEquals("""{ "foo": "bar" }""", response)
-        assertEquals("Bearer jwt", egressHeaders[HttpHeaders.AUTHORIZATION])
-        assertEquals("value", egressHeaders["key"])
     }
 
-    private fun response(): MockResponse {
+    @Test
+    fun doGet_returns_emptyString_when_noDataFromService() {
+        prepare(emptyResponse())
+
+        val response = client.doGet(baseUrl(), ingressHeaders())
+
+        assertEgressHeaders()
+        assertEquals("", response)
+    }
+
+    @Test
+    fun doPost_returns_data_when_serviceReturnsData() {
+        prepare(dataResponse())
+
+        val response = client.doPost(baseUrl(), ingressHeaders(), "body1")
+
+        assertEgressHeaders()
+        assertEquals("""{ "foo": "bar" }""", response)
+    }
+
+    @Test
+    fun doPost_returns_emptyString_when_noDataFromService() {
+        prepare(emptyResponse())
+
+        val response = client.doPost(baseUrl(), ingressHeaders(), "body1")
+
+        assertEgressHeaders()
+        assertEquals("", response)
+    }
+
+    private fun ingressHeaders(): TreeMap<String, String> {
+        val headers = TreeMap<String, String>()
+        headers[HttpHeaders.AUTHORIZATION] = "Bearer jwt"
+        headers["key"] = "value"
+        return headers
+    }
+
+    private fun dataResponse(): MockResponse {
         return jsonResponse().setBody("""{ "foo": "bar" }""")
+    }
+
+    private fun emptyResponse(): MockResponse {
+        return jsonResponse().setBody("") // makes webClient...block() return null
+    }
+
+    private fun assertEgressHeaders() {
+        val egressHeaders = takeRequest().headers
+        assertEquals("Bearer jwt", egressHeaders[HttpHeaders.AUTHORIZATION])
+        assertEquals("value", egressHeaders["key"])
     }
 }
