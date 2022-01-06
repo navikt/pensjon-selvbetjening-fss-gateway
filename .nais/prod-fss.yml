@@ -1,0 +1,72 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: pensjon-selvbetjening-fss-gateway
+  namespace: pensjonselvbetjening
+  labels:
+    team: pensjonselvbetjening
+spec:
+  image: {{ image }}
+  port: 8080
+  replicas:
+    min: 2
+    max: 4
+  ingresses:
+    - https://pensjon-selvbetjening-fss-gateway.intern.nav.no
+    - https://pensjon-selvbetjening-fss-gateway.prod-fss-pub.nais.io
+  liveness:
+    path: "/internal/liveness"
+    initialDelay: 30
+    timeout: 1
+    periodSeconds: 30
+    failureThreshold: 5
+  readiness:
+    path: "/internal/readiness"
+    periodSeconds: 30
+  env:
+    - name: AAREG_URL
+      value: https://modapp.adeo.no
+    - name: DKIF_URL
+      value: http://dkif.team-rocket.svc.nais.local
+    - name: EREG_URL
+      value: https://modapp.adeo.no
+    - name: ESB_URL
+      value: https://tjenestebuss.adeo.no
+    - name: JOURNALFORING_URL
+      value: https://dokarkiv.nais.adeo.no
+    - name: KODEVERK_URL
+      value: http://kodeverk.org.svc.nais.local
+    - name: PDL_URL
+      value: http://pdl-api.pdl.svc.nais.local
+    - name: PEN_URL
+      value: https://pensjon-pen.nais.adeo.no
+    - name: SKJERMING_URL
+      value: https://skjermede-personer-pip.nais.adeo.no
+    - name: STS_URL
+      value: http://security-token-service.aura.svc.nais.local
+    - name: FSSGW_LOGGING_LEVEL
+      value: info
+  prometheus:
+    enabled: true
+    path: /internal/prometheus
+  azure:
+    application:
+      enabled: true
+      tenant: nav.no
+  webproxy: true
+  tokenx:
+    enabled: true
+  accessPolicy:
+    inbound:
+      rules:
+        - application: pensjon-selvbetjening-opptjening-backend
+          namespace: pensjonselvbetjening
+          cluster: prod-fss
+        - application: pensjon-selvbetjening-soknad-alder-backend
+          namespace: pensjonselvbetjening
+          cluster: prod-gcp
+  vault:
+    enabled: true
+    paths:
+      - kvPath: /serviceuser/data/prod/srvpselv
+        mountPath: /secrets/serviceuser
