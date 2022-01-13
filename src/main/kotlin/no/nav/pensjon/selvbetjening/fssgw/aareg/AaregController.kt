@@ -30,6 +30,6 @@ class AaregController(
     }
 
     override fun consumerTokenRequired(): Boolean {
-        return false
+        return true
     }
 }
