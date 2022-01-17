@@ -20,7 +20,10 @@ class PenController(
 
     @GetMapping(
         value = [
+            "api/person/afphistorikk",
             "api/person/uforehistorikk",
+            "api/uttaksgrad/person",
+            "api/uttaksgrad/search",
             "springapi/krav",
             "springapi/sak/sammendrag",
             "springapi/vedtak",

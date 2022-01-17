@@ -31,19 +31,122 @@ internal class PenControllerTest {
     @MockBean
     lateinit var serviceClient: ServiceClient
 
+    private val auth = "Bearer jwt"
+
+    @Test
+    fun `when OK then AFP-historikk request returns data`() {
+        Mockito.`when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+            .thenReturn("""{ "response": "AFP-historikken"}""")
+        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+
+        mvc.perform(
+            get("/pen/api/person/afphistorikk")
+                .header(HttpHeaders.AUTHORIZATION, auth)
+                .header("pid", "01023456789"))
+            .andExpect(status().isOk)
+            .andExpect(content().json("""{"response": "AFP-historikken"}"""))
+    }
+
+    @Test
+    fun `when OK then uforehistorikk request returns data`() {
+        Mockito.`when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+            .thenReturn("""{ "response": "uførehistorikken"}""")
+        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+
+        mvc.perform(
+            get("/pen/api/person/uforehistorikk")
+                .header(HttpHeaders.AUTHORIZATION, auth)
+                .header("pid", "01023456789"))
+            .andExpect(status().isOk)
+            .andExpect(content().json("""{"response": "uførehistorikken"}"""))
+    }
+
+    @Test
+    fun `when OK then uttaksgrad person request returns data`() {
+        Mockito.`when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+            .thenReturn("""{ "response": "uttaksgraden"}""")
+        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+
+        mvc.perform(
+            get("/pen/api/uttaksgrad/person?sakType=ALDER")
+                .header(HttpHeaders.AUTHORIZATION, auth)
+                .header("pid", "01023456789"))
+            .andExpect(status().isOk)
+            .andExpect(content().json("""{"response": "uttaksgraden"}"""))
+    }
+
+    @Test
+    fun `when OK then uttaksgrad search request returns data`() {
+        Mockito.`when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+            .thenReturn("""{ "response": "uttaksgradene"}""")
+        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+
+        mvc.perform(
+            get("/pen/api/uttaksgrad/search?vedtakId=1&vedtakId=2&vedtakId=3")
+                .header(HttpHeaders.AUTHORIZATION, auth))
+            .andExpect(status().isOk)
+            .andExpect(content().json("""{"response": "uttaksgradene"}"""))
+    }
+
+    @Test
+    fun `when OK then krav request returns data`() {
+        Mockito.`when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+            .thenReturn("""{ "response": "kravet"}""")
+        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+
+        mvc.perform(
+            get("/pen/springapi/krav")
+                .header(HttpHeaders.AUTHORIZATION, auth)
+                .header("fnr", "01023456789")
+                .header("Nav-Call-Id", "ID 1"))
+            .andExpect(status().isOk)
+            .andExpect(content().json("""{"response": "kravet"}"""))
+    }
+
     @Test
     fun `when OK then sakssammendrag request returns data`() {
         Mockito.`when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
-            .thenReturn("""{ "response": "bar"}""")
+            .thenReturn("""{ "response": "sammendraget"}""")
         Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
         mvc.perform(
             get("/pen/springapi/sak/sammendrag")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
+                .header(HttpHeaders.AUTHORIZATION, auth)
                 .header("fnr", "01023456789")
-                .header("Nav-Call-Id", "nav-call-id"))
+                .header("Nav-Call-Id", "ID 1"))
             .andExpect(status().isOk)
-            .andExpect(content().json("""{"response": "bar"}"""))
+            .andExpect(content().json("""{"response": "sammendraget"}"""))
+    }
+
+    @Test
+    fun `when OK then vedtak request returns data`() {
+        Mockito.`when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+            .thenReturn("""{ "response": "vedtakene"}""")
+        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+
+        mvc.perform(
+            get("/pen/springapi/vedtak?sakstype=typen&alleVedtak=true&fom=2021-02-03")
+                .header(HttpHeaders.AUTHORIZATION, auth)
+                .header("fnr", "01023456789")
+                .header("Nav-Call-Id", "ID 1"))
+            .andExpect(status().isOk)
+            .andExpect(content().json("""{"response": "vedtakene"}"""))
+    }
+
+    @Test
+    fun `when OK then bestem gjeldende vedtak request returns data`() {
+        Mockito.`when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+            .thenReturn("""{ "response": "vedtakene"}""")
+        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+
+        mvc.perform(
+            get("/pen/springapi/vedtak/bestemgjeldende")
+                .header(HttpHeaders.AUTHORIZATION, auth)
+                .header("fnr", "01023456789")
+                .header("fom", "2021-02-03")
+                .header("Nav-Call-Id", "ID 1"))
+            .andExpect(status().isOk)
+            .andExpect(content().json("""{"response": "vedtakene"}"""))
     }
 
     @Test
@@ -53,7 +156,7 @@ internal class PenControllerTest {
 
         mvc.perform(
             get("/pen/springapi/ping")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
+                .header(HttpHeaders.AUTHORIZATION, auth)
                 .content("foo"))
             .andExpect(status().isOk)
             .andExpect(content().string("Ok"))
@@ -67,7 +170,7 @@ internal class PenControllerTest {
 
         mvc.perform(
             get("/pen/springapi/ping")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
+                .header(HttpHeaders.AUTHORIZATION, auth)
                 .content(""))
             .andExpect(status().isBadGateway)
             .andExpect(content().json("""{"error": "oops"}"""))
