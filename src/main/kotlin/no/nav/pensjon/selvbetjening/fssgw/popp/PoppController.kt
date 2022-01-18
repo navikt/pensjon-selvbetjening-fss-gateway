@@ -1,4 +1,4 @@
-package no.nav.pensjon.selvbetjening.fssgw.pen
+package no.nav.pensjon.selvbetjening.fssgw.popp
 
 import no.nav.pensjon.selvbetjening.fssgw.common.ControllerBase
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
@@ -10,30 +10,24 @@ import org.springframework.web.bind.annotation.*
 import javax.servlet.http.HttpServletRequest
 
 @RestController
-@RequestMapping("pen")
-class PenController(
+@RequestMapping("popp")
+class PoppController(
     jwsValidator: JwsValidator,
     egressTokenGetter: ServiceTokenGetter,
     serviceClient: ServiceClient,
-    @Value("\${pen.url}") egressEndpoint: String) :
+    @Value("\${popp.url}") egressEndpoint: String) :
     ControllerBase(jwsValidator, serviceClient, egressTokenGetter, egressEndpoint) {
 
     @GetMapping(
         value = [
-            "api/person/afphistorikk",
-            "api/person/uforehistorikk",
-            "api/uttaksgrad/person",
-            "api/uttaksgrad/search",
-            "springapi/krav",
-            "springapi/sak/sammendrag",
-            "springapi/vedtak",
-            "springapi/vedtak/bestemgjeldende",
-            "springapi/ping"])
+            "api/opptjeningsgrunnlag/{pid}",
+            "api/pensjonspoeng/{pid}",
+            "api/restpensjon/{pid}"])
     fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> {
         return super.doGet(request)
     }
 
-    @PostMapping("api/soknad/alderspensjon/behandle")
+    @PostMapping("api/beholdning")
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
         return super.doPost(request, body)
     }

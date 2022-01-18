@@ -40,6 +40,8 @@ spec:
       value: http://pdl-api.pdl.svc.nais.local
     - name: PEN_URL
       value: https://pensjon-pen.nais.adeo.no
+    - name: POPP_URL
+      value: https://pensjon-popp.nais.adeo.no
     - name: SKJERMING_URL
       value: https://skjermede-personer-pip.nais.adeo.no
     - name: STS_URL
