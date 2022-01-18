@@ -73,7 +73,7 @@ internal class PoppControllerTest {
 
     @Test
     fun `when OK then beholdning request returns data`() {
-        Mockito.`when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+        Mockito.`when`(serviceClient.doPost(MockUtil.anyObject(), MockUtil.anyObject(), MockUtil.anyObject()))
             .thenReturn("""{ "response": "beholdningen"}""")
         Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 

@@ -6,10 +6,7 @@ import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import javax.servlet.http.HttpServletRequest
 
 @RestController
@@ -31,8 +28,8 @@ class PoppController(
     }
 
     @PostMapping("api/beholdning")
-    fun handlePostRequest(request: HttpServletRequest): ResponseEntity<String> {
-        return super.doGet(request)
+    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
+        return super.doPost(request, body)
     }
 
     override fun egressAuthWaived(): Boolean {
