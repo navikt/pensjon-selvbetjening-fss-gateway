@@ -48,6 +48,8 @@ spec:
       value: http://security-token-service.aura.svc.nais.local
     - name: FSSGW_LOGGING_LEVEL
       value: info
+    - name: TP_URL
+      value: https://tp.nais.adeo.no
   prometheus:
     enabled: true
     path: /internal/prometheus

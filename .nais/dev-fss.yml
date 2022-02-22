@@ -48,6 +48,8 @@ spec:
       value: http://security-token-service.aura.svc.nais.local
     - name: FSSGW_LOGGING_LEVEL
       value: debug
+    - name: TP_URL
+      value: https://tp-q2.dev.intern.nav.no
   prometheus:
     enabled: true
     path: /internal/prometheus
