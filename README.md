@@ -1,15 +1,28 @@
 # pensjon-selvbetjening-fss-gateway
 
-Gateway-/proxy-applikasjon for at pensjonsrelaterte applikasjoner i GCP skal kunne nå tjenester i FSS.
+Gateway-/proxy-applikasjon for at pensjonsrelaterte applikasjoner i allmenn sky (GCP) skal kunne nå tjenester i Fagsystemsonen (FSS).
 
-Teknologi: Java 11, Kotlin, Spring Boot og Maven.
+Teknologi: Java 17, Kotlin, Spring Boot og Maven.
 
-Endepunkter:
+Støttede tjenester:
 
-- /api/pdl (Persondataløsningen)
-- /api/pen (Pensjonsfaglig kjerne)
+- AAREG (Arbeidstaker- og arbeidsgiverregisteret)
+- DKIF (Digital kontaktinformasjon)
+- EREG (Enhetsregisteret)
+- ESB (Enterprise Service Bus)
+- Dok-arkiv (JOARK)
+- Kodeverk
+- PDL (Persondataløsningen)
+- PEN (Pensjonsfaglig kjerne)
+- POPP (Pensjonsfaglig opptjeningsregister)
+- Skjermede personer PIP
+- TP (Tjenestepensjon)
 
-For å benytte endepunktene kreves *bearer*-token utstedt av TokenDings.
+For å benytte endepunktene kreves *bearer*-token (TokenX eller Azure AD On-Behalf-Of).
+
+## Øvrig dokumentasjon
+
+NAV-intern dokumentasjon (Confluence): [FSS-gateway-app](https://confluence.adeo.no/display/PEN/FSS-gateway-app)
 
 ## Henvendelser
 

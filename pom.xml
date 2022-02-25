@@ -10,12 +10,14 @@
     </parent>
     <groupId>no.nav.pensjon</groupId>
     <artifactId>selvbetjening-fss-gateway</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
     <name>pensjon-selvbetjening-fss-gateway</name>
     <description>Gateway-/proxy-app for tilgang til systemer i fagsystemsonen</description>
     <properties>
-        <java.version>11</java.version>
-        <kotlin.version>1.4.30</kotlin.version>
+        <java.version>17</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <kotlin.version>1.6.10</kotlin.version>
         <jjwt-version>0.11.2</jjwt-version>
         <log4j2.version>2.17.0</log4j2.version>
         <okhttp3.version>4.9.3</okhttp3.version>
@@ -53,7 +55,7 @@
         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>oauth2-oidc-sdk</artifactId>
-            <version>9.20</version>
+            <version>9.25</version>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
@@ -101,7 +103,7 @@
         <dependency>
             <groupId>io.prometheus</groupId>
             <artifactId>simpleclient_hotspot</artifactId>
-            <version>0.10.0</version>
+            <version>0.15.0</version>
         </dependency>
     </dependencies>
 
