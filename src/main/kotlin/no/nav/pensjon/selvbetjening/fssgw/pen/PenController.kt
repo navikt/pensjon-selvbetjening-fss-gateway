@@ -28,6 +28,7 @@ class PenController(
             "springapi/sak/sammendrag",
             "springapi/vedtak",
             "springapi/vedtak/bestemgjeldende",
+            "springapi/vedtak/{vedtakId}/beregninger",
             "springapi/ping"])
     fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> {
         return super.doGet(request)
