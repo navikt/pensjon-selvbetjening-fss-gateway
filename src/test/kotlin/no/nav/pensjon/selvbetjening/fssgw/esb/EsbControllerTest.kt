@@ -11,10 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import java.nio.charset.StandardCharsets
 
 @WebMvcTest(EsbController::class)
 internal class EsbControllerTest {
@@ -95,12 +96,15 @@ internal class EsbControllerTest {
     private fun doTest(path: String, expectedResponseBody: String) {
         `when`(serviceClient.doPost(anyObject(), anyObject(), anyObject())).thenReturn(expectedResponseBody)
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
+        val expectedMediaType = MediaType(MediaType.TEXT_XML, StandardCharsets.UTF_8)
 
         mvc.perform(
             post(path)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
-                .content("foo"))
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_XML_VALUE)
+                .content("""<?xml version="1.0" encoding="UTF-8"?><foo/>"""))
             .andExpect(status().isOk)
+            .andExpect(header().string(HttpHeaders.CONTENT_TYPE, expectedMediaType.toString()))
             .andExpect(content().xml(expectedResponseBody))
     }
 }

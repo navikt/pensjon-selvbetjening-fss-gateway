@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.util.StringUtils.hasText
+import java.nio.charset.StandardCharsets
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 
@@ -24,14 +25,15 @@ abstract class ControllerBase(
     private val callIdHeaderName = "Nav-Call-Id"
     private val consumerTokenHeaderName = "Nav-Consumer-Token"
     private val log = LoggerFactory.getLogger(javaClass)
+    private val locale = Locale.getDefault()
 
     private val notRelayedHeaders = listOf(
-        HttpHeaders.ACCEPT.toLowerCase(),
-        HttpHeaders.AUTHORIZATION.toLowerCase(),
-        HttpHeaders.HOST.toLowerCase(),
-        HttpHeaders.USER_AGENT.toLowerCase(),
-        HttpHeaders.CONTENT_LENGTH.toLowerCase(),
-        consumerTokenHeaderName.toLowerCase()
+        HttpHeaders.ACCEPT.lowercase(locale),
+        HttpHeaders.AUTHORIZATION.lowercase(locale),
+        HttpHeaders.HOST.lowercase(locale),
+        HttpHeaders.USER_AGENT.lowercase(locale),
+        HttpHeaders.CONTENT_LENGTH.lowercase(locale),
+        consumerTokenHeaderName.lowercase(locale)
     )
 
     fun doGet(request: HttpServletRequest): ResponseEntity<String> {
@@ -41,8 +43,9 @@ abstract class ControllerBase(
             val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
             val url = "$egressEndpoint${request.requestURI}$queryPart"
             val responseBody = serviceClient.doGet(url, headersToRelay)
+            val responseContentType = getResponseContentType(request)
             Metrics.counter("request_counter", "action", "get", "status", "OK").increment()
-            ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
+            ResponseEntity(responseBody, responseContentType, HttpStatus.OK)
         } catch (e: JwtException) {
             unauthorized(e)
         } catch (e: Oauth2Exception) {
@@ -60,8 +63,9 @@ abstract class ControllerBase(
             val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
             val url = "$egressEndpoint${request.requestURI}$queryPart"
             val responseBody = serviceClient.doPost(url, headersToRelay, body)
+            val responseContentType = getResponseContentType(request)
             Metrics.counter("request_counter", "action", "post", "status", "OK").increment()
-            ResponseEntity(responseBody, jsonContentType, HttpStatus.OK)
+            ResponseEntity(responseBody, responseContentType, HttpStatus.OK)
         } catch (e: JwtException) {
             unauthorized(e)
         } catch (e: Oauth2Exception) {
@@ -82,6 +86,13 @@ abstract class ControllerBase(
         addAuthHeaderIfNeeded(egressHeaders)
         addCallIdHeaderIfNeeded(egressHeaders)
         return egressHeaders
+    }
+
+    private fun getResponseContentType(request: HttpServletRequest): HttpHeaders {
+        val requestContentType: String? = request.getHeader(HttpHeaders.CONTENT_TYPE)
+
+        return if (requestContentType != null && requestContentType.startsWith(MediaType.TEXT_XML_VALUE))
+            xmlContentType else jsonContentType
     }
 
     private fun addAuthHeaderIfNeeded(headers: TreeMap<String, String>) {
@@ -107,7 +118,7 @@ abstract class ControllerBase(
     }
 
     private fun copyHeader(request: HttpServletRequest, headerName: String, headers: TreeMap<String, String>) {
-        if (notRelayedHeaders.contains(headerName.toLowerCase())) {
+        if (notRelayedHeaders.contains(headerName.lowercase(locale))) {
             return
         }
 
@@ -134,10 +145,15 @@ abstract class ControllerBase(
         return ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED)
     }
 
+    private fun contentTypeHeaders(mediaType: MediaType): HttpHeaders {
+        val httpHeaders = HttpHeaders()
+        httpHeaders.contentType = mediaType
+        return httpHeaders
+    }
+
     private val jsonContentType: HttpHeaders
-        get() {
-            val httpHeaders = HttpHeaders()
-            httpHeaders.contentType = MediaType.APPLICATION_JSON
-            return httpHeaders
-        }
+        get() = contentTypeHeaders(MediaType.APPLICATION_JSON)
+
+    private val xmlContentType: HttpHeaders
+        get() = contentTypeHeaders(MediaType(MediaType.TEXT_XML, StandardCharsets.UTF_8))
 }
