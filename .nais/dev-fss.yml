@@ -46,10 +46,10 @@ spec:
       value: https://skjermede-personer-pip.dev.adeo.no
     - name: STS_URL
       value: http://security-token-service.aura.svc.nais.local
-    - name: FSSGW_LOGGING_LEVEL
-      value: debug
     - name: TP_URL
       value: https://tp-q2.dev.intern.nav.no
+    - name: FSSGW_LOGGING_LEVEL
+      value: debug
   prometheus:
     enabled: true
     path: /internal/prometheus
@@ -68,6 +68,9 @@ spec:
           cluster: dev-fss
         - application: pensjon-selvbetjening-soknad-alder-backend
           namespace: pensjonselvbetjening
+          cluster: dev-gcp
+        - application: pensjon-pselv-q2
+          namespace: teampensjon
           cluster: dev-gcp
   vault:
     enabled: true

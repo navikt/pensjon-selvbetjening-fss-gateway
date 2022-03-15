@@ -8,16 +8,10 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import javax.servlet.http.HttpServletRequest
 
 @RestController
-@RequestMapping(
-    value = [
-        "nav-cons-pen-pselv-fullmaktWeb",
-        "nav-cons-pen-pselv-personWeb",
-        "nav-cons-test-getapplicationversionWeb"])
 class EsbController(
     jwsValidator: JwsValidator,
     egressTokenGetter: ServiceTokenGetter,
@@ -27,9 +21,16 @@ class EsbController(
 
     @PostMapping(
         value = [
-            "sca/PSELVFullmaktWSEXP", // sca = Service Component Architecture
-            "sca/PSELVPersonWSEXP",
-            "sca/TESTGetApplicationVersionWSEXP"])
+            "nav-cons-pen-pselv-brukerprofilWeb/sca/PSELVBrukerprofilWSEXP", // sca = Service Component Architecture
+            "nav-cons-pen-pselv-fullmaktWeb/sca/PSELVFullmaktWSEXP",
+            "nav-cons-pen-pselv-henvendelseWeb/sca/PSELVHenvendelseWSEXP",
+            "nav-cons-pen-pselv-inntektWeb/sca/PSELVInntektWSEXP",
+            "nav-cons-pen-pselv-personWeb/sca/PSELVPersonWSEXP",
+            "nav-cons-pen-pselv-ppen004Web/sca/PENPPEN004WSEXP",
+            "nav-cons-pen-pselv-samhandlerWeb/sca/PSELVSamhandlerWSEXP",
+            "nav-cons-pen-pselv-tjenestepensjonWeb/sca/PSELVTjenestepensjonWSEXPP",
+            "nav-cons-pen-pselv-utbetalingWeb/sca/PSELVUtbetalingWSEXP",
+            "nav-cons-test-getapplicationversionWeb/sca/TESTGetApplicationVersionWSEXP"])
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
         return super.doPost(request, body)
     }

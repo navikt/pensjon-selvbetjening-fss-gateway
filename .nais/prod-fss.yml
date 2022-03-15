@@ -46,10 +46,10 @@ spec:
       value: https://skjermede-personer-pip.nais.adeo.no
     - name: STS_URL
       value: http://security-token-service.aura.svc.nais.local
-    - name: FSSGW_LOGGING_LEVEL
-      value: info
     - name: TP_URL
       value: https://tp.nais.adeo.no
+    - name: FSSGW_LOGGING_LEVEL
+      value: info
   prometheus:
     enabled: true
     path: /internal/prometheus
@@ -68,6 +68,9 @@ spec:
           cluster: prod-fss
         - application: pensjon-selvbetjening-soknad-alder-backend
           namespace: pensjonselvbetjening
+          cluster: prod-gcp
+        - application: pensjon-pselv
+          namespace: pensjondeployer
           cluster: prod-gcp
   vault:
     enabled: true

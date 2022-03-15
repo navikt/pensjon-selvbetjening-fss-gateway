@@ -2,6 +2,20 @@ package no.nav.pensjon.selvbetjening.fssgw.esb
 
 object EsbXml {
 
+    val brukerprofilResponseBody: String
+        get() = """<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Body>
+        <inf:hentBrukerprofilListeResponse xmlns:inf="http://nav-cons-pen-pselv-brukerprofil/no/nav/inf">
+            <hentBrukerprofilListeResponse>
+                <brukerprofiler>
+                    <brukerprofilId>1</brukerprofilId>
+                </brukerprofiler>
+            </hentBrukerprofilListeResponse>
+        </inf:hentBrukerprofilListeResponse>
+    </soapenv:Body>
+</soapenv:Envelope>"""
+
     val fullmaktRequestBody: String
         get() = """<?xml version='1.0' encoding='UTF-8'?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
@@ -56,6 +70,34 @@ object EsbXml {
     </soapenv:Body>
 </soapenv:Envelope>"""
 
+    val henvendelseResponseBody: String
+        get() = """<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Body>
+        <inf:hentHenvendelseListeResponse xmlns:inf="http://nav-cons-pen-pselv-henvendelse/no/nav/inf">
+            <hentHenvendelseListeResponse>
+                <henvendelser>
+                    <henvendelseId>1</henvendelseId>
+                </henvendelser>
+            </hentHenvendelseListeResponse>
+        </inf:hentHenvendelseListeResponse>
+    </soapenv:Body>
+</soapenv:Envelope>"""
+
+    val inntektResponseBody: String
+        get() = """<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Body>
+        <inf:hentInntektListeResponse xmlns:inf="http://nav-cons-pen-pselv-inntekt/no/nav/inf">
+            <hentInntektListeResponse>
+                <inntekter>
+                    <inntektId>1</inntektId>
+                </inntekter>
+            </hentInntektListeResponse>
+        </inf:hentInntektListeResponse>
+    </soapenv:Body>
+</soapenv:Envelope>"""
+
     val personRequestBody: String
         get() = """<?xml version='1.0' encoding='UTF-8'?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
@@ -96,6 +138,62 @@ object EsbXml {
             </inf:hentPersonResponse>
         </soapenv:Body>
     </soapenv:Envelope>"""
+
+    val ppen004ResponseBody: String
+        get() = """<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Body>
+        <inf:hentPpen004ListeResponse xmlns:inf="http://nav-cons-pen-pselv-ppen004/no/nav/inf">
+            <hentPpen004ListeResponse>
+                <ppen004er>
+                    <ppen004Id>1</ppen004Id>
+                </ppen004er>
+            </hentPpen004ListeResponse>
+        </inf:hentPpen004ListeResponse>
+    </soapenv:Body>
+</soapenv:Envelope>"""
+
+    val samhandlerResponseBody: String
+        get() = """<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Body>
+        <inf:hentSamhandlerListeResponse xmlns:inf="http://nav-cons-pen-pselv-samhandler/no/nav/inf">
+            <hentSamhandlerListeResponse>
+                <samhandlerer>
+                    <samhandlerId>1</samhandlerId>
+                </samhandlerer>
+            </hentSamhandlerListeResponse>
+        </inf:hentSamhandlerListeResponse>
+    </soapenv:Body>
+</soapenv:Envelope>"""
+
+    val tjenestepensjonResponseBody: String
+        get() = """<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Body>
+        <inf:hentTjenestepensjonListeResponse xmlns:inf="http://nav-cons-pen-pselv-tjenestepensjon/no/nav/inf">
+            <hentTjenestepensjonListeResponse>
+                <tjenestepensjoner>
+                    <tjenestepensjonId>1</tjenestepensjonId>
+                </tjenestepensjoner>
+            </hentTjenestepensjonListeResponse>
+        </inf:hentTjenestepensjonListeResponse>
+    </soapenv:Body>
+</soapenv:Envelope>"""
+
+    val utbetalingResponseBody: String
+        get() = """<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Body>
+        <inf:hentUtbetalingListeResponse xmlns:inf="http://nav-cons-pen-pselv-utbetaling/no/nav/inf">
+            <hentUtbetalingListeResponse>
+                <utbetalinger>
+                    <utbetalingId>1</utbetalingId>
+                </utbetalinger>
+            </hentUtbetalingListeResponse>
+        </inf:hentUtbetalingListeResponse>
+    </soapenv:Body>
+</soapenv:Envelope>"""
 
     val pingRequestBody: String
         get() = """<?xml version='1.0' encoding='UTF-8'?>

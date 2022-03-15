@@ -6,20 +6,28 @@ import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil.serviceTokenData
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpHeaders
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @WebMvcTest(EsbController::class)
 internal class EsbControllerTest {
 
+    private val brukerprofilPath = "/nav-cons-pen-pselv-brukerprofilWeb/sca/PSELVBrukerprofilWSEXP"
     private val fullmaktPath = "/nav-cons-pen-pselv-fullmaktWeb/sca/PSELVFullmaktWSEXP"
+    private val henvendelsePath = "/nav-cons-pen-pselv-henvendelseWeb/sca/PSELVHenvendelseWSEXP"
+    private val inntektPath = "/nav-cons-pen-pselv-inntektWeb/sca/PSELVInntektWSEXP"
     private val personPath = "/nav-cons-pen-pselv-personWeb/sca/PSELVPersonWSEXP"
+    private val ppen004Path = "/nav-cons-pen-pselv-ppen004Web/sca/PENPPEN004WSEXP"
+    private val samhandlerPath = "/nav-cons-pen-pselv-samhandlerWeb/sca/PSELVSamhandlerWSEXP"
+    private val tjenestepensjonPath = "/nav-cons-pen-pselv-tjenestepensjonWeb/sca/PSELVTjenestepensjonWSEXPP"
+    private val utbetalingPath = "/nav-cons-pen-pselv-utbetalingWeb/sca/PSELVUtbetalingWSEXP"
     private val pingPath = "/nav-cons-test-getapplicationversionWeb/sca/TESTGetApplicationVersionWSEXP"
 
     @Autowired
@@ -35,44 +43,64 @@ internal class EsbControllerTest {
     lateinit var serviceClient: ServiceClient
 
     @Test
-    fun `fullmakt request results in fullmakt response XML`() {
-        Mockito.`when`(serviceClient.doPost(anyObject(), anyObject(), anyObject()))
-            .thenReturn(EsbXml.fullmaktResponseBody)
-        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
+    fun `brukerprofil request results in brukerprofil response XML`() {
+        doTest(brukerprofilPath, EsbXml.brukerprofilResponseBody)
+    }
 
-        mvc.perform(
-            MockMvcRequestBuilders.post(fullmaktPath)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
-                .content("foo"))
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.content().xml(EsbXml.fullmaktResponseBody))
+    @Test
+    fun `fullmakt request results in fullmakt response XML`() {
+        doTest(fullmaktPath, EsbXml.fullmaktResponseBody)
+    }
+
+    @Test
+    fun `henvendelse request results in henvendelse response XML`() {
+        doTest(henvendelsePath, EsbXml.henvendelseResponseBody)
+    }
+
+    @Test
+    fun `inntekt request results in inntekt response XML`() {
+        doTest(inntektPath, EsbXml.inntektResponseBody)
     }
 
     @Test
     fun `person request results in person response XML`() {
-        Mockito.`when`(serviceClient.doPost(anyObject(), anyObject(), anyObject()))
-            .thenReturn(EsbXml.personResponseBody)
-        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
+        doTest(personPath, EsbXml.personResponseBody)
+    }
 
-        mvc.perform(
-            MockMvcRequestBuilders.post(personPath)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
-                .content("foo"))
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.content().xml(EsbXml.personResponseBody))
+    @Test
+    fun `PPEN004 request results in PPEN004 response XML`() {
+        doTest(ppen004Path, EsbXml.ppen004ResponseBody)
+    }
+
+    @Test
+    fun `samhandler request results in samhandler response XML`() {
+        doTest(samhandlerPath, EsbXml.samhandlerResponseBody)
+    }
+
+    @Test
+    fun `tjenestepensjon request results in tjenestepensjon response XML`() {
+        doTest(tjenestepensjonPath, EsbXml.tjenestepensjonResponseBody)
+    }
+
+    @Test
+    fun `utbetaling request results in utbetaling response XML`() {
+        doTest(utbetalingPath, EsbXml.utbetalingResponseBody)
     }
 
     @Test
     fun `ping request results in ping response XML`() {
-        Mockito.`when`(serviceClient.doPost(anyObject(), anyObject(), anyObject()))
-            .thenReturn(EsbXml.pingResponseBody)
-        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
+        doTest(pingPath, EsbXml.pingResponseBody)
+    }
+
+    private fun doTest(path: String, expectedResponseBody: String) {
+        `when`(serviceClient.doPost(anyObject(), anyObject(), anyObject())).thenReturn(expectedResponseBody)
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
 
         mvc.perform(
-            MockMvcRequestBuilders.post(pingPath)
+            post(path)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
                 .content("foo"))
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.content().xml(EsbXml.pingResponseBody))
+            .andExpect(status().isOk)
+            .andExpect(content().xml(expectedResponseBody))
     }
 }
