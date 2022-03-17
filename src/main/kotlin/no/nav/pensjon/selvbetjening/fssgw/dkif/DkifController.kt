@@ -1,6 +1,6 @@
 package no.nav.pensjon.selvbetjening.fssgw.dkif
 
-import no.nav.pensjon.selvbetjening.fssgw.common.ControllerBase
+import no.nav.pensjon.selvbetjening.fssgw.common.ProtectedControllerBase
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
@@ -18,7 +18,7 @@ class DkifController(
     egressTokenGetter: ServiceTokenGetter,
     serviceClient: ServiceClient,
     @Value("\${dkif.url}") egressEndpoint: String) :
-    ControllerBase(jwsValidator, serviceClient, egressTokenGetter, egressEndpoint) {
+    ProtectedControllerBase(jwsValidator, egressTokenGetter, serviceClient, egressEndpoint) {
 
     @GetMapping("personer/kontaktinformasjon")
     fun getKontaktinformasjon(request: HttpServletRequest): ResponseEntity<String> {

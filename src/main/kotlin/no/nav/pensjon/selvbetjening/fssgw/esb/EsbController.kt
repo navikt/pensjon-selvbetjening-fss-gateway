@@ -1,6 +1,6 @@
 package no.nav.pensjon.selvbetjening.fssgw.esb
 
-import no.nav.pensjon.selvbetjening.fssgw.common.ControllerBase
+import no.nav.pensjon.selvbetjening.fssgw.common.ProtectedControllerBase
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
@@ -17,7 +17,7 @@ class EsbController(
     egressTokenGetter: ServiceTokenGetter,
     serviceClient: ServiceClient,
     @Value("\${esb.url}") egressEndpoint: String) :
-    ControllerBase(jwsValidator, serviceClient, egressTokenGetter, egressEndpoint) {
+    ProtectedControllerBase(jwsValidator, egressTokenGetter, serviceClient, egressEndpoint) {
 
     @PostMapping(
         value = [
@@ -30,7 +30,7 @@ class EsbController(
             "nav-cons-pen-pselv-samhandlerWeb/sca/PSELVSamhandlerWSEXP",
             "nav-cons-pen-pselv-tjenestepensjonWeb/sca/PSELVTjenestepensjonWSEXPP",
             "nav-cons-pen-pselv-utbetalingWeb/sca/PSELVUtbetalingWSEXP",
-            "nav-cons-test-getapplicationversionWeb/sca/TESTGetApplicationVersionWSEXP"])
+            "nav-tjeneste-journal_v2Web/sca/JournalWSEXP"])
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
         return super.doPost(request, body)
     }

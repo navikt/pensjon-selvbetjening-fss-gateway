@@ -1,6 +1,6 @@
 package no.nav.pensjon.selvbetjening.fssgw.ereg
 
-import no.nav.pensjon.selvbetjening.fssgw.common.ControllerBase
+import no.nav.pensjon.selvbetjening.fssgw.common.ProtectedControllerBase
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
@@ -18,7 +18,7 @@ class EregController(
     egressTokenGetter: ServiceTokenGetter,
     serviceClient: ServiceClient,
     @Value("\${ereg.url}") egressEndpoint: String) :
-    ControllerBase(jwsValidator, serviceClient, egressTokenGetter, egressEndpoint) {
+    ProtectedControllerBase(jwsValidator, egressTokenGetter, serviceClient, egressEndpoint) {
 
     @GetMapping("api/v1/organisasjon/{organisasjonsnummer}/noekkelinfo")
     fun getOrganisasjonNoekkelinfo(request: HttpServletRequest): ResponseEntity<String> {

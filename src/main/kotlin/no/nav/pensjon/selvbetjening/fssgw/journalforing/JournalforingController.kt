@@ -1,6 +1,6 @@
 package no.nav.pensjon.selvbetjening.fssgw.journalforing
 
-import no.nav.pensjon.selvbetjening.fssgw.common.ControllerBase
+import no.nav.pensjon.selvbetjening.fssgw.common.ProtectedControllerBase
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
@@ -19,7 +19,7 @@ class JournalforingController(
     egressTokenGetter: ServiceTokenGetter,
     serviceClient: ServiceClient,
     @Value("\${journalforing.url}") egressEndpoint: String) :
-    ControllerBase(jwsValidator, serviceClient, egressTokenGetter, egressEndpoint) {
+    ProtectedControllerBase(jwsValidator, egressTokenGetter, serviceClient, egressEndpoint) {
 
     @PostMapping("v1/journalpost")
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {

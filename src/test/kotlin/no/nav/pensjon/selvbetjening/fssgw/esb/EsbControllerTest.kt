@@ -29,7 +29,6 @@ internal class EsbControllerTest {
     private val samhandlerPath = "/nav-cons-pen-pselv-samhandlerWeb/sca/PSELVSamhandlerWSEXP"
     private val tjenestepensjonPath = "/nav-cons-pen-pselv-tjenestepensjonWeb/sca/PSELVTjenestepensjonWSEXPP"
     private val utbetalingPath = "/nav-cons-pen-pselv-utbetalingWeb/sca/PSELVUtbetalingWSEXP"
-    private val pingPath = "/nav-cons-test-getapplicationversionWeb/sca/TESTGetApplicationVersionWSEXP"
 
     @Autowired
     lateinit var mvc: MockMvc
@@ -86,11 +85,6 @@ internal class EsbControllerTest {
     @Test
     fun `utbetaling request results in utbetaling response XML`() {
         doTest(utbetalingPath, EsbXml.utbetalingResponseBody)
-    }
-
-    @Test
-    fun `ping request results in ping response XML`() {
-        doTest(pingPath, EsbXml.pingResponseBody)
     }
 
     private fun doTest(path: String, expectedResponseBody: String) {

@@ -2,9 +2,7 @@ package no.nav.pensjon.selvbetjening.fssgw.common
 
 import io.jsonwebtoken.JwtException
 import io.micrometer.core.instrument.Metrics
-import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.oauth2.Oauth2Exception
-import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -13,17 +11,16 @@ import org.springframework.http.ResponseEntity
 import org.springframework.util.StringUtils.hasText
 import java.nio.charset.StandardCharsets
 import java.util.*
+import java.util.UUID.randomUUID
 import javax.servlet.http.HttpServletRequest
 
 abstract class ControllerBase(
-    private val jwsValidator: JwsValidator,
     private val serviceClient: ServiceClient,
-    private val egressTokenGetter: ServiceTokenGetter,
     private val egressEndpoint: String) {
 
-    private val authType = "Bearer"
+    protected val authType = "Bearer"
+    protected val consumerTokenHeaderName = "Nav-Consumer-Token"
     private val callIdHeaderName = "Nav-Call-Id"
-    private val consumerTokenHeaderName = "Nav-Consumer-Token"
     private val log = LoggerFactory.getLogger(javaClass)
     private val locale = Locale.getDefault()
 
@@ -44,14 +41,14 @@ abstract class ControllerBase(
             val url = "$egressEndpoint${request.requestURI}$queryPart"
             val responseBody = serviceClient.doGet(url, headersToRelay)
             val responseContentType = getResponseContentType(request)
-            Metrics.counter("request_counter", "action", "get", "status", "OK").increment()
+            metric("get", "OK")
             ResponseEntity(responseBody, responseContentType, HttpStatus.OK)
         } catch (e: JwtException) {
             unauthorized(e)
         } catch (e: Oauth2Exception) {
             unauthorized(e)
         } catch (e: ConsumerException) {
-            Metrics.counter("request_counter", "action", "get", "status", "error").increment()
+            metric("get", "error")
             ResponseEntity("""{"error": "${e.message}"}""", jsonContentType, HttpStatus.BAD_GATEWAY)
         }
     }
@@ -64,21 +61,21 @@ abstract class ControllerBase(
             val url = "$egressEndpoint${request.requestURI}$queryPart"
             val responseBody = serviceClient.doPost(url, headersToRelay, body)
             val responseContentType = getResponseContentType(request)
-            Metrics.counter("request_counter", "action", "post", "status", "OK").increment()
+            metric("post", "OK")
             ResponseEntity(responseBody, responseContentType, HttpStatus.OK)
         } catch (e: JwtException) {
             unauthorized(e)
         } catch (e: Oauth2Exception) {
             unauthorized(e)
         } catch (e: ConsumerException) {
-            Metrics.counter("request_counter", "action", "post", "status", "error").increment()
+            metric("post", "error")
             ResponseEntity("""{"error": "${e.message}"}""", jsonContentType, HttpStatus.BAD_GATEWAY)
         }
     }
 
-    protected abstract fun egressAuthWaived(): Boolean
+    protected abstract fun checkIngressAuth(request: HttpServletRequest)
 
-    protected abstract fun consumerTokenRequired(): Boolean
+    protected abstract fun addAuthHeaderIfNeeded(headers: TreeMap<String, String>)
 
     private fun getEgressHeaders(request: HttpServletRequest): TreeMap<String, String> {
         val egressHeaders = TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER)
@@ -95,26 +92,12 @@ abstract class ControllerBase(
             xmlContentType else jsonContentType
     }
 
-    private fun addAuthHeaderIfNeeded(headers: TreeMap<String, String>) {
-        if (egressAuthWaived()) {
-            return
-        }
-
-        val token = egressTokenGetter.getServiceUserToken().accessToken
-        val auth = "$authType $token"
-        headers[HttpHeaders.AUTHORIZATION] = auth
-
-        if (consumerTokenRequired()) {
-            headers[consumerTokenHeaderName] = auth
-        }
-    }
-
     private fun addCallIdHeaderIfNeeded(headers: TreeMap<String, String>) {
         if (headers.containsKey(callIdHeaderName)) {
             return
         }
 
-        headers[callIdHeaderName] = UUID.randomUUID().toString()
+        headers[callIdHeaderName] = randomUUID().toString()
     }
 
     private fun copyHeader(request: HttpServletRequest, headerName: String, headers: TreeMap<String, String>) {
@@ -123,17 +106,6 @@ abstract class ControllerBase(
         }
 
         headers[headerName] = request.getHeader(headerName)
-    }
-
-    private fun checkIngressAuth(request: HttpServletRequest) {
-        val auth: String? = request.getHeader(HttpHeaders.AUTHORIZATION)
-        val accessToken: String = auth?.substring(authType.length + 1) ?: ""
-
-        if (!hasText(accessToken)) {
-            throw JwtException("Missing access token")
-        }
-
-        jwsValidator.validate(accessToken)
     }
 
     private fun unauthorized(e: Exception): ResponseEntity<String> {
@@ -149,6 +121,10 @@ abstract class ControllerBase(
         val httpHeaders = HttpHeaders()
         httpHeaders.contentType = mediaType
         return httpHeaders
+    }
+
+    private fun metric(action: String, status: String) {
+        Metrics.counter("request_counter", "action", action, "status", status).increment()
     }
 
     private val jsonContentType: HttpHeaders
