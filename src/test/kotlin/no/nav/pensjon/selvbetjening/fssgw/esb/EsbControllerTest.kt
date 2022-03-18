@@ -20,11 +20,12 @@ import java.nio.charset.StandardCharsets
 @WebMvcTest(EsbController::class)
 internal class EsbControllerTest {
 
+    private val penPersonPath = "/nav-cons-pen-pen-personWeb/sca/PENPersonWSEXP"
     private val brukerprofilPath = "/nav-cons-pen-pselv-brukerprofilWeb/sca/PSELVBrukerprofilWSEXP"
     private val fullmaktPath = "/nav-cons-pen-pselv-fullmaktWeb/sca/PSELVFullmaktWSEXP"
     private val henvendelsePath = "/nav-cons-pen-pselv-henvendelseWeb/sca/PSELVHenvendelseWSEXP"
     private val inntektPath = "/nav-cons-pen-pselv-inntektWeb/sca/PSELVInntektWSEXP"
-    private val personPath = "/nav-cons-pen-pselv-personWeb/sca/PSELVPersonWSEXP"
+    private val pselvPersonPath = "/nav-cons-pen-pselv-personWeb/sca/PSELVPersonWSEXP"
     private val ppen004Path = "/nav-cons-pen-pselv-ppen004Web/sca/PENPPEN004WSEXP"
     private val samhandlerPath = "/nav-cons-pen-pselv-samhandlerWeb/sca/PSELVSamhandlerWSEXP"
     private val tjenestepensjonPath = "/nav-cons-pen-pselv-tjenestepensjonWeb/sca/PSELVTjenestepensjonWSEXPP"
@@ -41,6 +42,11 @@ internal class EsbControllerTest {
 
     @MockBean
     lateinit var serviceClient: ServiceClient
+
+    @Test
+    fun `PEN person request results in PEN person response XML`() {
+        doTest(penPersonPath, EsbXml.penPersonResponseBody)
+    }
 
     @Test
     fun `brukerprofil request results in brukerprofil response XML`() {
@@ -64,7 +70,7 @@ internal class EsbControllerTest {
 
     @Test
     fun `person request results in person response XML`() {
-        doTest(personPath, EsbXml.personResponseBody)
+        doTest(pselvPersonPath, EsbXml.pselvPersonResponseBody)
     }
 
     @Test

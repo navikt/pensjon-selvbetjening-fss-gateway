@@ -2,6 +2,20 @@ package no.nav.pensjon.selvbetjening.fssgw.esb
 
 object EsbXml {
 
+    val penPersonResponseBody: String
+        get() = """<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Body>
+        <inf:hentPenPersonListeResponse xmlns:inf="http://nav-cons-pen-pselv-penPerson/no/nav/inf">
+            <hentPenPersonListeResponse>
+                <penPersoner>
+                    <penPersonId>1</penPersonId>
+                </penPersoner>
+            </hentPenPersonListeResponse>
+        </inf:hentPenPersonListeResponse>
+    </soapenv:Body>
+</soapenv:Envelope>"""
+
     val brukerprofilResponseBody: String
         get() = """<?xml version="1.0" encoding="UTF-8"?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
@@ -126,7 +140,7 @@ object EsbXml {
     </soapenv:Body>
 </soapenv:Envelope>"""
 
-    val personResponseBody: String
+    val pselvPersonResponseBody: String
         get() = """<?xml version="1.0" encoding="UTF-8"?>
     <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
         <soapenv:Body>
