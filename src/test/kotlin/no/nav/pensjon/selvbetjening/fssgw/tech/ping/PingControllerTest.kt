@@ -12,16 +12,17 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 @WebMvcTest(PingController::class)
 internal class PingControllerTest {
 
-    private val path = "/api/"
+    private val path = "/api/internal/"
 
     @Autowired
-    private val mvc: MockMvc? = null
+    lateinit var mvc: MockMvc
 
     @Test
-    fun ping() {
-        mvc!!.perform(get(path + "ping"))
-                .andExpect(status().isOk)
-                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(content().json("{ 'reponse': 'pong' }"))
+    fun `when OK then ping request responds with OK`() {
+        mvc.perform(
+            get(path + "ping"))
+            .andExpect(status().isOk)
+            .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().json("""{ "reponse": "pong" }"""))
     }
 }

@@ -19,6 +19,8 @@ class EsbController(
     @Value("\${esb.url}") egressEndpoint: String) :
     ProtectedControllerBase(jwsValidator, egressTokenGetter, serviceClient, egressEndpoint) {
 
+    // https://pensjon-pen-t4.nais.preprod.local/pen/api/simuler/tjenestepensjon/ping
+    
     @PostMapping(
         value = [
             "nav-cons-pen-pen-personWeb/sca/PENPersonWSEXP", // sca = Service Component Architecture

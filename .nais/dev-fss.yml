@@ -26,30 +26,48 @@ spec:
   env:
     - name: AAREG_URL
       value: https://modapp-q2.adeo.no
+    - name: ARENA_URL
+      value: https://arena-q2.adeo.no
+    - name: BREVDATA_URL
+      value: https://pensjon-brevmetadata.dev.intern.nav.no
     - name: DKIF_URL
       value: http://dkif.team-rocket.svc.nais.local
     - name: EREG_URL
       value: https://modapp-q2.adeo.no
     - name: ESB_URL
       value: https://tjenestebuss-q2.adeo.no
+    - name: INNTEKT_URL
+      value: https://app-q2.adeo.no
     - name: JOURNALFORING_URL
       value: https://dokarkiv-q2.dev.intern.nav.no
     - name: KODEVERK_URL
       value: http://kodeverk.org.svc.nais.local
+    - name: NORG2_URL
+      value: https://norg2.nais.preprod.local
+    - name: OPPGAVE_URL
+      value: https://oppgave-q2.nais.preprod.local
+    - name: PARALLELLESANNHETER_URL
+      value: https://pensjon-parallelle-sannheter.dev.intern.nav.no
     - name: PDL_URL
       value: http://pdl-api.pdl.svc.nais.local
     - name: PEN_URL
       value: https://pensjon-pen-q2.dev.adeo.no
     - name: POPP_URL
       value: https://pensjon-popp-q2.dev.adeo.no
+    - name: PREG_URL
+      value: https://pensjon-preg-q2.nais.preprod.local
     - name: SKJERMING_URL
       value: https://skjermede-personer-pip.dev.adeo.no
     - name: STS_URL
       value: http://security-token-service.aura.svc.nais.local
     - name: TP_URL
       value: https://tp-q2.dev.intern.nav.no
+    - name: TPS_PERSON_URL
+      value: https://app-q2.adeo.no
     - name: FSSGW_LOGGING_LEVEL
       value: debug
+    - name: STDOUT_LOG_OUTPUT
+      value: JSON
   prometheus:
     enabled: true
     path: /internal/prometheus

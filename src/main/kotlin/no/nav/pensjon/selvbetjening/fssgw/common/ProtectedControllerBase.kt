@@ -4,7 +4,7 @@ import io.jsonwebtoken.JwtException
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.springframework.http.HttpHeaders
-import org.springframework.util.StringUtils
+import org.springframework.util.StringUtils.hasText
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 
@@ -14,6 +14,8 @@ abstract class ProtectedControllerBase(
     serviceClient: ServiceClient,
     egressEndpoint: String) : ControllerBase(serviceClient, egressEndpoint) {
 
+    private val authType = "Bearer"
+
     protected abstract fun egressAuthWaived(): Boolean
 
     protected abstract fun consumerTokenRequired(): Boolean
@@ -22,7 +24,7 @@ abstract class ProtectedControllerBase(
         val auth: String? = request.getHeader(HttpHeaders.AUTHORIZATION)
         val accessToken: String = auth?.substring(authType.length + 1) ?: ""
 
-        if (!StringUtils.hasText(accessToken)) {
+        if (!hasText(accessToken)) {
             throw JwtException("Missing access token")
         }
 

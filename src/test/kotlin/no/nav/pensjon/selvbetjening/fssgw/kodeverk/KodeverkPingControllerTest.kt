@@ -1,10 +1,8 @@
 package no.nav.pensjon.selvbetjening.fssgw.kodeverk
 
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
-import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil
 import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil.anyObject
-import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
-import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
+import no.nav.pensjon.selvbetjening.fssgw.tech.basicauth.BasicAuthValidator
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,30 +14,27 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@WebMvcTest(KodeverkController::class)
-internal class KodeverkControllerTest {
+@WebMvcTest(KodeverkPingController::class)
+internal class KodeverkPingControllerTest {
 
     @Autowired
     lateinit var mvc: MockMvc
 
     @MockBean
-    lateinit var jwsValidator: JwsValidator
-
-    @MockBean
-    lateinit var egressTokenGetter: ServiceTokenGetter
+    lateinit var authValidator: BasicAuthValidator
 
     @MockBean
     lateinit var serviceClient: ServiceClient
 
     @Test
-    fun `Kodeverk request results in JSON response`() {
+    fun `Kodeverk ping request results in JSON response`() {
         `when`(serviceClient.doGet(anyObject(), anyObject())).thenReturn("""{ "response": "bar"}""")
-        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        val credentials = "cred"
+        `when`(authValidator.validate(credentials)).thenReturn(true)
 
         mvc.perform(
-            get("/api/v1/kodeverk/Postnummer/koder/betydninger?spraak=nb")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
-                .header("Nav-Consumer-Id", "id")
+            get("/api/v1/kodeverk")
+                .header(HttpHeaders.AUTHORIZATION, "Basic $credentials")
                 .content("foo"))
             .andExpect(status().isOk)
             .andExpect(content().json("""{ "response": "bar"}"""))

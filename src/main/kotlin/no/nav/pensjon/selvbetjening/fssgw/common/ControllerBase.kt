@@ -12,13 +12,13 @@ import org.springframework.util.StringUtils.hasText
 import java.nio.charset.StandardCharsets
 import java.util.*
 import java.util.UUID.randomUUID
+import javax.security.auth.message.AuthException
 import javax.servlet.http.HttpServletRequest
 
 abstract class ControllerBase(
     private val serviceClient: ServiceClient,
     private val egressEndpoint: String) {
 
-    protected val authType = "Bearer"
     protected val consumerTokenHeaderName = "Nav-Consumer-Token"
     private val callIdHeaderName = "Nav-Call-Id"
     private val log = LoggerFactory.getLogger(javaClass)
@@ -43,6 +43,30 @@ abstract class ControllerBase(
             val responseContentType = getResponseContentType(request)
             metric("get", "OK")
             ResponseEntity(responseBody, responseContentType, HttpStatus.OK)
+        } catch (e: AuthException) {
+            unauthorized(e)
+        } catch (e: JwtException) {
+            unauthorized(e)
+        } catch (e: Oauth2Exception) {
+            unauthorized(e)
+        } catch (e: ConsumerException) {
+            metric("get", "error")
+            ResponseEntity("""{"error": "${e.message}"}""", jsonContentType, HttpStatus.BAD_GATEWAY)
+        }
+    }
+
+    fun doOptions(request: HttpServletRequest): ResponseEntity<String> {
+        return try {
+            checkIngressAuth(request)
+            val headersToRelay = getEgressHeaders(request)
+            val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
+            val url = "$egressEndpoint${request.requestURI}$queryPart"
+            val responseBody = serviceClient.doOptions(url, headersToRelay)
+            val responseContentType = getResponseContentType(request)
+            metric("get", "OK")
+            ResponseEntity(responseBody, responseContentType, HttpStatus.OK)
+        } catch (e: AuthException) {
+            unauthorized(e)
         } catch (e: JwtException) {
             unauthorized(e)
         } catch (e: Oauth2Exception) {
@@ -63,6 +87,8 @@ abstract class ControllerBase(
             val responseContentType = getResponseContentType(request)
             metric("post", "OK")
             ResponseEntity(responseBody, responseContentType, HttpStatus.OK)
+        } catch (e: AuthException) {
+            unauthorized(e)
         } catch (e: JwtException) {
             unauthorized(e)
         } catch (e: Oauth2Exception) {

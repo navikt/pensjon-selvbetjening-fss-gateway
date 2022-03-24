@@ -2,8 +2,7 @@ package no.nav.pensjon.selvbetjening.fssgw.pdl
 
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil
-import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
-import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
+import no.nav.pensjon.selvbetjening.fssgw.tech.basicauth.BasicAuthValidator
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,34 +10,32 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpHeaders
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@WebMvcTest(PdlController::class)
-internal class PdlControllerTest {
+@WebMvcTest(PdlPingController::class)
+internal class PdlPingControllerTest {
 
     @Autowired
     lateinit var mvc: MockMvc
 
     @MockBean
-    lateinit var jwsValidator: JwsValidator
-
-    @MockBean
-    lateinit var egressTokenGetter: ServiceTokenGetter
+    lateinit var authValidator: BasicAuthValidator
 
     @MockBean
     lateinit var serviceClient: ServiceClient
 
     @Test
-    fun `PDL request results in JSON response`() {
-        `when`(serviceClient.doPost(MockUtil.anyObject(), MockUtil.anyObject(), MockUtil.anyObject()))
+    fun `PDL ping request results in JSON response`() {
+        `when`(serviceClient.doOptions(MockUtil.anyObject(), MockUtil.anyObject()))
             .thenReturn("""{ "response": "bar"}""")
-        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        val credentials = "cred"
+        `when`(authValidator.validate(credentials)).thenReturn(true)
 
         mvc.perform(
-            post("/graphql")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
+            options("/graphql")
+                .header(HttpHeaders.AUTHORIZATION, "Basic $credentials")
                 .content("foo"))
             .andExpect(status().isOk)
             .andExpect(content().json("""{ "response": "bar"}"""))

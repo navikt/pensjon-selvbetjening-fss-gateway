@@ -1,12 +1,11 @@
 package no.nav.pensjon.selvbetjening.fssgw.pen
 
-import no.nav.pensjon.selvbetjening.fssgw.common.ConsumerException
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -35,9 +34,9 @@ internal class PenControllerTest {
 
     @Test
     fun `when OK then AFP-historikk request returns data`() {
-        Mockito.`when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+        `when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
             .thenReturn("""{ "response": "AFP-historikken"}""")
-        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
         mvc.perform(
             get("/pen/api/person/afphistorikk")
@@ -49,9 +48,9 @@ internal class PenControllerTest {
 
     @Test
     fun `when OK then uforehistorikk request returns data`() {
-        Mockito.`when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+        `when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
             .thenReturn("""{ "response": "uførehistorikken"}""")
-        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
         mvc.perform(
             get("/pen/api/person/uforehistorikk")
@@ -63,9 +62,9 @@ internal class PenControllerTest {
 
     @Test
     fun `when OK then uttaksgrad person request returns data`() {
-        Mockito.`when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+        `when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
             .thenReturn("""{ "response": "uttaksgraden"}""")
-        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
         mvc.perform(
             get("/pen/api/uttaksgrad/person?sakType=ALDER")
@@ -77,9 +76,9 @@ internal class PenControllerTest {
 
     @Test
     fun `when OK then uttaksgrad search request returns data`() {
-        Mockito.`when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+        `when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
             .thenReturn("""{ "response": "uttaksgradene"}""")
-        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
         mvc.perform(
             get("/pen/api/uttaksgrad/search?vedtakId=1&vedtakId=2&vedtakId=3")
@@ -90,9 +89,9 @@ internal class PenControllerTest {
 
     @Test
     fun `when OK then krav request returns data`() {
-        Mockito.`when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+        `when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
             .thenReturn("""{ "response": "kravet"}""")
-        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
         mvc.perform(
             get("/pen/springapi/krav")
@@ -105,9 +104,9 @@ internal class PenControllerTest {
 
     @Test
     fun `when OK then sakssammendrag request returns data`() {
-        Mockito.`when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+        `when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
             .thenReturn("""{ "response": "sammendraget"}""")
-        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
         mvc.perform(
             get("/pen/springapi/sak/sammendrag")
@@ -120,9 +119,9 @@ internal class PenControllerTest {
 
     @Test
     fun `when OK then vedtak request returns data`() {
-        Mockito.`when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+        `when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
             .thenReturn("""{ "response": "vedtakene"}""")
-        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
         mvc.perform(
             get("/pen/springapi/vedtak?sakstype=typen&alleVedtak=true&fom=2021-02-03")
@@ -135,9 +134,9 @@ internal class PenControllerTest {
 
     @Test
     fun `when OK then bestem gjeldende vedtak request returns data`() {
-        Mockito.`when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+        `when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
             .thenReturn("""{ "response": "vedtakene"}""")
-        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
         mvc.perform(
             get("/pen/springapi/vedtak/bestemgjeldende")
@@ -147,32 +146,5 @@ internal class PenControllerTest {
                 .header("Nav-Call-Id", "ID 1"))
             .andExpect(status().isOk)
             .andExpect(content().json("""{"response": "vedtakene"}"""))
-    }
-
-    @Test
-    fun `when OK then ping request responds with OK`() {
-        Mockito.`when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject())).thenReturn("Ok")
-        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
-
-        mvc.perform(
-            get("/pen/springapi/ping")
-                .header(HttpHeaders.AUTHORIZATION, auth)
-                .content("foo"))
-            .andExpect(status().isOk)
-            .andExpect(content().string("Ok"))
-    }
-
-    @Test
-    fun `when error then ping request responds with bad gateway and error message`() {
-        Mockito.`when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
-            .thenAnswer { throw ConsumerException("oops") }
-        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
-
-        mvc.perform(
-            get("/pen/springapi/ping")
-                .header(HttpHeaders.AUTHORIZATION, auth)
-                .content(""))
-            .andExpect(status().isBadGateway)
-            .andExpect(content().json("""{"error": "oops"}"""))
     }
 }

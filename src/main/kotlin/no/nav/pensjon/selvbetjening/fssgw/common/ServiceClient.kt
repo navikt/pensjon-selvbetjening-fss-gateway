@@ -43,6 +43,32 @@ class ServiceClient {
         }
     }
 
+    fun doOptions(uri: String, headers: TreeMap<String, String>): String {
+        if (log.isDebugEnabled) {
+            log.debug("OPTION from URI: '$uri'")
+            log(headers)
+        }
+
+        try {
+            return webClient
+                .options()
+                .uri(uri)
+                .headers { h -> copyHeaders(headers, h) }
+                .retrieve()
+                .bodyToMono(String::class.java)
+                .block()
+                ?: ""
+        } catch (e: WebClientResponseException) {
+            val message = "Failed to access service at $uri: ${e.message} | Response: ${e.responseBodyAsString}"
+            log.error(message, e)
+            throw ConsumerException(message, e)
+        } catch (e: RuntimeException) { // e.g. when connection broken
+            val message = "Failed to access service at $uri: ${e.message}"
+            log.error(message, e)
+            throw ConsumerException(message, e)
+        }
+    }
+
     fun doPost(uri: String, headers: TreeMap<String, String>, body: String): String {
         if (log.isDebugEnabled) {
             log.debug("POST to URI: '$uri'")
