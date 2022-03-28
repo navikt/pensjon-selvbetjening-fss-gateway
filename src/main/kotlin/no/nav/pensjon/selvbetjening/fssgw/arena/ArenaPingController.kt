@@ -1,25 +1,23 @@
-package no.nav.pensjon.selvbetjening.fssgw.ail
+package no.nav.pensjon.selvbetjening.fssgw.arena
 
 import no.nav.pensjon.selvbetjening.fssgw.common.BasicProtectedControllerBase
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.tech.basicauth.BasicAuthValidator
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import javax.servlet.http.HttpServletRequest
 
 @RestController
-@RequestMapping("ail_ws/Arbeidsevnevurdering_v1")
-class ArbeidsevnevurderingPingController(
+@RequestMapping("ail_ws") // ail = Arena integration layers, ws = web services
+class ArenaPingController(
     authValidator: BasicAuthValidator,
     serviceClient: ServiceClient,
     @Value("\${arena.url}") egressEndpoint: String) :
     BasicProtectedControllerBase(authValidator, serviceClient, egressEndpoint) {
 
-    @GetMapping("ping")
-    fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> {
-        return super.doGet(request)
+    @PostMapping("Arbeidsevnevurdering_v1")
+    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
+        return super.doPost(request, body)
     }
 }
