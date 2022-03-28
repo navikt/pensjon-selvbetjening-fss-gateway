@@ -12,6 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpHeaders
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -31,11 +32,11 @@ internal class PenPingControllerTest {
 
     @Test
     fun `when OK then vedtak request responds with OK`() {
-        `when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject())).thenReturn("Ok")
+        `when`(serviceClient.doPost(MockUtil.anyObject(), MockUtil.anyObject(), MockUtil.anyObject())).thenReturn("Ok")
         `when`(authValidator.validate(credentials)).thenReturn(true)
 
         mvc.perform(
-            get("/pen/services/Vedtak_v2")
+            post("/pen/services/Vedtak_v2")
                 .header(HttpHeaders.AUTHORIZATION, "Basic $credentials")
                 .content("foo"))
             .andExpect(status().isOk)
