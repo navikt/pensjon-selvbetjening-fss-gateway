@@ -23,7 +23,7 @@ abstract class BasicProtectedControllerBase(
         }
     }
 
-    override fun addAuthHeaderIfNeeded(headers: TreeMap<String, String>) {
-        // No operation
+    override fun addAuthHeaderIfNeeded(request: HttpServletRequest, headers: TreeMap<String, String>) {
+        // No auth header by default
     }
 }

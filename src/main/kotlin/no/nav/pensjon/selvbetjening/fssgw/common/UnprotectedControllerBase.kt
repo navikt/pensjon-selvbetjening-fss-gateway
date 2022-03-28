@@ -11,7 +11,7 @@ abstract class UnprotectedControllerBase(
         // No operation
     }
 
-    override fun addAuthHeaderIfNeeded(headers: TreeMap<String, String>) {
+    override fun addAuthHeaderIfNeeded(request: HttpServletRequest, headers: TreeMap<String, String>) {
         // No operation
     }
 }

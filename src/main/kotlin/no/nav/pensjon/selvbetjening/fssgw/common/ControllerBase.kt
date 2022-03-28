@@ -101,12 +101,12 @@ abstract class ControllerBase(
 
     protected abstract fun checkIngressAuth(request: HttpServletRequest)
 
-    protected abstract fun addAuthHeaderIfNeeded(headers: TreeMap<String, String>)
+    protected abstract fun addAuthHeaderIfNeeded(request: HttpServletRequest, headers: TreeMap<String, String>)
 
     private fun getEgressHeaders(request: HttpServletRequest): TreeMap<String, String> {
         val egressHeaders = TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER)
         request.headerNames.toList().forEach { copyHeader(request, it, egressHeaders) }
-        addAuthHeaderIfNeeded(egressHeaders)
+        addAuthHeaderIfNeeded(request, egressHeaders)
         addCallIdHeaderIfNeeded(egressHeaders)
         return egressHeaders
     }

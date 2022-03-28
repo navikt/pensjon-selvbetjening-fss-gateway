@@ -31,7 +31,7 @@ abstract class ProtectedControllerBase(
         jwsValidator.validate(accessToken)
     }
 
-    override fun addAuthHeaderIfNeeded(headers: TreeMap<String, String>) {
+    override fun addAuthHeaderIfNeeded(request: HttpServletRequest, headers: TreeMap<String, String>) {
         if (egressAuthWaived()) {
             return
         }
