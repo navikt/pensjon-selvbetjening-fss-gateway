@@ -18,7 +18,11 @@ class PenPingController(
     @Value("\${pen.url}") egressEndpoint: String) :
     BasicProtectedControllerBase(authValidator, serviceClient, egressEndpoint) {
 
-    @GetMapping("springapi/ping")
+    @GetMapping(
+        value = [
+            "services/Vedtak_v2",
+            "api/simuler/tjenestepensjon/ping",
+            "springapi/ping"])
     fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> {
         return super.doGet(request)
     }

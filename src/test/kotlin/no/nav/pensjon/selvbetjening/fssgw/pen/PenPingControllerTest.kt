@@ -30,7 +30,33 @@ internal class PenPingControllerTest {
     private val credentials = "cred"
 
     @Test
-    fun `when OK then ping request responds with OK`() {
+    fun `when OK then vedtak request responds with OK`() {
+        `when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject())).thenReturn("Ok")
+        `when`(authValidator.validate(credentials)).thenReturn(true)
+
+        mvc.perform(
+            get("/pen/services/Vedtak_v2")
+                .header(HttpHeaders.AUTHORIZATION, "Basic $credentials")
+                .content("foo"))
+            .andExpect(status().isOk)
+            .andExpect(content().string("Ok"))
+    }
+
+    @Test
+    fun `when OK then simuler tjenestepensjon ping request responds with OK`() {
+        `when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject())).thenReturn("Ok")
+        `when`(authValidator.validate(credentials)).thenReturn(true)
+
+        mvc.perform(
+            get("/pen/api/simuler/tjenestepensjon/ping")
+                .header(HttpHeaders.AUTHORIZATION, "Basic $credentials")
+                .content("foo"))
+            .andExpect(status().isOk)
+            .andExpect(content().string("Ok"))
+    }
+
+    @Test
+    fun `when OK then Spring API ping request responds with OK`() {
         `when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject())).thenReturn("Ok")
         `when`(authValidator.validate(credentials)).thenReturn(true)
 
@@ -43,7 +69,7 @@ internal class PenPingControllerTest {
     }
 
     @Test
-    fun `when error then ping request responds with bad gateway and error message`() {
+    fun `when error then Spring API ping request responds with bad gateway and error message`() {
         `when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
             .thenAnswer { throw ConsumerException("oops") }
         `when`(authValidator.validate(credentials)).thenReturn(true)
