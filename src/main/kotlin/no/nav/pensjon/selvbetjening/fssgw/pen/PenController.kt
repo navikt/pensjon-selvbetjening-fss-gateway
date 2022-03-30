@@ -25,6 +25,7 @@ class PenController(
             "api/uttaksgrad/person",
             "api/uttaksgrad/search",
             "springapi/krav",
+            "springapi/krav/{kravId}",
             "springapi/sak/sammendrag",
             "springapi/vedtak",
             "springapi/vedtak/bestemgjeldende",
