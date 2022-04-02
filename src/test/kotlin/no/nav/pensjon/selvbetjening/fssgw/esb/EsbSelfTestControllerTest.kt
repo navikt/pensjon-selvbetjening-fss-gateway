@@ -1,8 +1,9 @@
 package no.nav.pensjon.selvbetjening.fssgw.esb
 
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
-import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyMap
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -27,7 +28,7 @@ internal class EsbSelfTestControllerTest {
 
     @Test
     fun `ping request results in ping response XML`() {
-        `when`(serviceClient.doPost(MockUtil.anyObject(), MockUtil.anyObject(), MockUtil.anyObject()))
+        `when`(serviceClient.doPost(anyString(), anyMap(), anyString()))
             .thenReturn(EsbXml.pingResponseBody)
         val expectedMediaType = MediaType(MediaType.TEXT_XML, StandardCharsets.UTF_8)
 

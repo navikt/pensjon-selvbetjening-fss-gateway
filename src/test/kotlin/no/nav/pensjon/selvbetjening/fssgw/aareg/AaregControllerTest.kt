@@ -1,11 +1,12 @@
 package no.nav.pensjon.selvbetjening.fssgw.aareg
 
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
-import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil.anyObject
 import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil.serviceTokenData
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyMap
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -33,7 +34,7 @@ internal class AaregControllerTest {
     @Test
     fun `Aareg request results in JSON response`() {
         val expectedIdent = "00000000000"
-        Mockito.`when`(serviceClient.doGet(anyObject(), anyObject())).thenReturn("""{ "response": "bar"}""")
+        Mockito.`when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "response": "bar"}""")
         Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
 
         mvc.perform(

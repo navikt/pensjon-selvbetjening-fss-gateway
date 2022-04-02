@@ -2,9 +2,10 @@ package no.nav.pensjon.selvbetjening.fssgw.pen
 
 import no.nav.pensjon.selvbetjening.fssgw.common.ConsumerException
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
-import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil
 import no.nav.pensjon.selvbetjening.fssgw.tech.basicauth.BasicAuthValidator
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyMap
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -32,7 +33,7 @@ internal class PenPingControllerTest {
 
     @Test
     fun `when OK then vedtak request responds with OK`() {
-        `when`(serviceClient.doPost(MockUtil.anyObject(), MockUtil.anyObject(), MockUtil.anyObject())).thenReturn("Ok")
+        `when`(serviceClient.doPost(anyString(), anyMap(), anyString())).thenReturn("Ok")
         `when`(authValidator.validate(credentials)).thenReturn(true)
 
         mvc.perform(
@@ -45,7 +46,7 @@ internal class PenPingControllerTest {
 
     @Test
     fun `when OK then Spring API ping request responds with OK`() {
-        `when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject())).thenReturn("Ok")
+        `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("Ok")
         `when`(authValidator.validate(credentials)).thenReturn(true)
 
         mvc.perform(
@@ -58,7 +59,7 @@ internal class PenPingControllerTest {
 
     @Test
     fun `when error then Spring API ping request responds with bad gateway and error message`() {
-        `when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+        `when`(serviceClient.doGet(anyString(), anyMap()))
             .thenAnswer { throw ConsumerException("oops") }
         `when`(authValidator.validate(credentials)).thenReturn(true)
 

@@ -2,9 +2,10 @@ package no.nav.pensjon.selvbetjening.fssgw.sts
 
 import no.nav.pensjon.selvbetjening.fssgw.common.ConsumerException
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
-import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil
 import no.nav.pensjon.selvbetjening.fssgw.tech.basicauth.BasicAuthValidator
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyMap
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -12,7 +13,8 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpHeaders
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @WebMvcTest(StsPingController::class)
 internal class StsPingControllerTest {
@@ -32,7 +34,7 @@ internal class StsPingControllerTest {
 
     @Test
     fun `when OK then JWT token request responds with OK`() {
-        `when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject())).thenReturn("Ok")
+        `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("Ok")
         `when`(authValidator.validate(credentials)).thenReturn(true)
 
         mvc.perform(
@@ -45,7 +47,7 @@ internal class StsPingControllerTest {
 
     @Test
     fun `when OK then SAML token request responds with OK`() {
-        `when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject())).thenReturn("Ok")
+        `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("Ok")
         `when`(authValidator.validate(credentials)).thenReturn(true)
 
         mvc.perform(
@@ -58,7 +60,7 @@ internal class StsPingControllerTest {
 
     @Test
     fun `when error then JWT token request responds with bad gateway and error message`() {
-        `when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+        `when`(serviceClient.doGet(anyString(), anyMap()))
             .thenAnswer { throw ConsumerException("oops") }
         `when`(authValidator.validate(credentials)).thenReturn(true)
 

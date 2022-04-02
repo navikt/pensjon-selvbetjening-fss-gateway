@@ -5,6 +5,8 @@ import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil
 import no.nav.pensjon.selvbetjening.fssgw.tech.basicauth.BasicAuthValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyMap
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -34,7 +36,7 @@ internal class SimulerTjenestepensjonPingControllerTest {
 
     @Test
     fun `when OK then simuler tjenestepensjon ping request responds with OK`() {
-        `when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject())).thenReturn("Ok")
+        `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("Ok")
         `when`(authValidator.validate(credentials)).thenReturn(true)
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 

@@ -1,11 +1,12 @@
 package no.nav.pensjon.selvbetjening.fssgw.journalforing
 
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
-import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil.anyObject
 import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil.serviceTokenData
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyMap
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -32,7 +33,7 @@ internal class JournalforingControllerTest {
 
     @Test
     fun `Journalforing request results in JSON response`() {
-        Mockito.`when`(serviceClient.doPost(anyObject(), anyObject(), anyObject()))
+        Mockito.`when`(serviceClient.doPost(anyString(), anyMap(), anyString()))
             .thenReturn("""{ "response": "bar"}""")
         Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
 

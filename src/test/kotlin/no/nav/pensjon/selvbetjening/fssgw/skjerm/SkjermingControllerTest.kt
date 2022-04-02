@@ -2,11 +2,12 @@ package no.nav.pensjon.selvbetjening.fssgw.skjerm
 
 import io.jsonwebtoken.JwtException
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
-import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil.anyObject
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenData
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyMap
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -34,8 +35,9 @@ internal class SkjermingControllerTest {
 
     @Test
     fun `isSkjermet returns data when valid token`() {
-        Mockito.`when`(serviceClient.doGet(anyObject(), anyObject())).thenReturn("false")
-        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(ServiceTokenData("j.w.t","JWT", LocalDateTime.now(), 60L))
+        Mockito.`when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("false")
+        Mockito.`when`(egressTokenGetter.getServiceUserToken())
+            .thenReturn(ServiceTokenData("j.w.t", "JWT", LocalDateTime.now(), 60L))
 
         mvc.perform(
             MockMvcRequestBuilders.get("/skjermet?personident=01023456789")

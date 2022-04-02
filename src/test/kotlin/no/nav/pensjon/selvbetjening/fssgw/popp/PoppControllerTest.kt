@@ -5,6 +5,8 @@ import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyMap
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -34,7 +36,7 @@ internal class PoppControllerTest {
 
     @Test
     fun `when OK then opptjeningsgrunnlag request returns data`() {
-        Mockito.`when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+        Mockito.`when`(serviceClient.doGet(anyString(), anyMap()))
             .thenReturn("""{ "response": "opptjeningsgrunnlaget"}""")
         Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
@@ -47,7 +49,7 @@ internal class PoppControllerTest {
 
     @Test
     fun `when OK then pensjonspoeng request returns data`() {
-        Mockito.`when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+        Mockito.`when`(serviceClient.doGet(anyString(), anyMap()))
             .thenReturn("""{ "response": "pensjonspoengene"}""")
         Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
@@ -60,7 +62,7 @@ internal class PoppControllerTest {
 
     @Test
     fun `when OK then restpensjon request returns data`() {
-        Mockito.`when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+        Mockito.`when`(serviceClient.doGet(anyString(), anyMap()))
             .thenReturn("""{ "response": "restpensjonen"}""")
         Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
@@ -73,7 +75,7 @@ internal class PoppControllerTest {
 
     @Test
     fun `when OK then beholdning request returns data`() {
-        Mockito.`when`(serviceClient.doPost(MockUtil.anyObject(), MockUtil.anyObject(), MockUtil.anyObject()))
+        Mockito.`when`(serviceClient.doPost(anyString(), anyMap(), anyString()))
             .thenReturn("""{ "response": "beholdningen"}""")
         Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 

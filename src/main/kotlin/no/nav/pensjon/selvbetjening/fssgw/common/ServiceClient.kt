@@ -6,7 +6,6 @@ import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
-import java.util.*
 
 @Component
 class ServiceClient {
@@ -17,7 +16,7 @@ class ServiceClient {
     // (which is more than the default 262 KB)
     private val webClient: WebClient = WebClientPreparer.largeBufferWebClient()
 
-    fun doGet(uri: String, headers: TreeMap<String, String>): String {
+    fun doGet(uri: String, headers: Map<String, String>): String {
         if (log.isDebugEnabled) {
             log.debug("GET from URI: '$uri'")
         }
@@ -42,7 +41,7 @@ class ServiceClient {
         }
     }
 
-    fun doOptions(uri: String, headers: TreeMap<String, String>): String {
+    fun doOptions(uri: String, headers: Map<String, String>): String {
         if (log.isDebugEnabled) {
             log.debug("OPTION from URI: '$uri'")
         }
@@ -67,7 +66,7 @@ class ServiceClient {
         }
     }
 
-    fun doPost(uri: String, headers: TreeMap<String, String>, body: String): String {
+    fun doPost(uri: String, headers: Map<String, String>, body: String): String {
         if (log.isDebugEnabled) {
             log.debug("POST to URI: '$uri'")
         }
@@ -93,7 +92,7 @@ class ServiceClient {
         }
     }
 
-    private fun copyHeaders(ingressHeaders: TreeMap<String, String>, egressHeaders: HttpHeaders) {
+    private fun copyHeaders(ingressHeaders: Map<String, String>, egressHeaders: HttpHeaders) {
         ingressHeaders.entries.stream().forEach { (k, v) -> egressHeaders.set(k, v) }
     }
 }

@@ -5,6 +5,8 @@ import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyMap
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -34,7 +36,7 @@ internal class PenControllerTest {
 
     @Test
     fun `when OK then AFP-historikk request returns data`() {
-        `when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+        `when`(serviceClient.doGet(anyString(), anyMap()))
             .thenReturn("""{ "response": "AFP-historikken"}""")
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
@@ -48,7 +50,7 @@ internal class PenControllerTest {
 
     @Test
     fun `when OK then uforehistorikk request returns data`() {
-        `when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+        `when`(serviceClient.doGet(anyString(), anyMap()))
             .thenReturn("""{ "response": "uførehistorikken"}""")
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
@@ -62,7 +64,7 @@ internal class PenControllerTest {
 
     @Test
     fun `when OK then uttaksgrad person request returns data`() {
-        `when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+        `when`(serviceClient.doGet(anyString(), anyMap()))
             .thenReturn("""{ "response": "uttaksgraden"}""")
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
@@ -76,7 +78,7 @@ internal class PenControllerTest {
 
     @Test
     fun `when OK then uttaksgrad search request returns data`() {
-        `when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+        `when`(serviceClient.doGet(anyString(), anyMap()))
             .thenReturn("""{ "response": "uttaksgradene"}""")
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
@@ -89,7 +91,7 @@ internal class PenControllerTest {
 
     @Test
     fun `when OK then krav request returns data`() {
-        `when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+        `when`(serviceClient.doGet(anyString(), anyMap()))
             .thenReturn("""{ "response": "kravet"}""")
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
@@ -104,7 +106,7 @@ internal class PenControllerTest {
 
     @Test
     fun `when OK then sakssammendrag request returns data`() {
-        `when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+        `when`(serviceClient.doGet(anyString(), anyMap()))
             .thenReturn("""{ "response": "sammendraget"}""")
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
@@ -119,7 +121,7 @@ internal class PenControllerTest {
 
     @Test
     fun `when OK then vedtak request returns data`() {
-        `when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+        `when`(serviceClient.doGet(anyString(), anyMap()))
             .thenReturn("""{ "response": "vedtakene"}""")
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
@@ -134,7 +136,7 @@ internal class PenControllerTest {
 
     @Test
     fun `when OK then bestem gjeldende vedtak request returns data`() {
-        `when`(serviceClient.doGet(MockUtil.anyObject(), MockUtil.anyObject()))
+        `when`(serviceClient.doGet(anyString(), anyMap()))
             .thenReturn("""{ "response": "vedtakene"}""")
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 

@@ -1,11 +1,12 @@
 package no.nav.pensjon.selvbetjening.fssgw.esb
 
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
-import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil.anyObject
 import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil.serviceTokenData
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyMap
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -94,7 +95,7 @@ internal class EsbControllerTest {
     }
 
     private fun doTest(path: String, expectedResponseBody: String) {
-        `when`(serviceClient.doPost(anyObject(), anyObject(), anyObject())).thenReturn(expectedResponseBody)
+        `when`(serviceClient.doPost(anyString(), anyMap(), anyString())).thenReturn(expectedResponseBody)
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
         val expectedMediaType = MediaType(MediaType.TEXT_XML, StandardCharsets.UTF_8)
 

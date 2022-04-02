@@ -2,9 +2,10 @@ package no.nav.pensjon.selvbetjening.fssgw.tps
 
 import no.nav.pensjon.selvbetjening.fssgw.common.ConsumerException
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
-import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil
 import no.nav.pensjon.selvbetjening.fssgw.tech.basicauth.BasicAuthValidator
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyMap
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -33,7 +34,7 @@ internal class TpsPingControllerTest {
 
     @Test
     fun `when OK then person request responds with OK`() {
-        `when`(serviceClient.doPost(MockUtil.anyObject(), MockUtil.anyObject(), MockUtil.anyObject())).thenReturn("Ok")
+        `when`(serviceClient.doPost(anyString(), anyMap(), anyString())).thenReturn("Ok")
         `when`(authValidator.validate(credentials)).thenReturn(true)
 
         mvc.perform(
@@ -46,7 +47,7 @@ internal class TpsPingControllerTest {
 
     @Test
     fun `when error then person request responds with bad gateway and error message`() {
-        `when`(serviceClient.doPost(MockUtil.anyObject(), MockUtil.anyObject(), MockUtil.anyObject()))
+        `when`(serviceClient.doPost(anyString(), anyMap(), anyString()))
             .thenAnswer { throw ConsumerException("oops") }
         `when`(authValidator.validate(credentials)).thenReturn(true)
 
