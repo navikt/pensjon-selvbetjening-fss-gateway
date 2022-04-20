@@ -52,6 +52,8 @@ spec:
       value: http://pdl-api.pdl.svc.nais.local
     - name: PEN_URL
       value: https://pensjon-pen-q2.dev.adeo.no
+    - name: PENSJONREGLER_URL
+      value: https://pensjon-regler-q2.dev.adeo.no
     - name: POPP_URL
       value: https://pensjon-popp-q2.dev.adeo.no
     - name: PREG_URL
