@@ -63,7 +63,7 @@ abstract class ControllerBase(
             val url = "$egressEndpoint${request.requestURI}$queryPart"
             val responseBody = serviceClient.doOptions(url, headersToRelay)
             val responseContentType = getResponseContentType(request)
-            metric("get", "OK")
+            metric("options", "OK")
             ResponseEntity(responseBody, responseContentType, HttpStatus.OK)
         } catch (e: AuthException) {
             unauthorized(e)

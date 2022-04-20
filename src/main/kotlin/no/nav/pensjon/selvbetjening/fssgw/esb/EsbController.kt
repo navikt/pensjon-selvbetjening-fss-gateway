@@ -22,6 +22,7 @@ class EsbController(
     @PostMapping(
         value = [
             "nav-cons-pen-pen-personWeb/sca/PENPersonWSEXP", // sca = Service Component Architecture
+            "nav-cons-pen-pen-ppen015Web/sca/PENPPEN015WSEXP",
             "nav-cons-pen-pselv-brukerprofilWeb/sca/PSELVBrukerprofilWSEXP",
             "nav-cons-pen-pselv-fullmaktWeb/sca/PSELVFullmaktWSEXP",
             "nav-cons-pen-pselv-henvendelseWeb/sca/PSELVHenvendelseWSEXP",
