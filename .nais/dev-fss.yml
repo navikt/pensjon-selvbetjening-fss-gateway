@@ -89,6 +89,9 @@ spec:
         - application: pensjon-selvbetjening-soknad-alder-backend
           namespace: pensjonselvbetjening
           cluster: dev-gcp
+        - application: pensjon-selvbetjening-soknad-alder-backend-ekstern
+          namespace: pensjonselvbetjening
+          cluster: dev-gcp
         - application: pensjon-pselv-q2
           namespace: teampensjon
           cluster: dev-gcp
