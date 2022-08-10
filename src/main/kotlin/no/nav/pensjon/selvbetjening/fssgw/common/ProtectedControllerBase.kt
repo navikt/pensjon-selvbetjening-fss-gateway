@@ -41,7 +41,7 @@ abstract class ProtectedControllerBase(
         headers[HttpHeaders.AUTHORIZATION] = auth
 
         if (consumerTokenRequired()) {
-            headers[consumerTokenHeaderName] = auth
+            headers[CONSUMER_TOKEN_HEADER_NAME] = auth
         }
     }
 }

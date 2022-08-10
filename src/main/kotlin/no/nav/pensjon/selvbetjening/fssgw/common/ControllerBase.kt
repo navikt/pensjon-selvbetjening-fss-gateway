@@ -20,7 +20,6 @@ abstract class ControllerBase(
     private val serviceClient: ServiceClient,
     private val egressEndpoint: String) {
 
-    protected val consumerTokenHeaderName = "Nav-Consumer-Token"
     private val log = LoggerFactory.getLogger(javaClass)
     private val locale = Locale.getDefault()
 
@@ -30,7 +29,7 @@ abstract class ControllerBase(
         HttpHeaders.HOST.lowercase(locale),
         HttpHeaders.USER_AGENT.lowercase(locale),
         HttpHeaders.CONTENT_LENGTH.lowercase(locale),
-        consumerTokenHeaderName.lowercase(locale)
+        CONSUMER_TOKEN_HEADER_NAME.lowercase(locale)
     )
 
     fun doGet(request: HttpServletRequest): ResponseEntity<String> {
@@ -173,6 +172,7 @@ abstract class ControllerBase(
 
     companion object {
         const val CALL_ID_HEADER_NAME_1 = "Nav-Call-Id"
+        const val CONSUMER_TOKEN_HEADER_NAME = "Nav-Consumer-Token"
 
         // NB: No consensus in NAV regarding call ID header name,
         // ref. https://github.com/navikt/k9-formidling/blob/master/app/src/main/kotlin/no/nav/k9/formidling/app/logging/LoggingHjelper.kt
