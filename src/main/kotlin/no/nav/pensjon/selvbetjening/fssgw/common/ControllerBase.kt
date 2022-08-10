@@ -4,6 +4,7 @@ import io.jsonwebtoken.JwtException
 import io.micrometer.core.instrument.Metrics
 import no.nav.pensjon.selvbetjening.fssgw.tech.oauth2.Oauth2Exception
 import org.slf4j.LoggerFactory
+import org.slf4j.MDC
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -20,7 +21,6 @@ abstract class ControllerBase(
     private val egressEndpoint: String) {
 
     protected val consumerTokenHeaderName = "Nav-Consumer-Token"
-    private val callIdHeaderName = "Nav-Call-Id"
     private val log = LoggerFactory.getLogger(javaClass)
     private val locale = Locale.getDefault()
 
@@ -52,6 +52,8 @@ abstract class ControllerBase(
         } catch (e: ConsumerException) {
             metric("get", "error")
             ResponseEntity("""{"error": "${e.message}"}""", jsonContentType, HttpStatus.BAD_GATEWAY)
+        } finally {
+            MDC.clear()
         }
     }
 
@@ -74,6 +76,8 @@ abstract class ControllerBase(
         } catch (e: ConsumerException) {
             metric("get", "error")
             ResponseEntity("""{"error": "${e.message}"}""", jsonContentType, HttpStatus.BAD_GATEWAY)
+        } finally {
+            MDC.clear()
         }
     }
 
@@ -96,6 +100,8 @@ abstract class ControllerBase(
         } catch (e: ConsumerException) {
             metric("post", "error")
             ResponseEntity("""{"error": "${e.message}"}""", jsonContentType, HttpStatus.BAD_GATEWAY)
+        } finally {
+            MDC.clear()
         }
     }
 
@@ -107,7 +113,7 @@ abstract class ControllerBase(
         val egressHeaders = TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER)
         request.headerNames.toList().forEach { copyHeader(request, it, egressHeaders) }
         addAuthHeaderIfNeeded(request, egressHeaders)
-        addCallIdHeaderIfNeeded(egressHeaders)
+        addCallIdHeader(egressHeaders)
         return egressHeaders
     }
 
@@ -118,12 +124,10 @@ abstract class ControllerBase(
             xmlContentType else jsonContentType
     }
 
-    private fun addCallIdHeaderIfNeeded(headers: TreeMap<String, String>) {
-        if (headers.containsKey(callIdHeaderName)) {
-            return
-        }
-
-        headers[callIdHeaderName] = randomUUID().toString()
+    private fun addCallIdHeader(headers: TreeMap<String, String>) {
+        val callId = resolveCallId(headers)
+        MDC.put(CALL_ID_HEADER_NAME_1, callId)
+        headers[CALL_ID_HEADER_NAME_1] = callId
     }
 
     private fun copyHeader(request: HttpServletRequest, headerName: String, headers: TreeMap<String, String>) {
@@ -158,4 +162,26 @@ abstract class ControllerBase(
 
     private val xmlContentType: HttpHeaders
         get() = contentTypeHeaders(MediaType(MediaType.TEXT_XML, StandardCharsets.UTF_8))
+
+    private fun resolveCallId(headers: TreeMap<String, String>): String {
+        return NAV_CALL_ID_HEADER_NAMES
+            .asSequence()
+            .mapNotNull { headers[it] }
+            .firstOrNull { it.isNotEmpty() }
+            ?: randomUUID().toString()
+    }
+
+    companion object {
+        const val CALL_ID_HEADER_NAME_1 = "Nav-Call-Id"
+
+        // NB: No consensus in NAV regarding call ID header name,
+        // ref. https://github.com/navikt/k9-formidling/blob/master/app/src/main/kotlin/no/nav/k9/formidling/app/logging/LoggingHjelper.kt
+
+        val NAV_CALL_ID_HEADER_NAMES =
+            setOf(
+                CALL_ID_HEADER_NAME_1,
+                "Nav-CallId",
+                "Nav-Callid",
+                "X-Correlation-Id")
+    }
 }
