@@ -7,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest
 class PensjonSelvbetjeningFssGatewayApplicationTests {
 
     @Test
-    fun contextLoads() {
+    fun `context loads`() {
     }
-
 }

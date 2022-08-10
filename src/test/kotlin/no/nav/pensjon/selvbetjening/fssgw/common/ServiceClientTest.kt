@@ -20,7 +20,7 @@ internal class ServiceClientTest : WebClientTest() {
     }
 
     @Test
-    fun doGet_returns_data_when_serviceReturnsData() {
+    fun `doGet returns data when service returns data`() {
         prepare(dataResponse())
 
         val response = client.doGet(baseUrl(), ingressHeaders())
@@ -30,7 +30,7 @@ internal class ServiceClientTest : WebClientTest() {
     }
 
     @Test
-    fun doGet_returns_emptyString_when_noDataFromService() {
+    fun `doGet returns empty string when no data from service`() {
         prepare(emptyResponse())
 
         val response = client.doGet(baseUrl(), ingressHeaders())
@@ -40,7 +40,7 @@ internal class ServiceClientTest : WebClientTest() {
     }
 
     @Test
-    fun doPost_returns_data_when_serviceReturnsData() {
+    fun `doPost returns data when service returns data`() {
         prepare(dataResponse())
 
         val response = client.doPost(baseUrl(), ingressHeaders(), "body1")
@@ -50,7 +50,7 @@ internal class ServiceClientTest : WebClientTest() {
     }
 
     @Test
-    fun doPost_returns_emptyString_when_noDataFromService() {
+    fun `doPost returns empty string when no data from service`() {
         prepare(emptyResponse())
 
         val response = client.doPost(baseUrl(), ingressHeaders(), "body1")

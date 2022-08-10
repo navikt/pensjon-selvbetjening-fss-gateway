@@ -18,37 +18,37 @@ internal class BasicAuthValidatorTest {
     }
 
     @Test
-    fun validate_returns_true_if_correct_usernameAndPassword() {
+    fun `validate returns true if correct username and password`() {
         val credentials = basicAuth("user1:secret")
         assertTrue(validator.validate(credentials))
     }
 
     @Test
-    fun validate_returns_false_if_wrong_password() {
+    fun `validate returns false if wrong password`() {
         val credentials = basicAuth("user1:secreT")
         assertFalse(validator.validate(credentials))
     }
 
     @Test
-    fun validate_returns_false_if_wrong_username() {
+    fun `validate returns false if wrong username`() {
         val credentials = basicAuth("user0:secret")
         assertFalse(validator.validate(credentials))
     }
 
     @Test
-    fun validate_returns_false_if_wrong_delimiter() {
+    fun `validate returns false if wrong delimiter`() {
         val credentials = basicAuth("user1;secret")
         assertFalse(validator.validate(credentials))
     }
 
     @Test
-    fun validate_returns_false_if_no_credentials() {
+    fun `validate returns false if no credentials`() {
         assertFalse(validator.validate(" "))
         assertFalse(validator.validate(""))
     }
 
     @Test
-    fun validate_throwsIllegalArgumentException_if_credentialsNotBase64Encoded() {
+    fun `validate throws IllegalArgumentException if credentials not Base64-encoded`() {
         val credentials = "user1:secret"
         assertThrows(IllegalArgumentException::class.java) { validator.validate(credentials) }
     }

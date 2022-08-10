@@ -15,12 +15,12 @@ internal class JsonWebKeyTest {
             "AQAB")
 
     @Test
-    fun getKeyId_returns_keyId() {
+    fun `getKeyId returns key ID`() {
         assertEquals("a80c5e17-ab45-4300-8312-e0913241a198", key.getKeyId())
     }
 
     @Test
-    fun getRsaPublicKey_returns_rsaPublicKey() {
+    fun `getRsaPublicKey returns RSA public key`() {
         val key = key.getRsaPublicKey()
         assertEquals("RSA", key.algorithm)
     }
