@@ -58,14 +58,14 @@ spec:
       value: https://pensjon-popp.nais.adeo.no
     - name: PREG_URL
       value: https://pensjon-preg.nais.adeo.no
-    - name: SKJERMING_URL
-      value: https://skjermede-personer-pip.nais.adeo.no
     - name: STS_URL
       value: http://security-token-service.aura.svc.nais.local
     - name: TP_URL
       value: https://tp.nais.adeo.no
     - name: TPS_PERSON_URL
       value: https://app.adeo.no
+    - name: WASAPP_URL
+      value: https://wasapp.adeo.no
     - name: FSSGW_LOGGING_LEVEL
       value: info
     - name: STDOUT_LOG_OUTPUT

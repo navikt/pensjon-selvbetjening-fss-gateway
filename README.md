@@ -15,10 +15,10 @@ Støttede tjenester:
 - PDL (Persondataløsningen)
 - PEN (Pensjonsfaglig kjerne)
 - POPP (Pensjonsfaglig opptjeningsregister)
-- Skjermede personer PIP
 - TP (Tjenestepensjon)
+- TSS (Tjenestebasert samhandlersystem)
 
-For å benytte endepunktene kreves *bearer*-token (TokenX eller Azure AD On-Behalf-Of).
+For å benytte endepunktene kreves *bearer*-token (TokenX, Azure AD On-Behalf-Of, eller Client credentials).
 
 ## Øvrig dokumentasjon
 
