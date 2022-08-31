@@ -61,7 +61,7 @@ internal class StsPingControllerTest {
     @Test
     fun `when error then JWT token request responds with bad gateway and error message`() {
         `when`(serviceClient.doGet(anyString(), anyMap()))
-            .thenAnswer { throw ConsumerException("oops") }
+            .thenAnswer { throw ConsumerException("""{"error": "oops"}""") }
         `when`(authValidator.validate(credentials)).thenReturn(true)
 
         mvc.perform(

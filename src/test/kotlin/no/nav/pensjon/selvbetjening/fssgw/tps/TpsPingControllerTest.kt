@@ -48,7 +48,11 @@ internal class TpsPingControllerTest {
     @Test
     fun `when error then person request responds with bad gateway and error message`() {
         `when`(serviceClient.doPost(anyString(), anyMap(), anyString()))
-            .thenAnswer { throw ConsumerException("oops") }
+            .thenAnswer {
+                throw ConsumerException(
+                    """<?xml version="1.0" encoding="UTF-8"?>
+<error>oops</error>""")
+            }
         `when`(authValidator.validate(credentials)).thenReturn(true)
 
         mvc.perform(
@@ -56,6 +60,7 @@ internal class TpsPingControllerTest {
                 .header(HttpHeaders.AUTHORIZATION, "Basic $credentials")
                 .content("foo"))
             .andExpect(status().isBadGateway)
-            .andExpect(content().json("""{"error": "oops"}"""))
+            .andExpect(content().xml("""<?xml version="1.0" encoding="UTF-8"?>
+<error>oops</error>"""))
     }
 }

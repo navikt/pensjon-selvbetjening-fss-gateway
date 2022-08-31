@@ -48,7 +48,7 @@ internal class ArenaPingControllerTest {
     @Test
     fun `when error then arbeidsevnevurdering request responds with bad gateway and error message`() {
         `when`(serviceClient.doPost(anyString(), anyMap(), anyString()))
-            .thenAnswer { throw ConsumerException("oops") }
+            .thenAnswer { throw ConsumerException("""{"error": "oops"}""") }
         `when`(authValidator.validate(credentials)).thenReturn(true)
 
         mvc.perform(

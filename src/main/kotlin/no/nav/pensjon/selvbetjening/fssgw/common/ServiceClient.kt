@@ -31,19 +31,15 @@ class ServiceClient {
                 .block()
                 ?: ""
         } catch (e: WebClientResponseException) {
-            val message = "Failed to access service at $uri: ${e.message} | Response: ${e.responseBodyAsString}"
-            log.error(message, e)
-            throw ConsumerException(message, e)
+            throw ConsumerException(e.responseBodyAsString, e)
         } catch (e: RuntimeException) { // e.g. when connection broken
-            val message = "Failed to access service at $uri: ${e.message}"
-            log.error(message, e)
-            throw ConsumerException(message, e)
+            throw ConsumerException("Failed to do GET towards $uri: ${e.message}", e)
         }
     }
 
     fun doOptions(uri: String, headers: Map<String, String>): String {
         if (log.isDebugEnabled) {
-            log.debug("OPTION from URI: '$uri'")
+            log.debug("OPTIONS from URI: '$uri'")
         }
 
         try {
@@ -56,13 +52,9 @@ class ServiceClient {
                 .block()
                 ?: ""
         } catch (e: WebClientResponseException) {
-            val message = "Failed to access service at $uri: ${e.message} | Response: ${e.responseBodyAsString}"
-            log.error(message, e)
-            throw ConsumerException(message, e)
+            throw ConsumerException(e.responseBodyAsString, e)
         } catch (e: RuntimeException) { // e.g. when connection broken
-            val message = "Failed to access service at $uri: ${e.message}"
-            log.error(message, e)
-            throw ConsumerException(message, e)
+            throw ConsumerException("Failed to do OPTIONS towards $uri: ${e.message}", e)
         }
     }
 
@@ -82,13 +74,9 @@ class ServiceClient {
                 .block()
                 ?: ""
         } catch (e: WebClientResponseException) {
-            val message = "Failed to access service at $uri: ${e.message} | Response: ${e.responseBodyAsString}"
-            log.error(message, e)
-            throw ConsumerException(message, e)
+            throw ConsumerException(e.responseBodyAsString, e)
         } catch (e: RuntimeException) { // e.g. when connection broken
-            val message = "Failed to access service at $uri: ${e.message}"
-            log.error(message, e)
-            throw ConsumerException(message, e)
+            throw ConsumerException("Failed to do POST towards $uri: ${e.message}", e)
         }
     }
 

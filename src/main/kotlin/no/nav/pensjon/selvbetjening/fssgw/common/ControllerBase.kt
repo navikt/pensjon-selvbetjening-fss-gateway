@@ -33,13 +33,14 @@ abstract class ControllerBase(
     )
 
     fun doGet(request: HttpServletRequest): ResponseEntity<String> {
+        val responseContentType = getResponseContentType(request)
+
         return try {
             checkIngressAuth(request)
             val headersToRelay = getEgressHeaders(request)
             val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
             val url = "$egressEndpoint${request.requestURI}$queryPart"
             val responseBody = serviceClient.doGet(url, headersToRelay)
-            val responseContentType = getResponseContentType(request)
             metric("get", "OK")
             ResponseEntity(responseBody, responseContentType, HttpStatus.OK)
         } catch (e: AuthException) {
@@ -50,20 +51,22 @@ abstract class ControllerBase(
             unauthorized(e)
         } catch (e: ConsumerException) {
             metric("get", "error")
-            ResponseEntity("""{"error": "${e.message}"}""", jsonContentType, HttpStatus.BAD_GATEWAY)
+            log.error("Failed to consume service at $egressEndpoint${request.requestURI}: " + e.message, e)
+            ResponseEntity(e.message, responseContentType, HttpStatus.BAD_GATEWAY)
         } finally {
             MDC.clear()
         }
     }
 
     fun doOptions(request: HttpServletRequest): ResponseEntity<String> {
+        val responseContentType = getResponseContentType(request)
+
         return try {
             checkIngressAuth(request)
             val headersToRelay = getEgressHeaders(request)
             val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
             val url = "$egressEndpoint${request.requestURI}$queryPart"
             val responseBody = serviceClient.doOptions(url, headersToRelay)
-            val responseContentType = getResponseContentType(request)
             metric("options", "OK")
             ResponseEntity(responseBody, responseContentType, HttpStatus.OK)
         } catch (e: AuthException) {
@@ -73,21 +76,23 @@ abstract class ControllerBase(
         } catch (e: Oauth2Exception) {
             unauthorized(e)
         } catch (e: ConsumerException) {
-            metric("get", "error")
-            ResponseEntity("""{"error": "${e.message}"}""", jsonContentType, HttpStatus.BAD_GATEWAY)
+            metric("options", "error")
+            log.error("Failed to consume service at $egressEndpoint${request.requestURI}: " + e.message, e)
+            ResponseEntity(e.message, responseContentType, HttpStatus.BAD_GATEWAY)
         } finally {
             MDC.clear()
         }
     }
 
     fun doPost(request: HttpServletRequest, body: String): ResponseEntity<String> {
+        val responseContentType = getResponseContentType(request)
+
         return try {
             checkIngressAuth(request)
             val headersToRelay = getEgressHeaders(request)
             val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
             val url = "$egressEndpoint${request.requestURI}$queryPart"
             val responseBody = serviceClient.doPost(url, headersToRelay, body)
-            val responseContentType = getResponseContentType(request)
             metric("post", "OK")
             ResponseEntity(responseBody, responseContentType, HttpStatus.OK)
         } catch (e: AuthException) {
@@ -98,7 +103,8 @@ abstract class ControllerBase(
             unauthorized(e)
         } catch (e: ConsumerException) {
             metric("post", "error")
-            ResponseEntity("""{"error": "${e.message}"}""", jsonContentType, HttpStatus.BAD_GATEWAY)
+            log.error("Failed to consume service at $egressEndpoint${request.requestURI}: " + e.message, e)
+            ResponseEntity(e.message, responseContentType, HttpStatus.BAD_GATEWAY)
         } finally {
             MDC.clear()
         }
