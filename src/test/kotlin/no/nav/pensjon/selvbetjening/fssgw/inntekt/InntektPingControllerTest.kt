@@ -28,19 +28,6 @@ internal class InntektPingControllerTest {
     private val credentials = "cred"
 
     @Test
-    fun `when OK then Inntekt ping request responds with OK`() {
-        Mockito.`when`(serviceClient.doGet(ArgumentMatchers.anyString(), ArgumentMatchers.anyMap()))
-            .thenReturn("""{ "response": "pong"}""")
-        Mockito.`when`(authValidator.validate(credentials)).thenReturn(true)
-
-        mvc.perform(
-            MockMvcRequestBuilders.get("/inntektskomponenten-ws/rs/api/ping")
-                .header(HttpHeaders.AUTHORIZATION, "Basic $credentials"))
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.content().json("""{"response": "pong"}"""))
-    }
-
-    @Test
     fun `when OK then BehandleInntekt ping request responds with OK`() {
         Mockito.`when`(serviceClient.doGet(ArgumentMatchers.anyString(), ArgumentMatchers.anyMap()))
             .thenReturn("""{ "response": "pong"}""")
