@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 import javax.servlet.http.HttpServletRequest
 
 @RestController
-@RequestMapping("inntektskomponenten-ws/inntekt")
+@RequestMapping("inntektskomponenten-ws")
 class InntektPingController(
     authValidator: BasicAuthValidator,
     serviceClient: ServiceClient,
@@ -20,8 +20,9 @@ class InntektPingController(
 
     @GetMapping(
         value = [
-            "BehandleInntekt/ping",
-            "v3/Inntekt/ping"])
+            "inntekt/BehandleInntekt/ping",
+            "inntekt/v3/Inntekt/ping",
+            "rs/api/ping"])
     fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> {
         return super.doGet(request)
     }
