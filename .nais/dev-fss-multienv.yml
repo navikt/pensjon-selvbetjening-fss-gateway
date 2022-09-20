@@ -1,0 +1,99 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: pensjon-selvbetjening-fss-gateway-{{ environment }}
+  namespace: pensjonselvbetjening
+  labels:
+    team: pensjonselvbetjening
+spec:
+  image: {{ image }}
+  port: 8080
+  replicas:
+    min: 2
+    max: 2
+  ingresses:
+    - https://pensjon-selvbetjening-fss-gateway-{{ environment }}.dev.intern.nav.no
+    - https://pensjon-selvbetjening-fss-gateway-{{ environment }}.dev-fss-pub.nais.io
+  liveness:
+    path: "/internal/liveness"
+    initialDelay: 30
+    timeout: 1
+    periodSeconds: 30
+    failureThreshold: 5
+  readiness:
+    path: "/internal/readiness"
+    periodSeconds: 30
+  env:
+    - name: AAREG_URL
+      value: https://modapp-{{ environment }}.adeo.no
+    - name: ARENA_URL
+      value: https://arena-{{ environment }}.adeo.no
+    - name: BREVDATA_URL
+      value: https://pensjon-brevmetadata.dev.intern.nav.no
+    - name: DKIF_URL
+      value: http://dkif.team-rocket.svc.nais.local
+    - name: EREG_URL
+      value: https://modapp-{{ environment }}.adeo.no
+    - name: ESB_URL
+      value: https://tjenestebuss-{{ environment }}.adeo.no
+    - name: INNTEKT_URL
+      value: https://app-{{ environment }}.adeo.no
+    - name: JOURNALFORING_URL
+      value: https://dokarkiv-{{ environment }}.dev.intern.nav.no
+    - name: KODEVERK_URL
+      value: http://kodeverk.org.svc.nais.local
+    - name: NORG2_URL
+      value: https://norg2.nais.preprod.local
+    - name: OPPGAVE_URL
+      value: https://oppgave-{{ environment }}.nais.preprod.local
+    - name: PARALLELLESANNHETER_URL
+      value: https://pensjon-parallelle-sannheter.dev.intern.nav.no
+    - name: PDL_URL
+      value: http://pdl-api.pdl.svc.nais.local
+    - name: PEN_URL
+      value: https://pensjon-pen-{{ environment }}.dev.adeo.no
+    - name: PENSJONREGLER_URL
+      value: https://pensjon-regler-{{ environment }}.dev.adeo.no
+    - name: POPP_URL
+      value: https://pensjon-popp-{{ environment }}.dev.adeo.no
+    - name: PREG_URL
+      value: https://pensjon-preg-{{ environment }}.nais.preprod.local
+    - name: STS_URL
+      value: http://security-token-service.aura.svc.nais.local
+    - name: TP_URL
+      value: https://tp-{{ environment }}.dev.intern.nav.no
+    - name: TPS_PERSON_URL
+      value: https://app-{{ environment }}.adeo.no
+    - name: WASAPP_URL
+      value: https://wasapp-{{ environment }}.adeo.no
+    - name: FSSGW_LOGGING_LEVEL
+      value: debug
+    - name: STDOUT_LOG_OUTPUT
+      value: JSON
+  prometheus:
+    enabled: true
+    path: /internal/prometheus
+  azure:
+    application:
+      enabled: true
+      tenant: trygdeetaten.no
+  webproxy: true
+  tokenx:
+    enabled: true
+  accessPolicy:
+    inbound:
+      rules:
+        - application: pensjon-selvbetjening-soknad-alder-backend
+          namespace: pensjonselvbetjening
+          cluster: dev-gcp
+        - application: pensjon-selvbetjening-soknad-alder-backend-ekstern
+          namespace: pensjonselvbetjening
+          cluster: dev-gcp
+        - application: pensjon-pselv-{{ environment }}
+          namespace: teampensjon
+          cluster: dev-gcp
+  vault:
+    enabled: true
+    paths:
+      - kvPath: /serviceuser/data/dev/srvpselv
+        mountPath: /secrets/serviceuser
