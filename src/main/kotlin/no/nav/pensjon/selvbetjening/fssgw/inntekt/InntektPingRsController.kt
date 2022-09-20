@@ -1,8 +1,9 @@
 package no.nav.pensjon.selvbetjening.fssgw.inntekt
 
-import no.nav.pensjon.selvbetjening.fssgw.common.BasicProtectedControllerBase
+import no.nav.pensjon.selvbetjening.fssgw.common.ProtectedControllerBase
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
-import no.nav.pensjon.selvbetjening.fssgw.tech.basicauth.BasicAuthValidator
+import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
+import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -12,17 +13,23 @@ import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("inntektskomponenten-ws")
-class InntektPingController(
-    authValidator: BasicAuthValidator,
+class InntektPingRsController(
+    jwsValidator: JwsValidator,
+    egressTokenGetter: ServiceTokenGetter,
     serviceClient: ServiceClient,
     @Value("\${inntekt.url}") egressEndpoint: String) :
-    BasicProtectedControllerBase(authValidator, serviceClient, egressEndpoint) {
+    ProtectedControllerBase(jwsValidator, egressTokenGetter, serviceClient, egressEndpoint) {
 
-    @GetMapping(
-        value = [
-            "inntekt/BehandleInntekt/ping",
-            "inntekt/v3/Inntekt/ping"])
+    @GetMapping("rs/api/ping")
     fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> {
         return super.doGet(request)
+    }
+
+    override fun egressAuthWaived(): Boolean {
+        return true
+    }
+
+    override fun consumerTokenRequired(): Boolean {
+        return false
     }
 }
