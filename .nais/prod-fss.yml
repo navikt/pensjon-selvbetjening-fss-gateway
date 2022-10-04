@@ -15,14 +15,17 @@ spec:
     - https://pensjon-selvbetjening-fss-gateway.intern.nav.no
     - https://pensjon-selvbetjening-fss-gateway.prod-fss-pub.nais.io
   liveness:
-    path: "/internal/liveness"
+    path: /internal/liveness
     initialDelay: 30
     timeout: 1
     periodSeconds: 30
     failureThreshold: 5
   readiness:
-    path: "/internal/readiness"
+    path: /internal/readiness
     periodSeconds: 30
+  prometheus:
+    enabled: true
+    path: /internal/prometheus
   env:
     - name: AAREG_URL
       value: https://modapp.adeo.no
@@ -70,9 +73,6 @@ spec:
       value: info
     - name: STDOUT_LOG_OUTPUT
       value: JSON
-  prometheus:
-    enabled: true
-    path: /internal/prometheus
   azure:
     application:
       enabled: true
@@ -85,7 +85,7 @@ spec:
       rules:
         - application: pensjon-selvbetjening-opptjening-backend
           namespace: pensjonselvbetjening
-          cluster: prod-fss
+          cluster: prod-gcp
         - application: pensjon-selvbetjening-soknad-alder-backend
           namespace: pensjonselvbetjening
           cluster: prod-gcp
