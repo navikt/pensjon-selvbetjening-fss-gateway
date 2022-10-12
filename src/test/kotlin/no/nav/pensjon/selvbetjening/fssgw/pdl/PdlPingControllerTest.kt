@@ -1,7 +1,9 @@
 package no.nav.pensjon.selvbetjening.fssgw.pdl
 
+import no.nav.pensjon.selvbetjening.fssgw.common.ConsumerException
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
-import no.nav.pensjon.selvbetjening.fssgw.tech.basicauth.BasicAuthValidator
+import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
+import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyMap
 import org.mockito.ArgumentMatchers.anyString
@@ -22,23 +24,37 @@ internal class PdlPingControllerTest {
     lateinit var mvc: MockMvc
 
     @MockBean
-    lateinit var authValidator: BasicAuthValidator
+    lateinit var authValidator: JwsValidator
+
+    @MockBean
+    lateinit var egressTokenGetter: ServiceTokenGetter
 
     @MockBean
     lateinit var serviceClient: ServiceClient
 
     @Test
-    fun `PDL ping request results in JSON response`() {
+    fun `when OK then PDL ping request results in JSON response`() {
         `when`(serviceClient.doOptions(anyString(), anyMap()))
             .thenReturn("""{ "response": "bar"}""")
-        val credentials = "cred"
-        `when`(authValidator.validate(credentials)).thenReturn(true)
 
         mvc.perform(
             options("/graphql")
-                .header(HttpHeaders.AUTHORIZATION, "Basic $credentials")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer token")
                 .content("foo"))
             .andExpect(status().isOk)
             .andExpect(content().json("""{ "response": "bar"}"""))
+    }
+
+    @Test
+    fun `when error then Spring API ping request responds with bad gateway and error message`() {
+        `when`(serviceClient.doOptions(anyString(), anyMap()))
+            .thenAnswer { throw ConsumerException("""{"error": "oops"}""") }
+
+        mvc.perform(
+            options("/graphql")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer token")
+                .content(""))
+            .andExpect(status().isBadGateway)
+            .andExpect(content().json("""{"error": "oops"}"""))
     }
 }

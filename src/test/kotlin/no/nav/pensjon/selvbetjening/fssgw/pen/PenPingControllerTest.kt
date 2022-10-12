@@ -2,7 +2,8 @@ package no.nav.pensjon.selvbetjening.fssgw.pen
 
 import no.nav.pensjon.selvbetjening.fssgw.common.ConsumerException
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
-import no.nav.pensjon.selvbetjening.fssgw.tech.basicauth.BasicAuthValidator
+import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
+import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyMap
 import org.mockito.ArgumentMatchers.anyString
@@ -13,7 +14,6 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpHeaders
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -24,34 +24,23 @@ internal class PenPingControllerTest {
     lateinit var mvc: MockMvc
 
     @MockBean
-    lateinit var authValidator: BasicAuthValidator
+    lateinit var authValidator: JwsValidator
+
+    @MockBean
+    lateinit var egressTokenGetter: ServiceTokenGetter
 
     @MockBean
     lateinit var serviceClient: ServiceClient
 
-    private val credentials = "cred"
-
-    @Test
-    fun `when OK then vedtak request responds with OK`() {
-        `when`(serviceClient.doPost(anyString(), anyMap(), anyString())).thenReturn("Ok")
-        `when`(authValidator.validate(credentials)).thenReturn(true)
-
-        mvc.perform(
-            post("/pen/services/Vedtak_v2")
-                .header(HttpHeaders.AUTHORIZATION, "Basic $credentials")
-                .content("foo"))
-            .andExpect(status().isOk)
-            .andExpect(content().string("Ok"))
-    }
+    private val credentials = "token"
 
     @Test
     fun `when OK then Spring API ping request responds with OK`() {
         `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("Ok")
-        `when`(authValidator.validate(credentials)).thenReturn(true)
 
         mvc.perform(
             get("/pen/springapi/ping")
-                .header(HttpHeaders.AUTHORIZATION, "Basic $credentials")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $credentials")
                 .content("foo"))
             .andExpect(status().isOk)
             .andExpect(content().string("Ok"))
@@ -61,11 +50,10 @@ internal class PenPingControllerTest {
     fun `when error then Spring API ping request responds with bad gateway and error message`() {
         `when`(serviceClient.doGet(anyString(), anyMap()))
             .thenAnswer { throw ConsumerException("""{"error": "oops"}""") }
-        `when`(authValidator.validate(credentials)).thenReturn(true)
 
         mvc.perform(
             get("/pen/springapi/ping")
-                .header(HttpHeaders.AUTHORIZATION, "Basic $credentials")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $credentials")
                 .content(""))
             .andExpect(status().isBadGateway)
             .andExpect(content().json("""{"error": "oops"}"""))
