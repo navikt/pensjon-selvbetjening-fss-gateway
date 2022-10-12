@@ -2,6 +2,7 @@ package no.nav.pensjon.selvbetjening.fssgw.pen
 
 import no.nav.pensjon.selvbetjening.fssgw.common.ConsumerException
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
+import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
@@ -32,15 +33,14 @@ internal class PenPingControllerTest {
     @MockBean
     lateinit var serviceClient: ServiceClient
 
-    private val credentials = "token"
-
     @Test
     fun `when OK then Spring API ping request responds with OK`() {
         `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("Ok")
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
         mvc.perform(
             get("/pen/springapi/ping")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer $credentials")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer token")
                 .content("foo"))
             .andExpect(status().isOk)
             .andExpect(content().string("Ok"))
@@ -50,10 +50,11 @@ internal class PenPingControllerTest {
     fun `when error then Spring API ping request responds with bad gateway and error message`() {
         `when`(serviceClient.doGet(anyString(), anyMap()))
             .thenAnswer { throw ConsumerException("""{"error": "oops"}""") }
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
         mvc.perform(
             get("/pen/springapi/ping")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer $credentials")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer token")
                 .content(""))
             .andExpect(status().isBadGateway)
             .andExpect(content().json("""{"error": "oops"}"""))

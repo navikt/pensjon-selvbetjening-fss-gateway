@@ -1,8 +1,9 @@
 package no.nav.pensjon.selvbetjening.fssgw.popp
 
-import no.nav.pensjon.selvbetjening.fssgw.common.BasicProtectedControllerBase
+import no.nav.pensjon.selvbetjening.fssgw.common.ProtectedControllerBase
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
-import no.nav.pensjon.selvbetjening.fssgw.tech.basicauth.BasicAuthValidator
+import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
+import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -13,10 +14,11 @@ import javax.servlet.http.HttpServletRequest
 @RestController
 @RequestMapping("popp")
 class PoppPingController(
-    authValidator: BasicAuthValidator,
+    authValidator: JwsValidator,
+    egressTokenGetter: ServiceTokenGetter,
     serviceClient: ServiceClient,
     @Value("\${popp.url}") egressEndpoint: String) :
-    BasicProtectedControllerBase(authValidator, serviceClient, egressEndpoint) {
+    ProtectedControllerBase(authValidator, egressTokenGetter, serviceClient, egressEndpoint) {
 
     @GetMapping(
         value = [
@@ -24,5 +26,13 @@ class PoppPingController(
             "api/opptjeningsgrunnlag/ping"])
     fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> {
         return super.doGet(request)
+    }
+
+    override fun egressAuthWaived(): Boolean {
+        return false // POPP requires auth for ping
+    }
+
+    override fun consumerTokenRequired(): Boolean {
+        return false
     }
 }

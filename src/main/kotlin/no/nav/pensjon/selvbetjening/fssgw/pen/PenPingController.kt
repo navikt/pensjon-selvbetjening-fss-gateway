@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest
 @RequestMapping("pen")
 class PenPingController(
     authValidator: JwsValidator,
-    egressTokenGetter: ServiceTokenGetter, // not used, since egress auth is waived
+    egressTokenGetter: ServiceTokenGetter,
     serviceClient: ServiceClient,
     @Value("\${pen.url}") egressEndpoint: String) :
     ProtectedControllerBase(authValidator, egressTokenGetter, serviceClient, egressEndpoint) {
@@ -24,7 +24,7 @@ class PenPingController(
     }
 
     override fun egressAuthWaived(): Boolean {
-        return true
+        return false // PEN requires auth for ping
     }
 
     override fun consumerTokenRequired(): Boolean {
