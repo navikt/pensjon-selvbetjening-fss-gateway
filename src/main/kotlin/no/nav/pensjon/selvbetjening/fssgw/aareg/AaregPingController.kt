@@ -1,8 +1,7 @@
-package no.nav.pensjon.selvbetjening.fssgw.ereg
+package no.nav.pensjon.selvbetjening.fssgw.aareg
 
-import no.nav.pensjon.selvbetjening.fssgw.common.BasicProtectedControllerBase
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
-import no.nav.pensjon.selvbetjening.fssgw.tech.basicauth.BasicAuthValidator
+import no.nav.pensjon.selvbetjening.fssgw.common.UnprotectedControllerBase
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -11,14 +10,13 @@ import org.springframework.web.bind.annotation.RestController
 import javax.servlet.http.HttpServletRequest
 
 @RestController
-@RequestMapping("ereg")
-class EregPingController(
-    authValidator: BasicAuthValidator,
-    serviceClient: ServiceClient,
-    @Value("\${ereg.url}") egressEndpoint: String) :
-    BasicProtectedControllerBase(authValidator, serviceClient, egressEndpoint) {
+@RequestMapping("aareg-services")
+class AaregPingController(
+        serviceClient: ServiceClient,
+        @Value("\${aareg.url}") egressEndpoint: String) :
+        UnprotectedControllerBase(serviceClient, egressEndpoint) {
 
-    @GetMapping("ws/OrganisasjonService/v4/ping")
+    @GetMapping("/api/ping")
     fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> {
         return super.doGet(request)
     }
