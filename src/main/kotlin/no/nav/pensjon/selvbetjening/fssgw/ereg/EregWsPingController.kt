@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("ereg")
-class EregPingController(
+class EregWsPingController(
     authValidator: BasicAuthValidator,
     serviceClient: ServiceClient,
     @Value("\${ereg.url}") egressEndpoint: String) :
