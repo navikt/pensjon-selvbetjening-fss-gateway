@@ -61,4 +61,32 @@ internal class InntektControllerTest {
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.content().json("""{"response": "ForventedeInntekter"}"""))
     }
+
+    @Test
+    fun `when OK then hentdetaljerteabonnerteinntekter post returns data`() {
+        Mockito.`when`(serviceClient.doPost(ArgumentMatchers.anyString(), ArgumentMatchers.anyMap(), ArgumentMatchers.anyString()))
+            .thenReturn("""{ "response": "hentdetaljerteabonnerteinntekter"}""")
+        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+
+        mvc.perform(
+            MockMvcRequestBuilders.post("/inntektskomponenten-ws/rs/api/v1/hentdetaljerteabonnerteinntekter")
+                .header(HttpHeaders.AUTHORIZATION, auth)
+                .content("body"))
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.content().json("""{"response": "hentdetaljerteabonnerteinntekter"}"""))
+    }
+
+    @Test
+    fun `when OK then hentabonnerteinntekterbolk post returns data`() {
+        Mockito.`when`(serviceClient.doPost(ArgumentMatchers.anyString(), ArgumentMatchers.anyMap(), ArgumentMatchers.anyString()))
+            .thenReturn("""{ "response": "hentabonnerteinntekterbolk"}""")
+        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+
+        mvc.perform(
+            MockMvcRequestBuilders.post("/inntektskomponenten-ws/rs/api/v1/hentabonnerteinntekterbolk")
+                .header(HttpHeaders.AUTHORIZATION, auth)
+                .content("body"))
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.content().json("""{"response": "hentabonnerteinntekterbolk"}"""))
+    }
 }

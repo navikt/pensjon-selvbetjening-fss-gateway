@@ -25,7 +25,11 @@ class InntektController (
         return super.doGet(request)
     }
 
-    @PostMapping("${PATH}forventetinntekt")
+    @PostMapping(
+        value = [
+            "${PATH}forventetinntekt",
+            "${PATH}hentdetaljerteabonnerteinntekter",
+            "${PATH}hentabonnerteinntekterbolk"])
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
         return super.doPost(request, body)
     }
