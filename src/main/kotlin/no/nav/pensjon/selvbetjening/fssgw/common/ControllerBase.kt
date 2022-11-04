@@ -12,12 +12,12 @@ import org.springframework.http.ResponseEntity
 import org.springframework.util.StringUtils.hasText
 import java.nio.charset.StandardCharsets
 import java.util.*
-import java.util.UUID.randomUUID
 import javax.security.auth.message.AuthException
 import javax.servlet.http.HttpServletRequest
 
 abstract class ControllerBase(
     private val serviceClient: ServiceClient,
+    private val callIdGenerator: CallIdGenerator,
     private val egressEndpoint: String) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -92,7 +92,7 @@ abstract class ControllerBase(
             val headersToRelay = getEgressHeaders(request)
             val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
             val url = "$egressEndpoint${request.requestURI}$queryPart"
-            val responseBody = serviceClient.doPost(url, headersToRelay, body)
+            val responseBody = serviceClient.doPost(url, headersToRelay, provideBodyAuth(body))
             metric("post", "OK")
             ResponseEntity(responseBody, responseContentType, HttpStatus.OK)
         } catch (e: AuthException) {
@@ -112,12 +112,14 @@ abstract class ControllerBase(
 
     protected abstract fun checkIngressAuth(request: HttpServletRequest)
 
-    protected abstract fun addAuthHeaderIfNeeded(request: HttpServletRequest, headers: TreeMap<String, String>)
+    protected abstract fun provideHeaderAuth(request: HttpServletRequest, headers: TreeMap<String, String>)
+
+    protected abstract fun provideBodyAuth(body: String): String
 
     private fun getEgressHeaders(request: HttpServletRequest): TreeMap<String, String> {
         val egressHeaders = TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER)
         request.headerNames.toList().forEach { copyHeader(request, it, egressHeaders) }
-        addAuthHeaderIfNeeded(request, egressHeaders)
+        provideHeaderAuth(request, egressHeaders)
         addCallIdHeader(egressHeaders)
         return egressHeaders
     }
@@ -173,7 +175,7 @@ abstract class ControllerBase(
             .asSequence()
             .mapNotNull { headers[it] }
             .firstOrNull { it.isNotEmpty() }
-            ?: randomUUID().toString()
+            ?: callIdGenerator.newCallId()
     }
 
     companion object {

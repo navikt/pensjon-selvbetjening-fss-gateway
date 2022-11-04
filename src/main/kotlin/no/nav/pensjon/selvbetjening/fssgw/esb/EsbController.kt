@@ -1,9 +1,9 @@
 package no.nav.pensjon.selvbetjening.fssgw.esb
 
-import no.nav.pensjon.selvbetjening.fssgw.common.ProtectedControllerBase
+import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
+import no.nav.pensjon.selvbetjening.fssgw.common.EgressBodyAuthController
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
-import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -13,11 +13,12 @@ import javax.servlet.http.HttpServletRequest
 
 @RestController
 class EsbController(
-    jwsValidator: JwsValidator,
-    egressTokenGetter: ServiceTokenGetter,
+    ingressTokenValidator: JwsValidator,
     serviceClient: ServiceClient,
-    @Value("\${esb.url}") egressEndpoint: String) :
-    ProtectedControllerBase(jwsValidator, egressTokenGetter, serviceClient, egressEndpoint) {
+    callIdGenerator: CallIdGenerator,
+    @Value("\${esb.url}") egressEndpoint: String,
+    @Value("\${sts.password}") private val password: String)
+    : EgressBodyAuthController(ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, password) {
 
     @PostMapping(
         value = [
@@ -35,13 +36,5 @@ class EsbController(
             "nav-tjeneste-journal_v2Web/sca/JournalWSEXP"])
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
         return super.doPost(request, body)
-    }
-
-    override fun egressAuthWaived(): Boolean {
-        return false
-    }
-
-    override fun consumerTokenRequired(): Boolean {
-        return false
     }
 }

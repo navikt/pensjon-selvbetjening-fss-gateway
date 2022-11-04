@@ -1,6 +1,7 @@
 package no.nav.pensjon.selvbetjening.fssgw.ereg
 
-import no.nav.pensjon.selvbetjening.fssgw.common.ProtectedControllerBase
+import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
+import no.nav.pensjon.selvbetjening.fssgw.common.EgressHeaderAuthController
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
@@ -14,19 +15,17 @@ import javax.servlet.http.HttpServletRequest
 @RestController
 @RequestMapping("ereg")
 class EregController(
-    jwsValidator: JwsValidator,
+    ingressTokenValidator: JwsValidator,
     egressTokenGetter: ServiceTokenGetter,
     serviceClient: ServiceClient,
-    @Value("\${ereg.url}") egressEndpoint: String) :
-    ProtectedControllerBase(jwsValidator, egressTokenGetter, serviceClient, egressEndpoint) {
+    callIdGenerator: CallIdGenerator,
+    @Value("\${ereg.url}") egressEndpoint: String)
+    : EgressHeaderAuthController(
+    ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter) {
 
     @GetMapping("api/v1/organisasjon/{organisasjonsnummer}/noekkelinfo")
     fun getOrganisasjonNoekkelinfo(request: HttpServletRequest): ResponseEntity<String> {
         return super.doGet(request)
-    }
-
-    override fun egressAuthWaived(): Boolean {
-        return false
     }
 
     override fun consumerTokenRequired(): Boolean {

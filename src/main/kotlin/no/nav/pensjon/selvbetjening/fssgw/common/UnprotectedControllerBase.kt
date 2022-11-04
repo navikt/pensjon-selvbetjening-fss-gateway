@@ -5,13 +5,17 @@ import javax.servlet.http.HttpServletRequest
 
 abstract class UnprotectedControllerBase(
     serviceClient: ServiceClient,
-    egressEndpoint: String) : ControllerBase(serviceClient, egressEndpoint) {
+    callIdGenerator: CallIdGenerator,
+    egressEndpoint: String)
+    : ControllerBase(serviceClient, callIdGenerator, egressEndpoint) {
 
     override fun checkIngressAuth(request: HttpServletRequest) {
         // No operation
     }
 
-    override fun addAuthHeaderIfNeeded(request: HttpServletRequest, headers: TreeMap<String, String>) {
+    override fun provideBodyAuth(body: String): String = body
+
+    override fun provideHeaderAuth(request: HttpServletRequest, headers: TreeMap<String, String>) {
         // No operation
     }
 }

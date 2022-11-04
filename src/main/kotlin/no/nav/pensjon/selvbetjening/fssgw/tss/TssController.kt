@@ -1,6 +1,7 @@
 package no.nav.pensjon.selvbetjening.fssgw.tss
 
-import no.nav.pensjon.selvbetjening.fssgw.common.ProtectedControllerBase
+import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
+import no.nav.pensjon.selvbetjening.fssgw.common.EgressHeaderAuthController
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
@@ -21,16 +22,13 @@ class TssController(
     jwsValidator: JwsValidator,
     egressTokenGetter: ServiceTokenGetter,
     serviceClient: ServiceClient,
-    @Value("\${wasapp.url}") egressEndpoint: String) :
-    ProtectedControllerBase(jwsValidator, egressTokenGetter, serviceClient, egressEndpoint) {
+    callIdGenerator: CallIdGenerator,
+    @Value("\${wasapp.url}") egressEndpoint: String)
+    : EgressHeaderAuthController(jwsValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter) {
 
     @PostMapping("hentSamhandler")
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
         return super.doPost(request, body)
-    }
-
-    override fun egressAuthWaived(): Boolean {
-        return false
     }
 
     override fun consumerTokenRequired(): Boolean {

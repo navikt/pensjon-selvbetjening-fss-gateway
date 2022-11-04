@@ -1,6 +1,7 @@
 package no.nav.pensjon.selvbetjening.fssgw.pen
 
-import no.nav.pensjon.selvbetjening.fssgw.common.ProtectedControllerBase
+import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
+import no.nav.pensjon.selvbetjening.fssgw.common.EgressHeaderAuthController
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
@@ -15,8 +16,9 @@ class PenController(
     jwsValidator: JwsValidator,
     egressTokenGetter: ServiceTokenGetter,
     serviceClient: ServiceClient,
-    @Value("\${pen.url}") egressEndpoint: String) :
-    ProtectedControllerBase(jwsValidator, egressTokenGetter, serviceClient, egressEndpoint) {
+    callIdGenerator: CallIdGenerator,
+    @Value("\${pen.url}") egressEndpoint: String)
+    : EgressHeaderAuthController(jwsValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter) {
 
     @GetMapping(
         value = [
@@ -37,10 +39,6 @@ class PenController(
     @PostMapping("api/soknad/alderspensjon/behandle")
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
         return super.doPost(request, body)
-    }
-
-    override fun egressAuthWaived(): Boolean {
-        return false
     }
 
     override fun consumerTokenRequired(): Boolean {

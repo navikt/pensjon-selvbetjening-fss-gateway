@@ -1,5 +1,6 @@
 package no.nav.pensjon.selvbetjening.fssgw.arena
 
+import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ConsumerException
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.tech.basicauth.BasicAuthValidator
@@ -20,6 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 internal class ArenaPingControllerTest {
 
     private val path = "/ail_ws/Arbeidsevnevurdering_v1"
+    private val credentials = "cred"
 
     @Autowired
     lateinit var mvc: MockMvc
@@ -30,7 +32,8 @@ internal class ArenaPingControllerTest {
     @MockBean
     lateinit var serviceClient: ServiceClient
 
-    private val credentials = "cred"
+    @MockBean
+    lateinit var callIdGenerator: CallIdGenerator
 
     @Test
     fun `when OK then arbeidsevnevurdering request responds with OK`() {

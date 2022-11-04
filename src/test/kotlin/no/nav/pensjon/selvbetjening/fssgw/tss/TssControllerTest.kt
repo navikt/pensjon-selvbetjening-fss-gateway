@@ -1,5 +1,6 @@
 package no.nav.pensjon.selvbetjening.fssgw.tss
 
+import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil.serviceTokenData
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
@@ -32,6 +33,9 @@ internal class TssControllerTest {
 
     @MockBean
     lateinit var serviceClient: ServiceClient
+
+    @MockBean
+    lateinit var callIdGenerator: CallIdGenerator
 
     @Test
     fun `hentSamhandler request results in samhandler response XML`() {

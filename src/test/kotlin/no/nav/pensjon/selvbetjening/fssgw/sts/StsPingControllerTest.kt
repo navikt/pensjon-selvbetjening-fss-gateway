@@ -1,5 +1,6 @@
 package no.nav.pensjon.selvbetjening.fssgw.sts
 
+import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ConsumerException
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.tech.basicauth.BasicAuthValidator
@@ -20,6 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 internal class StsPingControllerTest {
 
     private val path = "/rest/v1/sts"
+    private val credentials = "cred"
 
     @Autowired
     lateinit var mvc: MockMvc
@@ -30,7 +32,8 @@ internal class StsPingControllerTest {
     @MockBean
     lateinit var serviceClient: ServiceClient
 
-    private val credentials = "cred"
+    @MockBean
+    lateinit var callIdGenerator: CallIdGenerator
 
     @Test
     fun `when OK then JWT token request responds with OK`() {

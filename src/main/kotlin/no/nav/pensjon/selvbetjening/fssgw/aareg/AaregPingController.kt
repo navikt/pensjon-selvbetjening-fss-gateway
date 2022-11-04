@@ -1,5 +1,6 @@
 package no.nav.pensjon.selvbetjening.fssgw.aareg
 
+import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.common.UnprotectedControllerBase
 import org.springframework.beans.factory.annotation.Value
@@ -12,9 +13,10 @@ import javax.servlet.http.HttpServletRequest
 @RestController
 @RequestMapping("aareg-services")
 class AaregPingController(
-        serviceClient: ServiceClient,
-        @Value("\${aareg.url}") egressEndpoint: String) :
-        UnprotectedControllerBase(serviceClient, egressEndpoint) {
+    serviceClient: ServiceClient,
+    callIdGenerator: CallIdGenerator,
+    @Value("\${aareg.url}") egressEndpoint: String)
+    : UnprotectedControllerBase(serviceClient, callIdGenerator, egressEndpoint) {
 
     @GetMapping("/api/ping")
     fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> {

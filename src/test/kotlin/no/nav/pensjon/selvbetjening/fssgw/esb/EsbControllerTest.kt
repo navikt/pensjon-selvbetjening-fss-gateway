@@ -1,5 +1,6 @@
 package no.nav.pensjon.selvbetjening.fssgw.esb
 
+import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil.serviceTokenData
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
@@ -7,7 +8,7 @@ import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyMap
 import org.mockito.ArgumentMatchers.anyString
-import org.mockito.Mockito.`when`
+import org.mockito.Mockito.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -44,6 +45,9 @@ internal class EsbControllerTest {
 
     @MockBean
     lateinit var serviceClient: ServiceClient
+
+    @MockBean
+    lateinit var callIdGenerator: CallIdGenerator
 
     @Test
     fun `PEN person request results in PEN person response XML`() {
@@ -103,15 +107,21 @@ internal class EsbControllerTest {
     private fun doTest(path: String, expectedResponseBody: String) {
         `when`(serviceClient.doPost(anyString(), anyMap(), anyString())).thenReturn(expectedResponseBody)
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
+        `when`(callIdGenerator.newCallId()).thenReturn("call ID 1")
         val expectedMediaType = MediaType(MediaType.TEXT_XML, StandardCharsets.UTF_8)
 
         mvc.perform(
             post(path)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_XML_VALUE)
-                .content("""<?xml version="1.0" encoding="UTF-8"?><foo/>"""))
+                .content("""<?xml version="1.0" encoding="UTF-8"?><auth>__password__</auth><foo/>"""))
             .andExpect(status().isOk)
             .andExpect(header().string(HttpHeaders.CONTENT_TYPE, expectedMediaType.toString()))
             .andExpect(content().xml(expectedResponseBody))
+
+        verify(serviceClient, times(1)).doPost(
+            "https://tjenestebuss-q2.adeo.no$path",
+            mapOf("Content-Type" to "text/xml;charset=UTF-8", "Nav-Call-Id" to "call ID 1"),
+            """<?xml version="1.0" encoding="UTF-8"?><auth>secret</auth><foo/>""")
     }
 }

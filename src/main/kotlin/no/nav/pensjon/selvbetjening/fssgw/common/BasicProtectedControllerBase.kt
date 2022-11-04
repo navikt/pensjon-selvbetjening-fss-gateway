@@ -9,7 +9,8 @@ import javax.servlet.http.HttpServletRequest
 abstract class BasicProtectedControllerBase(
     private val authValidator: BasicAuthValidator,
     serviceClient: ServiceClient,
-    egressEndpoint: String) : ControllerBase(serviceClient, egressEndpoint) {
+    callIdGenerator: CallIdGenerator,
+    egressEndpoint: String) : ControllerBase(serviceClient, callIdGenerator, egressEndpoint) {
 
     private val authType = "Basic"
 
@@ -23,7 +24,9 @@ abstract class BasicProtectedControllerBase(
         }
     }
 
-    override fun addAuthHeaderIfNeeded(request: HttpServletRequest, headers: TreeMap<String, String>) {
+    override fun provideBodyAuth(body: String) = body
+
+    override fun provideHeaderAuth(request: HttpServletRequest, headers: TreeMap<String, String>) {
         // No auth header by default
     }
 }

@@ -1,6 +1,7 @@
 package no.nav.pensjon.selvbetjening.fssgw.sts
 
 import no.nav.pensjon.selvbetjening.fssgw.common.BasicProtectedControllerBase
+import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.tech.basicauth.BasicAuthValidator
 import org.springframework.beans.factory.annotation.Value
@@ -17,15 +18,16 @@ import javax.servlet.http.HttpServletRequest
 class StsPingController(
     authValidator: BasicAuthValidator,
     serviceClient: ServiceClient,
-    @Value("\${sts.url}") egressEndpoint: String) :
-    BasicProtectedControllerBase(authValidator, serviceClient, egressEndpoint) {
+    callIdGenerator: CallIdGenerator,
+    @Value("\${sts.url}") egressEndpoint: String)
+    : BasicProtectedControllerBase(authValidator, serviceClient, callIdGenerator, egressEndpoint) {
 
     @GetMapping(value = ["samltoken", "token"])
     fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> {
         return super.doGet(request)
     }
 
-    override fun addAuthHeaderIfNeeded(request: HttpServletRequest, headers: TreeMap<String, String>) {
+    override fun provideHeaderAuth(request: HttpServletRequest, headers: TreeMap<String, String>) {
         headers[HttpHeaders.AUTHORIZATION] = request.getHeader(HttpHeaders.AUTHORIZATION)
     }
 }

@@ -1,6 +1,7 @@
 package no.nav.pensjon.selvbetjening.fssgw.inntekt
 
-import no.nav.pensjon.selvbetjening.fssgw.common.ProtectedControllerBase
+import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
+import no.nav.pensjon.selvbetjening.fssgw.common.EgressHeaderAuthController
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
@@ -13,12 +14,14 @@ const val PATH = "api/v1/"
 
 @RestController
 @RequestMapping("inntektskomponenten-ws/rs")
-class InntektController (
-    jwsValidator: JwsValidator,
+class InntektController(
+    ingressTokenValidator: JwsValidator,
     egressTokenGetter: ServiceTokenGetter,
     serviceClient: ServiceClient,
-    @Value("\${inntekt.url}") egressEndpoint: String) :
-    ProtectedControllerBase(jwsValidator, egressTokenGetter, serviceClient, egressEndpoint) {
+    callIdGenerator: CallIdGenerator,
+    @Value("\${inntekt.url}") egressEndpoint: String)
+    : EgressHeaderAuthController(
+    ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter) {
 
     @GetMapping("${PATH}forventetinntekt")
     fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> {
@@ -32,10 +35,6 @@ class InntektController (
             "${PATH}hentabonnerteinntekterbolk"])
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
         return super.doPost(request, body)
-    }
-
-    override fun egressAuthWaived(): Boolean {
-        return false
     }
 
     override fun consumerTokenRequired(): Boolean {

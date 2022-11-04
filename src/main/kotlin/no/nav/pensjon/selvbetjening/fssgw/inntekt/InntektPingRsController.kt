@@ -1,6 +1,7 @@
 package no.nav.pensjon.selvbetjening.fssgw.inntekt
 
-import no.nav.pensjon.selvbetjening.fssgw.common.ProtectedControllerBase
+import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
+import no.nav.pensjon.selvbetjening.fssgw.common.EgressHeaderAuthController
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
@@ -14,19 +15,17 @@ import javax.servlet.http.HttpServletRequest
 @RestController
 @RequestMapping("inntektskomponenten-ws")
 class InntektPingRsController(
-    jwsValidator: JwsValidator,
+    ingressTokenValidator: JwsValidator,
     egressTokenGetter: ServiceTokenGetter,
     serviceClient: ServiceClient,
-    @Value("\${inntekt.url}") egressEndpoint: String) :
-    ProtectedControllerBase(jwsValidator, egressTokenGetter, serviceClient, egressEndpoint) {
+    callIdGenerator: CallIdGenerator,
+    @Value("\${inntekt.url}") egressEndpoint: String)
+    : EgressHeaderAuthController(
+    ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter) {
 
     @GetMapping("rs/api/ping")
     fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> {
         return super.doGet(request)
-    }
-
-    override fun egressAuthWaived(): Boolean {
-        return true
     }
 
     override fun consumerTokenRequired(): Boolean {

@@ -1,5 +1,6 @@
 package no.nav.pensjon.selvbetjening.fssgw.esb
 
+import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyMap
@@ -25,6 +26,9 @@ internal class EsbSelfTestControllerTest {
 
     @MockBean
     lateinit var serviceClient: ServiceClient
+
+    @MockBean
+    lateinit var callIdGenerator: CallIdGenerator
 
     @Test
     fun `ping request results in ping response XML`() {
