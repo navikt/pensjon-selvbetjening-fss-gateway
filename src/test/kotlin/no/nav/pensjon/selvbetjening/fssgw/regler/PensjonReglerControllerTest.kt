@@ -1,5 +1,6 @@
 package no.nav.pensjon.selvbetjening.fssgw.regler
 
+import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
@@ -31,6 +32,9 @@ internal class PensjonReglerControllerTest {
 
     @MockBean
     lateinit var serviceClient: ServiceClient
+
+    @MockBean
+    lateinit var callIdGenerator: CallIdGenerator
 
     @Test
     fun `hentGrunnbelopListe request results in JSON response`() {

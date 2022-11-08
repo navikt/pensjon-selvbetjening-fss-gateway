@@ -1,6 +1,7 @@
 package no.nav.pensjon.selvbetjening.fssgw.popp
 
-import no.nav.pensjon.selvbetjening.fssgw.common.ProtectedControllerBase
+import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
+import no.nav.pensjon.selvbetjening.fssgw.common.EgressHeaderAuthController
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
@@ -14,11 +15,13 @@ import javax.servlet.http.HttpServletRequest
 @RestController
 @RequestMapping("popp")
 class PoppPingController(
-    authValidator: JwsValidator,
+    ingressTokenValidator: JwsValidator,
     egressTokenGetter: ServiceTokenGetter,
     serviceClient: ServiceClient,
-    @Value("\${popp.url}") egressEndpoint: String) :
-    ProtectedControllerBase(authValidator, egressTokenGetter, serviceClient, egressEndpoint) {
+    callIdGenerator: CallIdGenerator,
+    @Value("\${popp.url}") egressEndpoint: String)
+    : EgressHeaderAuthController(
+    ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter) {
 
     @GetMapping(
         value = [
@@ -26,10 +29,6 @@ class PoppPingController(
             "api/opptjeningsgrunnlag/ping"])
     fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> {
         return super.doGet(request)
-    }
-
-    override fun egressAuthWaived(): Boolean {
-        return false // POPP requires auth for ping
     }
 
     override fun consumerTokenRequired(): Boolean {

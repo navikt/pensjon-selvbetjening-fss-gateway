@@ -1,5 +1,6 @@
 package no.nav.pensjon.selvbetjening.fssgw.pen
 
+import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ConsumerException
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil
@@ -32,6 +33,9 @@ internal class PenPingControllerTest {
 
     @MockBean
     lateinit var serviceClient: ServiceClient
+
+    @MockBean
+    lateinit var callIdGenerator: CallIdGenerator
 
     @Test
     fun `when OK then Spring API ping request responds with OK`() {

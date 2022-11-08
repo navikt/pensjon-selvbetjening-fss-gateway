@@ -1,6 +1,7 @@
 package no.nav.pensjon.selvbetjening.fssgw.dkif
 
-import no.nav.pensjon.selvbetjening.fssgw.common.ProtectedControllerBase
+import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
+import no.nav.pensjon.selvbetjening.fssgw.common.EgressHeaderAuthController
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
@@ -14,19 +15,17 @@ import javax.servlet.http.HttpServletRequest
 @RestController
 @RequestMapping("api/v1")
 class DkifController(
-    jwsValidator: JwsValidator,
+    ingressTokenValidator: JwsValidator,
     egressTokenGetter: ServiceTokenGetter,
     serviceClient: ServiceClient,
-    @Value("\${dkif.url}") egressEndpoint: String) :
-    ProtectedControllerBase(jwsValidator, egressTokenGetter, serviceClient, egressEndpoint) {
+    callIdGenerator: CallIdGenerator,
+    @Value("\${dkif.url}") egressEndpoint: String)
+    : EgressHeaderAuthController(
+    ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter) {
 
     @GetMapping("personer/kontaktinformasjon")
     fun getKontaktinformasjon(request: HttpServletRequest): ResponseEntity<String> {
         return super.doGet(request)
-    }
-
-    override fun egressAuthWaived(): Boolean {
-        return false
     }
 
     override fun consumerTokenRequired(): Boolean {

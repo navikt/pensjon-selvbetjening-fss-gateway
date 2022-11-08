@@ -1,6 +1,7 @@
 package no.nav.pensjon.selvbetjening.fssgw.inntekt
 
 import no.nav.pensjon.selvbetjening.fssgw.common.BasicProtectedControllerBase
+import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.tech.basicauth.BasicAuthValidator
 import org.springframework.beans.factory.annotation.Value
@@ -15,8 +16,9 @@ import javax.servlet.http.HttpServletRequest
 class InntektPingController(
     authValidator: BasicAuthValidator,
     serviceClient: ServiceClient,
-    @Value("\${inntekt.url}") egressEndpoint: String) :
-    BasicProtectedControllerBase(authValidator, serviceClient, egressEndpoint) {
+    callIdGenerator: CallIdGenerator,
+    @Value("\${inntekt.url}") egressEndpoint: String)
+    : BasicProtectedControllerBase(authValidator, serviceClient, callIdGenerator, egressEndpoint) {
 
     @GetMapping(
         value = [

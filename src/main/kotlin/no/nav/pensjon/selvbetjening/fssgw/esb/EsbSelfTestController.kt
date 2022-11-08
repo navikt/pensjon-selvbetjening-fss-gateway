@@ -1,5 +1,6 @@
 package no.nav.pensjon.selvbetjening.fssgw.esb
 
+import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.common.UnprotectedControllerBase
 import org.springframework.beans.factory.annotation.Value
@@ -12,8 +13,9 @@ import javax.servlet.http.HttpServletRequest
 @RestController
 class EsbSelfTestController(
     serviceClient: ServiceClient,
-    @Value("\${esb.url}") egressEndpoint: String) :
-    UnprotectedControllerBase(serviceClient, egressEndpoint) {
+    callIdGenerator: CallIdGenerator,
+    @Value("\${esb.url}") egressEndpoint: String)
+    : UnprotectedControllerBase(serviceClient, callIdGenerator, egressEndpoint) {
 
     @PostMapping("nav-cons-test-getapplicationversionWeb/sca/TESTGetApplicationVersionWSEXP")
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {

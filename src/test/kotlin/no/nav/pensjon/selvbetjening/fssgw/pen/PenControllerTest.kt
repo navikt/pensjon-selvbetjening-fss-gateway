@@ -1,5 +1,6 @@
 package no.nav.pensjon.selvbetjening.fssgw.pen
 
+import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
@@ -20,6 +21,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @WebMvcTest(PenController::class)
 internal class PenControllerTest {
 
+    private val auth = "Bearer jwt"
+
     @Autowired
     lateinit var mvc: MockMvc
 
@@ -32,7 +35,8 @@ internal class PenControllerTest {
     @MockBean
     lateinit var serviceClient: ServiceClient
 
-    private val auth = "Bearer jwt"
+    @MockBean
+    lateinit var callIdGenerator: CallIdGenerator
 
     @Test
     fun `when OK then AFP-historikk request returns data`() {

@@ -1,5 +1,6 @@
 package no.nav.pensjon.selvbetjening.fssgw.pen
 
+import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil
 import no.nav.pensjon.selvbetjening.fssgw.tech.basicauth.BasicAuthValidator
@@ -20,6 +21,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @WebMvcTest(SimulerTjenestepensjonPingController::class)
 internal class SimulerTjenestepensjonPingControllerTest {
 
+    private val credentials = "cred"
+
     @Autowired
     lateinit var mvc: MockMvc
 
@@ -32,7 +35,8 @@ internal class SimulerTjenestepensjonPingControllerTest {
     @MockBean
     lateinit var serviceClient: ServiceClient
 
-    private val credentials = "cred"
+    @MockBean
+    lateinit var callIdGenerator: CallIdGenerator
 
     @Test
     fun `when OK then simuler tjenestepensjon ping request responds with OK`() {

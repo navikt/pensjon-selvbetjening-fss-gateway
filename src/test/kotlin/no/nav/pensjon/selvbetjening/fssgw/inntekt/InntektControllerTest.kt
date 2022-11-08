@@ -1,22 +1,26 @@
 package no.nav.pensjon.selvbetjening.fssgw.inntekt
 
+import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpHeaders
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @WebMvcTest(InntektController::class)
 internal class InntektControllerTest {
+
+    private val auth = "Bearer jwt"
 
     @Autowired
     lateinit var mvc: MockMvc
@@ -30,13 +34,14 @@ internal class InntektControllerTest {
     @MockBean
     lateinit var serviceClient: ServiceClient
 
-    private val auth = "Bearer jwt"
+    @MockBean
+    lateinit var callIdGenerator: CallIdGenerator
 
     @Test
     fun `when OK then ForventedeInntekter request returns data`() {
-        Mockito.`when`(serviceClient.doGet(ArgumentMatchers.anyString(), ArgumentMatchers.anyMap()))
+        `when`(serviceClient.doGet(ArgumentMatchers.anyString(), ArgumentMatchers.anyMap()))
             .thenReturn("""{ "response": "ForventedeInntekter"}""")
-        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
         mvc.perform(
             MockMvcRequestBuilders.get("/inntektskomponenten-ws/rs/api/v1/forventetinntekt")
@@ -44,49 +49,49 @@ internal class InntektControllerTest {
                 .header("pid", "01023456789")
                 .header("aar-list", "2020")
                 .header("aar-list", "2021"))
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.content().json("""{"response": "ForventedeInntekter"}"""))
+            .andExpect(status().isOk)
+            .andExpect(content().json("""{"response": "ForventedeInntekter"}"""))
     }
 
     @Test
     fun `when OK then ForventedeInntekter post returns data`() {
-        Mockito.`when`(serviceClient.doPost(ArgumentMatchers.anyString(), ArgumentMatchers.anyMap(), ArgumentMatchers.anyString()))
+        `when`(serviceClient.doPost(ArgumentMatchers.anyString(), ArgumentMatchers.anyMap(), ArgumentMatchers.anyString()))
             .thenReturn("""{ "response": "ForventedeInntekter"}""")
-        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
         mvc.perform(
             MockMvcRequestBuilders.post("/inntektskomponenten-ws/rs/api/v1/forventetinntekt")
                 .header(HttpHeaders.AUTHORIZATION, auth)
                 .content("body"))
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.content().json("""{"response": "ForventedeInntekter"}"""))
+            .andExpect(status().isOk)
+            .andExpect(content().json("""{"response": "ForventedeInntekter"}"""))
     }
 
     @Test
     fun `when OK then hentdetaljerteabonnerteinntekter post returns data`() {
-        Mockito.`when`(serviceClient.doPost(ArgumentMatchers.anyString(), ArgumentMatchers.anyMap(), ArgumentMatchers.anyString()))
+        `when`(serviceClient.doPost(ArgumentMatchers.anyString(), ArgumentMatchers.anyMap(), ArgumentMatchers.anyString()))
             .thenReturn("""{ "response": "hentdetaljerteabonnerteinntekter"}""")
-        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
         mvc.perform(
             MockMvcRequestBuilders.post("/inntektskomponenten-ws/rs/api/v1/hentdetaljerteabonnerteinntekter")
                 .header(HttpHeaders.AUTHORIZATION, auth)
                 .content("body"))
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.content().json("""{"response": "hentdetaljerteabonnerteinntekter"}"""))
+            .andExpect(status().isOk)
+            .andExpect(content().json("""{"response": "hentdetaljerteabonnerteinntekter"}"""))
     }
 
     @Test
     fun `when OK then hentabonnerteinntekterbolk post returns data`() {
-        Mockito.`when`(serviceClient.doPost(ArgumentMatchers.anyString(), ArgumentMatchers.anyMap(), ArgumentMatchers.anyString()))
+        `when`(serviceClient.doPost(ArgumentMatchers.anyString(), ArgumentMatchers.anyMap(), ArgumentMatchers.anyString()))
             .thenReturn("""{ "response": "hentabonnerteinntekterbolk"}""")
-        Mockito.`when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
         mvc.perform(
             MockMvcRequestBuilders.post("/inntektskomponenten-ws/rs/api/v1/hentabonnerteinntekterbolk")
                 .header(HttpHeaders.AUTHORIZATION, auth)
                 .content("body"))
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.content().json("""{"response": "hentabonnerteinntekterbolk"}"""))
+            .andExpect(status().isOk)
+            .andExpect(content().json("""{"response": "hentabonnerteinntekterbolk"}"""))
     }
 }

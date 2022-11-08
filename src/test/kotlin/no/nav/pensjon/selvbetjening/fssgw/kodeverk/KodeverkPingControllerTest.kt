@@ -1,5 +1,6 @@
 package no.nav.pensjon.selvbetjening.fssgw.kodeverk
 
+import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.tech.basicauth.BasicAuthValidator
 import org.junit.jupiter.api.Test
@@ -26,6 +27,9 @@ internal class KodeverkPingControllerTest {
 
     @MockBean
     lateinit var serviceClient: ServiceClient
+
+    @MockBean
+    lateinit var callIdGenerator: CallIdGenerator
 
     @Test
     fun `Kodeverk ping request results in JSON response`() {
