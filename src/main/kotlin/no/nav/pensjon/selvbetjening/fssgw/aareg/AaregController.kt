@@ -15,12 +15,13 @@ import javax.servlet.http.HttpServletRequest
 @RestController
 @RequestMapping("aareg-services")
 class AaregController(
-    jwsValidator: JwsValidator,
+    ingressTokenValidator: JwsValidator,
     egressTokenGetter: ServiceTokenGetter,
     serviceClient: ServiceClient,
     callIdGenerator: CallIdGenerator,
     @Value("\${aareg.url}") egressEndpoint: String)
-    : EgressHeaderAuthController(jwsValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter) {
+    : EgressHeaderAuthController(
+    ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter) {
 
     @GetMapping("api/v1/arbeidstaker/arbeidsforhold")
     fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> {

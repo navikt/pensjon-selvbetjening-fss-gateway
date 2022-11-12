@@ -154,11 +154,7 @@ abstract class ControllerBase(
         return ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED)
     }
 
-    private fun contentTypeHeaders(mediaType: MediaType): HttpHeaders {
-        val httpHeaders = HttpHeaders()
-        httpHeaders.contentType = mediaType
-        return httpHeaders
-    }
+    private fun contentTypeHeaders(mediaType: MediaType) = HttpHeaders().also { it.contentType = mediaType }
 
     private fun metric(action: String, status: String) {
         Metrics.counter("request_counter", "action", action, "status", status).increment()

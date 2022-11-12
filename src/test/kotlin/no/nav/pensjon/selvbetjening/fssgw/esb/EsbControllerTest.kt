@@ -2,9 +2,7 @@ package no.nav.pensjon.selvbetjening.fssgw.esb
 
 import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
-import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil.serviceTokenData
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
-import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyMap
 import org.mockito.ArgumentMatchers.anyString
@@ -39,9 +37,6 @@ internal class EsbControllerTest {
 
     @MockBean
     lateinit var jwsValidator: JwsValidator
-
-    @MockBean
-    lateinit var egressTokenGetter: ServiceTokenGetter
 
     @MockBean
     lateinit var serviceClient: ServiceClient
@@ -106,7 +101,6 @@ internal class EsbControllerTest {
 
     private fun doTest(path: String, expectedResponseBody: String) {
         `when`(serviceClient.doPost(anyString(), anyMap(), anyString())).thenReturn(expectedResponseBody)
-        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
         `when`(callIdGenerator.newCallId()).thenReturn("call ID 1")
         val expectedMediaType = MediaType(MediaType.TEXT_XML, StandardCharsets.UTF_8)
 

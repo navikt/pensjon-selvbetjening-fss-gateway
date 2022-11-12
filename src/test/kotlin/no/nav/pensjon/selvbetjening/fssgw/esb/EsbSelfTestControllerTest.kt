@@ -2,6 +2,7 @@ package no.nav.pensjon.selvbetjening.fssgw.esb
 
 import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
+import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyMap
 import org.mockito.ArgumentMatchers.anyString
@@ -25,6 +26,9 @@ internal class EsbSelfTestControllerTest {
     lateinit var mvc: MockMvc
 
     @MockBean
+    lateinit var jwsValidator: JwsValidator
+
+    @MockBean
     lateinit var serviceClient: ServiceClient
 
     @MockBean
@@ -38,6 +42,7 @@ internal class EsbSelfTestControllerTest {
 
         mvc.perform(
             post(pingPath)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_XML_VALUE)
                 .content("""<?xml version="1.0" encoding="UTF-8"?><foo/>"""))
             .andExpect(status().isOk)

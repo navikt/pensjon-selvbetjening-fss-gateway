@@ -1,4 +1,4 @@
-package no.nav.pensjon.selvbetjening.fssgw.tech.ping
+package no.nav.pensjon.selvbetjening.fssgw.tech.health
 
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,17 +12,15 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 @WebMvcTest(PingController::class)
 internal class PingControllerTest {
 
-    private val path = "/api/internal/"
-
     @Autowired
     lateinit var mvc: MockMvc
 
     @Test
-    fun `when OK then ping request responds with OK`() {
+    fun `ping request responds with status OK and content pong`() {
         mvc.perform(
-            get(path + "ping"))
+            get("/internal/ping"))
             .andExpect(status().isOk)
-            .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(content().json("""{ "reponse": "pong" }"""))
+            .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE))
+            .andExpect(content().string("pong"))
     }
 }
