@@ -27,7 +27,7 @@ internal class PenControllerTest {
     lateinit var mvc: MockMvc
 
     @MockBean
-    lateinit var jwsValidator: JwsValidator
+    lateinit var ingressTokenValidator: JwsValidator
 
     @MockBean
     lateinit var egressTokenGetter: ServiceTokenGetter
