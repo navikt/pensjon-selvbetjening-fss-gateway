@@ -52,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        environment: [q0, q1, q4]
+        environment: [q0, q1]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
