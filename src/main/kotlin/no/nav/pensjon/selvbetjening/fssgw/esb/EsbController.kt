@@ -22,18 +22,35 @@ class EsbController(
 
     @PostMapping(
         value = [
-            "nav-cons-pen-pen-personWeb/sca/PENPersonWSEXP", // sca = Service Component Architecture
+            "nav-cons-pen-pen-batch-oppdragWeb/sca/PENOppdragBatchWSEXP", // sca = Service Component Architecture
+            "nav-cons-pen-pen-fullmaktWeb/sca/PENFullmaktWSEXP",
+            "nav-cons-pen-pen-inntektWeb/sca/PENInntektWSEXP",
+            "nav-cons-pen-pen-oppdragWeb/sca/PENOppdragWSEXP",
+            "nav-cons-pen-pen-personWeb/sca/PENPersonWSEXP",
+            "nav-cons-pen-pen-ppen003Web/sca/PENPPEN003WSEXP",
+            "nav-cons-pen-pen-ppen006Web/sca/PENPPEN006WSEXP",
+            "nav-cons-pen-pen-ppen008Web/sca/PPEN008WSEXP",
             "nav-cons-pen-pen-ppen015Web/sca/PENPPEN015WSEXP",
+            "nav-cons-pen-pen-tjenestepensjonWeb/sca/PENTjenestepensjonWSEXP",
             "nav-cons-pen-pselv-brukerprofilWeb/sca/PSELVBrukerprofilWSEXP",
             "nav-cons-pen-pselv-fullmaktWeb/sca/PSELVFullmaktWSEXP",
             "nav-cons-pen-pselv-henvendelseWeb/sca/PSELVHenvendelseWSEXP",
             "nav-cons-pen-pselv-inntektWeb/sca/PSELVInntektWSEXP",
             "nav-cons-pen-pselv-personWeb/sca/PSELVPersonWSEXP",
+            "nav-cons-pen-pselv-ppen003Web/sca/PSELVPPEN003WSEXP",
             "nav-cons-pen-pselv-ppen004Web/sca/PENPPEN004WSEXP",
             "nav-cons-pen-pselv-samhandlerWeb/sca/PSELVSamhandlerWSEXP",
             "nav-cons-pen-pselv-tjenestepensjonWeb/sca/PSELVTjenestepensjonWSEXPP",
             "nav-cons-pen-pselv-utbetalingWeb/sca/PSELVUtbetalingWSEXP",
-            "nav-tjeneste-journal_v2Web/sca/JournalWSEXP"])
+            "nav-tjeneste-behandleTrekk_v1Web/sca/BehandleTrekkWSEXP",
+            "nav-tjeneste-institusjonsopphold_v1Web/sca/InstitusjonsoppholdWSEXP",
+            "nav-tjeneste-journal_v2Web/sca/JournalWSEXP",
+            "nav-tjeneste-journalbehandling_v1Web/sca/JournalbehandlingWSEXP",
+            "nav-tjeneste-person_v2Web/sca/PersonWSEXP",
+            "nav-tjeneste-trekk_v1Web/sca/TrekkWSEXP",
+            "nav-tjeneste-utbetaling_v1Web/sca/UtbetalingWSEXP",
+            "pensjon-tjeneste-iverksattVedtakBehandling_v1Web/sca/IverksattVedtakBehandlingWSEXP",
+            "pensjon-tjeneste-samordning_v1Web/sca/SamordningWSEXP"])
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
         return super.doPost(request, body)
     }
