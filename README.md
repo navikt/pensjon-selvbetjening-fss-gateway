@@ -6,11 +6,11 @@ Teknologi: Java 17, Kotlin, Spring Boot og Maven.
 
 Støttede tjenester:
 
-- AAREG (Arbeidstaker- og arbeidsgiverregisteret)
 - DKIF (Digital kontaktinformasjon)
 - EREG (Enhetsregisteret)
-- ESB (Enterprise Service Bus)
+- ESB (Enterprise Service Bus, tjenestebuss)
 - Dok-arkiv (JOARK)
+- Inntektskomponenten
 - Kodeverk
 - PDL (Persondataløsningen)
 - PEN (Pensjonsfaglig kjerne)

@@ -27,8 +27,6 @@ spec:
     enabled: true
     path: /internal/prometheus
   env:
-    - name: AAREG_URL
-      value: https://modapp-q2.adeo.no
     - name: ARENA_URL
       value: https://arena-q2.adeo.no
     - name: BREVDATA_URL
