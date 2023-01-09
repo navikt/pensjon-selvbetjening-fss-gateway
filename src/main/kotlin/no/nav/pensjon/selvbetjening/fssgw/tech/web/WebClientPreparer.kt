@@ -7,7 +7,7 @@ import reactor.netty.http.client.HttpClient
 
 object WebClientPreparer {
 
-    private const val MAX_IN_MEMORY_SIZE = 2 * 1024 * 1024 // 2 MB
+    private const val MAX_IN_MEMORY_SIZE = 10 * 1024 * 1024 // 10 MB
 
     fun webClient(requiresProxy: Boolean, proxyUri: String) =
         if (requiresProxy) proxyAwareWebClient(proxyUri)
