@@ -10,6 +10,7 @@ import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.SigningKeyException
 import no.nav.pensjon.selvbetjening.fssgw.tech.rsa.JsonWebKey
 import org.springframework.stereotype.Component
 import java.security.Key
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Obtains the public key required to validate a signed JWT.
@@ -18,7 +19,7 @@ import java.security.Key
 @Component
 class Oauth2SigningKeyResolver(private val multiIssuerSupport: MultiIssuerSupport) : SigningKeyResolverAdapter() {
 
-    private val cachedKeysById: MutableMap<String, Key> = HashMap()
+    private val cachedKeysById: MutableMap<String, Key> = ConcurrentHashMap()
 
     override fun resolveSigningKey(header: JwsHeader<*>, claims: Claims): Key {
         val keyId = header.keyId

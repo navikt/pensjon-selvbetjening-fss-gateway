@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Support for handling multiple token issuers in OAuth2 flows.
@@ -13,7 +14,7 @@ import org.springframework.web.reactive.function.client.WebClient
 class MultiIssuerSupport(@Qualifier("\${external-user}") private val externalUserOauth2BasicData: Oauth2BasicData,
                          @Qualifier("\${internal-user}") private val internalUserOauth2BasicData: Oauth2BasicData) {
 
-    private val handlersByIssuer: MutableMap<String, Oauth2Handler> = HashMap()
+    private val handlersByIssuer: MutableMap<String, Oauth2Handler> = ConcurrentHashMap()
     private val oauth2Basics: List<Oauth2BasicData> = listOf(externalUserOauth2BasicData, internalUserOauth2BasicData)
     private val log = LoggerFactory.getLogger(javaClass)
 
