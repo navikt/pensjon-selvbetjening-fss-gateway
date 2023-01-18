@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest
 class EregRestPingController(
     serviceClient: ServiceClient,
     callIdGenerator: CallIdGenerator,
-    @Value("\${ereg.url}") egressEndpoint: String)
+    @Value("\${modapp.url}") egressEndpoint: String)
     : UnprotectedControllerBase(serviceClient, callIdGenerator, egressEndpoint) {
 
     @GetMapping("/api/ping")

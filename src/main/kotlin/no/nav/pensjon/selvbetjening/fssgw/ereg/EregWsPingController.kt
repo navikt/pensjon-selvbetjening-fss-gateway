@@ -17,7 +17,7 @@ class EregWsPingController(
     authValidator: BasicAuthValidator,
     serviceClient: ServiceClient,
     callIdGenerator: CallIdGenerator,
-    @Value("\${ereg.url}") egressEndpoint: String)
+    @Value("\${modapp.url}") egressEndpoint: String)
     : BasicProtectedControllerBase(authValidator, serviceClient, callIdGenerator, egressEndpoint) {
 
     @GetMapping("ws/OrganisasjonService/v4/ping")

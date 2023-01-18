@@ -53,6 +53,15 @@ internal class TssControllerTest {
             .andExpect(content().xml(RESPONSE_BODY))
     }
 
+    @Test
+    fun `unauthorized hentSamhandler request results in response status Unauthorized`() {
+        mvc.perform(
+            post(HENT_SAMHANDLER_PATH)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_XML_VALUE)
+                .content(REQUEST_BODY))
+            .andExpect(status().isUnauthorized)
+    }
+
     private companion object {
         const val HENT_SAMHANDLER_PATH = "/services/tss/hentSamhandler"
 

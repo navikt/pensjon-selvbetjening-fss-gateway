@@ -27,6 +27,8 @@ spec:
     enabled: true
     path: /internal/prometheus
   env:
+    - name: APP_URL
+      value: https://app.adeo.no
     - name: ARENA_URL
       value: https://arena.adeo.no
     - name: BREVDATA_URL
@@ -34,7 +36,7 @@ spec:
     - name: DKIF_URL
       value: http://dkif.team-rocket.svc.nais.local
     - name: EREG_URL
-      value: https://modapp.adeo.no
+      value: https://ereg-services.intern.nav.no
     - name: ESB_URL
       value: https://tjenestebuss.adeo.no
     - name: INNTEKT_URL
@@ -43,6 +45,8 @@ spec:
       value: https://dokarkiv.nais.adeo.no
     - name: KODEVERK_URL
       value: http://kodeverk.org.svc.nais.local
+    - name: MODAPP_URL
+      value: https://modapp.adeo.no
     - name: NORG2_URL
       value: https://app.adeo.no
     - name: OPPGAVE_URL
@@ -65,8 +69,6 @@ spec:
       value: http://security-token-service.aura.svc.nais.local
     - name: TP_URL
       value: https://tp.nais.adeo.no
-    - name: TPS_PERSON_URL
-      value: https://app.adeo.no
     - name: WASAPP_URL
       value: https://wasapp.adeo.no
     - name: FSSGW_LOGGING_LEVEL

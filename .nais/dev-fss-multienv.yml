@@ -33,7 +33,7 @@ spec:
       value: https://pensjon-brevmetadata.dev.intern.nav.no
     - name: DKIF_URL
       value: http://dkif.team-rocket.svc.nais.local
-    - name: EREG_URL
+    - name: MODAPP_URL
       value: https://modapp-{{ environment }}.adeo.no
     - name: ESB_URL
       value: https://tjenestebuss-{{ environment }}.adeo.no
@@ -65,7 +65,7 @@ spec:
       value: http://security-token-service.aura.svc.nais.local
     - name: TP_URL
       value: https://tp-{{ environment }}.dev.intern.nav.no
-    - name: TPS_PERSON_URL
+    - name: APP_URL
       value: https://app-{{ environment }}.adeo.no
     - name: WASAPP_URL
       value: https://wasapp-{{ environment }}.adeo.no

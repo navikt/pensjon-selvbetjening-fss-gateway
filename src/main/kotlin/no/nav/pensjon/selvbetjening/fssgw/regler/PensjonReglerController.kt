@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 import javax.servlet.http.HttpServletRequest
 
 @RestController
-@RequestMapping("api/hentGrunnbelopListe")
+@RequestMapping("api")
 class PensjonReglerController(
     jwsValidator: JwsValidator,
     egressTokenGetter: ServiceTokenGetter,
@@ -20,7 +20,12 @@ class PensjonReglerController(
     @Value("\${pensjonregler.url}") egressEndpoint: String)
     : EgressHeaderAuthController(jwsValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter) {
 
-    @PostMapping
+    @GetMapping("merknad")
+    fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> {
+        return super.doGet(request)
+    }
+
+    @PostMapping("hentGrunnbelopListe")
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
         return super.doPost(request, body)
     }

@@ -1,8 +1,8 @@
-package no.nav.pensjon.selvbetjening.fssgw.regler
+package no.nav.pensjon.selvbetjening.fssgw.sts
 
 import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
-import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil
+import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil.serviceTokenData
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
@@ -13,14 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 
-@WebMvcTest(PensjonReglerController::class)
-internal class PensjonReglerControllerTest {
+@WebMvcTest(StsController::class)
+internal class StsControllerTest {
 
     @Autowired
     lateinit var mvc: MockMvc
@@ -38,31 +36,26 @@ internal class PensjonReglerControllerTest {
     lateinit var callIdGenerator: CallIdGenerator
 
     @Test
-    fun `hentGrunnbelopListe request results in JSON response`() {
-        `when`(serviceClient.doPost(anyString(), anyMap(), anyString()))
+    fun `token request results in JSON response`() {
+        `when`(serviceClient.doGet(anyString(), anyMap()))
             .thenReturn("""{ "response": "bar"}""")
-        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
 
         mvc.perform(
-            post(HENT_GRUNNBELOP_LISTE_PATH)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .content(REQUEST_BODY))
+            get(TOKEN_PATH)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer jwt"))
             .andExpect(status().isOk)
             .andExpect(content().json("""{ "response": "bar"}"""))
     }
 
     @Test
-    fun `unauthorized hentGrunnbelopListe request results in response status Unauthorized`() {
+    fun `unauthorized token request results in response status Unauthorized`() {
         mvc.perform(
-            post(HENT_GRUNNBELOP_LISTE_PATH)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .content(REQUEST_BODY))
+            get(TOKEN_PATH))
             .andExpect(status().isUnauthorized)
     }
 
     private companion object {
-        const val HENT_GRUNNBELOP_LISTE_PATH = "/api/hentGrunnbelopListe"
-        const val REQUEST_BODY = "foo"
+        const val TOKEN_PATH = "/rest/v1/sts/token"
     }
 }

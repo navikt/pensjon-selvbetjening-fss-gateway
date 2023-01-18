@@ -1,4 +1,4 @@
-package no.nav.pensjon.selvbetjening.fssgw.ereg
+package no.nav.pensjon.selvbetjening.fssgw.sts
 
 import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.EgressHeaderAuthController
@@ -13,18 +13,18 @@ import org.springframework.web.bind.annotation.RestController
 import javax.servlet.http.HttpServletRequest
 
 @RestController
-@RequestMapping("ereg")
-class EregController(
+@RequestMapping("rest/v1/sts")
+class StsController(
     ingressTokenValidator: JwsValidator,
     egressTokenGetter: ServiceTokenGetter,
     serviceClient: ServiceClient,
     callIdGenerator: CallIdGenerator,
-    @Value("\${modapp.url}") egressEndpoint: String)
+    @Value("\${sts.url}") egressEndpoint: String)
     : EgressHeaderAuthController(
     ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter) {
 
-    @GetMapping("api/v1/organisasjon/{organisasjonsnummer}/noekkelinfo")
-    fun getOrganisasjonNoekkelinfo(request: HttpServletRequest): ResponseEntity<String> {
+    @GetMapping("token")
+    fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> {
         return super.doGet(request)
     }
 
