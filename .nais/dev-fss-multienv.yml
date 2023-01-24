@@ -58,7 +58,7 @@ spec:
     - name: PENSJONREGLER_URL
       value: https://pensjon-regler-{{ environment }}.dev.adeo.no
     - name: POPP_URL
-      value: https://pensjon-popp-{{ environment }}.dev.adeo.no
+      value: https://pensjon-popp-{{ environment }}.dev.intern.nav.no
     - name: PREG_URL
       value: https://pensjon-preg-{{ environment }}.nais.preprod.local
     - name: STS_URL
