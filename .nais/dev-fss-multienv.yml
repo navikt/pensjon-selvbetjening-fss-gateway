@@ -50,7 +50,7 @@ spec:
     - name: PARALLELLESANNHETER_URL
       value: https://pensjon-parallelle-sannheter.dev.intern.nav.no
     - name: PDL_URL
-      value: http://pdl-api.pdl.svc.nais.local
+      value: https://pdl-api-{{ environment }}.dev.intern.nav.no
     - name: PEN_URL
       value: https://pensjon-pen-{{ environment }}.dev.adeo.no
     - name: PENSJON_FULLMAKT_URL
