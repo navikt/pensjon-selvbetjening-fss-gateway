@@ -52,7 +52,7 @@ spec:
     - name: PDL_URL
       value: https://pdl-api-{{ environment }}.dev.intern.nav.no
     - name: PEN_URL
-      value: https://pensjon-pen-{{ environment }}.dev.adeo.no
+      value: https://pensjon-pen-{{ environment }}.nais.preprod.local
     - name: PENSJON_FULLMAKT_URL
       value: https://pensjon-fullmakt-{{ environment }}.dev.intern.nav.no
     - name: PENSJONREGLER_URL
