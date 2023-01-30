@@ -31,8 +31,6 @@ spec:
       value: https://arena-{{ environment }}.adeo.no
     - name: BREVDATA_URL
       value: https://pensjon-brevmetadata.dev.intern.nav.no
-    - name: DKIF_URL
-      value: http://dkif.team-rocket.svc.nais.local
     - name: MODAPP_URL
       value: https://modapp-{{ environment }}.adeo.no
     - name: ESB_URL

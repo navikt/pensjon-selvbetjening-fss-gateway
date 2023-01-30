@@ -6,7 +6,6 @@ Teknologi: Java 17, Kotlin, Spring Boot og Maven.
 
 Støttede tjenester:
 
-- DKIF (Digital kontaktinformasjon)
 - EREG (Enhetsregisteret)
 - ESB (Enterprise Service Bus, tjenestebuss)
 - Dok-arkiv (JOARK)
