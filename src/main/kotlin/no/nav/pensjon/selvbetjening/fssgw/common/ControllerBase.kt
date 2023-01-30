@@ -41,7 +41,7 @@ abstract class ControllerBase(
             val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
             val url = "$egressEndpoint${request.requestURI}$queryPart"
             val responseBody = serviceClient.doGet(url, headersToRelay)
-            metric("get", "OK")
+            metric("GET ${request.requestURI}", "OK")
             ResponseEntity(responseBody, responseContentType, HttpStatus.OK)
         } catch (e: AuthException) {
             unauthorized(e)
@@ -50,7 +50,7 @@ abstract class ControllerBase(
         } catch (e: Oauth2Exception) {
             unauthorized(e)
         } catch (e: ConsumerException) {
-            metric("get", "error")
+            metric("GET ${request.requestURI}", "error")
             log.error("Failed to consume service at $egressEndpoint${request.requestURI}: " + e.message, e)
             ResponseEntity(e.message, responseContentType, HttpStatus.BAD_GATEWAY)
         } finally {
@@ -67,7 +67,7 @@ abstract class ControllerBase(
             val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
             val url = "$egressEndpoint${request.requestURI}$queryPart"
             val responseBody = serviceClient.doOptions(url, headersToRelay)
-            metric("options", "OK")
+            metric("OPTIONS ${request.requestURI}", "OK")
             ResponseEntity(responseBody, responseContentType, HttpStatus.OK)
         } catch (e: AuthException) {
             unauthorized(e)
@@ -76,7 +76,7 @@ abstract class ControllerBase(
         } catch (e: Oauth2Exception) {
             unauthorized(e)
         } catch (e: ConsumerException) {
-            metric("options", "error")
+            metric("OPTIONS ${request.requestURI}", "error")
             log.error("Failed to consume service at $egressEndpoint${request.requestURI}: " + e.message, e)
             ResponseEntity(e.message, responseContentType, HttpStatus.BAD_GATEWAY)
         } finally {
@@ -93,7 +93,7 @@ abstract class ControllerBase(
             val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
             val url = "$egressEndpoint${request.requestURI}$queryPart"
             val responseBody = serviceClient.doPost(url, headersToRelay, provideBodyAuth(body))
-            metric("post", "OK")
+            metric("POST ${request.requestURI}", "OK")
             ResponseEntity(responseBody, responseContentType, HttpStatus.OK)
         } catch (e: AuthException) {
             unauthorized(e)
@@ -102,7 +102,7 @@ abstract class ControllerBase(
         } catch (e: Oauth2Exception) {
             unauthorized(e)
         } catch (e: ConsumerException) {
-            metric("post", "error")
+            metric("POST ${request.requestURI}", "error")
             log.error("Failed to consume service at $egressEndpoint${request.requestURI}: " + e.message, e)
             ResponseEntity(e.message, responseContentType, HttpStatus.BAD_GATEWAY)
         } finally {
