@@ -98,34 +98,6 @@ object EsbXml {
     </soapenv:Body>
 </soapenv:Envelope>"""
 
-    val henvendelseResponseBody: String
-        get() = """<?xml version="1.0" encoding="UTF-8"?>
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
-    <soapenv:Body>
-        <inf:hentHenvendelseListeResponse xmlns:inf="http://nav-cons-pen-pselv-henvendelse/no/nav/inf">
-            <hentHenvendelseListeResponse>
-                <henvendelser>
-                    <henvendelseId>1</henvendelseId>
-                </henvendelser>
-            </hentHenvendelseListeResponse>
-        </inf:hentHenvendelseListeResponse>
-    </soapenv:Body>
-</soapenv:Envelope>"""
-
-    val inntektResponseBody: String
-        get() = """<?xml version="1.0" encoding="UTF-8"?>
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
-    <soapenv:Body>
-        <inf:hentInntektListeResponse xmlns:inf="http://nav-cons-pen-pselv-inntekt/no/nav/inf">
-            <hentInntektListeResponse>
-                <inntekter>
-                    <inntektId>1</inntektId>
-                </inntekter>
-            </hentInntektListeResponse>
-        </inf:hentInntektListeResponse>
-    </soapenv:Body>
-</soapenv:Envelope>"""
-
     val personRequestBody: String
         get() = """<?xml version='1.0' encoding='UTF-8'?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
@@ -195,17 +167,98 @@ object EsbXml {
     </soapenv:Body>
 </soapenv:Envelope>"""
 
+    val tjenestepensjonRequestBody: String
+        get() = """<?xml version='1.0' encoding='UTF-8'?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Header>
+        <scp:StelvioContext xmlns="" xmlns:scp="http://www.nav.no/StelvioContextPropagation">
+            <applicationId>PP01</applicationId>
+            <correlationId>4dcbaf90-30f2-4b89-bdae-4cb22d418c2d</correlationId>
+            <userId>PP01</userId>
+        </scp:StelvioContext>
+        <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" soapenv:mustUnderstand="1">
+            <wsse:UsernameToken>
+                <wsse:Username>********</wsse:Username>
+                <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">********</wsse:Password>
+            </wsse:UsernameToken>
+        </wsse:Security>
+    </soapenv:Header>
+    <soapenv:Body>
+        <inf:finnTjenestepensjonForhold xmlns:inf="http://nav-cons-pen-pselv-tjenestepensjon/no/nav/inf">
+            <finnTjenestepensjonForholdRequest>
+                <hentSamhandlerInfo>true</hentSamhandlerInfo>
+                <fnr>65915200189</fnr>
+            </finnTjenestepensjonForholdRequest>
+        </inf:finnTjenestepensjonForhold>
+    </soapenv:Body>
+</soapenv:Envelope>"""
+
     val tjenestepensjonResponseBody: String
         get() = """<?xml version="1.0" encoding="UTF-8"?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
     <soapenv:Body>
-        <inf:hentTjenestepensjonListeResponse xmlns:inf="http://nav-cons-pen-pselv-tjenestepensjon/no/nav/inf">
-            <hentTjenestepensjonListeResponse>
-                <tjenestepensjoner>
-                    <tjenestepensjonId>1</tjenestepensjonId>
-                </tjenestepensjoner>
-            </hentTjenestepensjonListeResponse>
-        </inf:hentTjenestepensjonListeResponse>
+        <inf:finnTjenestepensjonForholdResponse xmlns:inf="http://nav-cons-pen-pselv-tjenestepensjon/no/nav/inf">
+            <finnTjenestepensjonForholdResponse>
+                <fnr>65915200189</fnr>
+                <tjenestepensjonForholdene>
+                    <forholdId>33587178</forholdId>
+                    <tssEksternId>80001580761</tssEksternId>
+                    <navn>Statens pensjonskasse</navn>
+                    <tpNr>3010</tpNr>
+                    <harUtlandPensjon>false</harUtlandPensjon>
+                    <samtykkeSimuleringKode>N</samtykkeSimuleringKode>
+                    <harSimulering>false</harSimulering>
+                    <tjenestepensjonYtelseListe>
+                        <ytelseId>33587180</ytelseId>
+                        <innmeldtFom>2014-04-01</innmeldtFom>
+                        <ytelseKode>ALDER</ytelseKode>
+                        <ytelseBeskrivelse>ALDER</ytelseBeskrivelse>
+                        <iverksattFom>2022-09-20</iverksattFom>
+                    </tjenestepensjonYtelseListe>
+                    <endringsInfo>
+                        <endretAvId>srvtest</endretAvId>
+                        <opprettetAvId>srvtest</opprettetAvId>
+                        <endretDato>2022-10-20</endretDato>
+                        <opprettetDato>2022-10-20</opprettetDato>
+                        <kildeId>PP01</kildeId>
+                    </endringsInfo>
+                    <avdelingType>TPOF</avdelingType>
+                </tjenestepensjonForholdene>
+                <endringsInfo>
+                    <endretAvId>UNKNOWN</endretAvId>
+                    <opprettetAvId>UNKNOWN</opprettetAvId>
+                    <endretDato>2022-04-20</endretDato>
+                    <opprettetDato>2022-04-20</opprettetDato>
+                </endringsInfo>
+            </finnTjenestepensjonForholdResponse>
+        </inf:finnTjenestepensjonForholdResponse>
+    </soapenv:Body>
+</soapenv:Envelope>"""
+
+    val utbetalingRequestBody: String
+        get() = """<?xml version='1.0' encoding='UTF-8'?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Header>
+        <scp:StelvioContext xmlns="" xmlns:scp="http://www.nav.no/StelvioContextPropagation">
+            <applicationId>PP01</applicationId>
+            <correlationId>4dcbaf90-30f2-4b89-bdae-4cb22d418c2d</correlationId>
+            <userId>PP01</userId>
+        </scp:StelvioContext>
+        <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" soapenv:mustUnderstand="1">
+            <wsse:UsernameToken>
+                <wsse:Username>********</wsse:Username>
+                <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">********</wsse:Password>
+            </wsse:UsernameToken>
+        </wsse:Security>
+    </soapenv:Header>
+    <soapenv:Body>
+        <inf:hentPeriodisertUtbetalingListe xmlns:inf="http://nav-cons-pen-pselv-utbetaling/no/nav/inf">
+            <hentPeriodisertUtbetalingListeRequest>
+                <fnrOrgnr>65915200189</fnrOrgnr>
+                <fomDato>2022-10-01+02:00</fomDato>
+                <tomDato>2023-01-19+01:00</tomDato>
+            </hentPeriodisertUtbetalingListeRequest>
+        </inf:hentPeriodisertUtbetalingListe>
     </soapenv:Body>
 </soapenv:Envelope>"""
 
@@ -213,13 +266,9 @@ object EsbXml {
         get() = """<?xml version="1.0" encoding="UTF-8"?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
     <soapenv:Body>
-        <inf:hentUtbetalingListeResponse xmlns:inf="http://nav-cons-pen-pselv-utbetaling/no/nav/inf">
-            <hentUtbetalingListeResponse>
-                <utbetalinger>
-                    <utbetalingId>1</utbetalingId>
-                </utbetalinger>
-            </hentUtbetalingListeResponse>
-        </inf:hentUtbetalingListeResponse>
+        <inf:hentPeriodisertUtbetalingListeResponse xmlns:inf="http://nav-cons-pen-pselv-utbetaling/no/nav/inf">
+            <hentPeriodisertUtbetalingListeResponse/>
+        </inf:hentPeriodisertUtbetalingListeResponse>
     </soapenv:Body>
 </soapenv:Envelope>"""
 

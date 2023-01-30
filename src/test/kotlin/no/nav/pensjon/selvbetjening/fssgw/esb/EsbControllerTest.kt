@@ -24,8 +24,6 @@ internal class EsbControllerTest {
     private val ppen015Path = "/nav-cons-pen-pen-ppen015Web/sca/PENPPEN015WSEXP"
     private val brukerprofilPath = "/nav-cons-pen-pselv-brukerprofilWeb/sca/PSELVBrukerprofilWSEXP"
     private val fullmaktPath = "/nav-cons-pen-pselv-fullmaktWeb/sca/PSELVFullmaktWSEXP"
-    private val henvendelsePath = "/nav-cons-pen-pselv-henvendelseWeb/sca/PSELVHenvendelseWSEXP"
-    private val inntektPath = "/nav-cons-pen-pselv-inntektWeb/sca/PSELVInntektWSEXP"
     private val pselvPersonPath = "/nav-cons-pen-pselv-personWeb/sca/PSELVPersonWSEXP"
     private val ppen004Path = "/nav-cons-pen-pselv-ppen004Web/sca/PENPPEN004WSEXP"
     private val samhandlerPath = "/nav-cons-pen-pselv-samhandlerWeb/sca/PSELVSamhandlerWSEXP"
@@ -62,16 +60,6 @@ internal class EsbControllerTest {
     @Test
     fun `fullmakt request results in fullmakt response XML`() {
         doTest(fullmaktPath, EsbXml.fullmaktResponseBody)
-    }
-
-    @Test
-    fun `henvendelse request results in henvendelse response XML`() {
-        doTest(henvendelsePath, EsbXml.henvendelseResponseBody)
-    }
-
-    @Test
-    fun `inntekt request results in inntekt response XML`() {
-        doTest(inntektPath, EsbXml.inntektResponseBody)
     }
 
     @Test

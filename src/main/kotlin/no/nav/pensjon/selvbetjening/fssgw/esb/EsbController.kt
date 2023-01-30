@@ -34,8 +34,6 @@ class EsbController(
             "nav-cons-pen-pen-tjenestepensjonWeb/sca/PENTjenestepensjonWSEXP",
             "nav-cons-pen-pselv-brukerprofilWeb/sca/PSELVBrukerprofilWSEXP",
             "nav-cons-pen-pselv-fullmaktWeb/sca/PSELVFullmaktWSEXP",
-            "nav-cons-pen-pselv-henvendelseWeb/sca/PSELVHenvendelseWSEXP",
-            "nav-cons-pen-pselv-inntektWeb/sca/PSELVInntektWSEXP",
             "nav-cons-pen-pselv-personWeb/sca/PSELVPersonWSEXP",
             "nav-cons-pen-pselv-ppen003Web/sca/PSELVPPEN003WSEXP",
             "nav-cons-pen-pselv-ppen004Web/sca/PENPPEN004WSEXP",
