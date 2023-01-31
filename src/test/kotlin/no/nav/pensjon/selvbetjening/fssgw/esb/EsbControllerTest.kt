@@ -104,6 +104,6 @@ internal class EsbControllerTest {
         verify(serviceClient, times(1)).doPost(
             "https://tjenestebuss-q2.adeo.no$path",
             mapOf("Content-Type" to "text/xml;charset=UTF-8", "Nav-Call-Id" to "call ID 1"),
-            """<?xml version="1.0" encoding="UTF-8"?><auth>secret</auth><foo/>""")
+            """<?xml version="1.0" encoding="UTF-8"?><auth>&amp;secret</auth><foo/>""")
     }
 }

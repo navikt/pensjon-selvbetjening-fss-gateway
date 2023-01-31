@@ -15,10 +15,12 @@ abstract class EgressBodyAuthController(
     serviceClient: ServiceClient,
     callIdGenerator: CallIdGenerator,
     egressEndpoint: String,
-    private val password: String)
+    password: String)
     : TokenProtectedController(ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint) {
 
-    override fun provideBodyAuth(body: String) = body.replace("__password__", escapeXml(password))
+    private val replacement: String = ">${escapeXml(password)}</"
+
+    override fun provideBodyAuth(body: String) = body.replace(">__password__</", replacement)
 
     override fun provideHeaderAuth(request: HttpServletRequest, headers: TreeMap<String, String>) {
         // No auth header – auth is instead provided in SOAP header (in HTTP body)
