@@ -41,7 +41,7 @@ abstract class ControllerBase(
             val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
             val url = "$egressEndpoint${request.requestURI}$queryPart"
             val responseBody = serviceClient.doGet(url, headersToRelay)
-            metric("GET ${request.requestURI}", "OK")
+            metric("GET ${metricDetail(request)}", "OK")
             ResponseEntity(responseBody, responseContentType, HttpStatus.OK)
         } catch (e: AuthException) {
             unauthorized(e)
@@ -50,7 +50,7 @@ abstract class ControllerBase(
         } catch (e: Oauth2Exception) {
             unauthorized(e)
         } catch (e: ConsumerException) {
-            metric("GET ${request.requestURI}", "error")
+            metric("GET ${metricDetail(request)}", "error")
             log.error("Failed to consume service at $egressEndpoint${request.requestURI}: " + e.message, e)
             ResponseEntity(e.message, responseContentType, HttpStatus.BAD_GATEWAY)
         } finally {
@@ -67,7 +67,7 @@ abstract class ControllerBase(
             val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
             val url = "$egressEndpoint${request.requestURI}$queryPart"
             val responseBody = serviceClient.doOptions(url, headersToRelay)
-            metric("OPTIONS ${request.requestURI}", "OK")
+            metric("OPTIONS ${metricDetail(request)}", "OK")
             ResponseEntity(responseBody, responseContentType, HttpStatus.OK)
         } catch (e: AuthException) {
             unauthorized(e)
@@ -76,7 +76,7 @@ abstract class ControllerBase(
         } catch (e: Oauth2Exception) {
             unauthorized(e)
         } catch (e: ConsumerException) {
-            metric("OPTIONS ${request.requestURI}", "error")
+            metric("OPTIONS ${metricDetail(request)}", "error")
             log.error("Failed to consume service at $egressEndpoint${request.requestURI}: " + e.message, e)
             ResponseEntity(e.message, responseContentType, HttpStatus.BAD_GATEWAY)
         } finally {
@@ -93,7 +93,7 @@ abstract class ControllerBase(
             val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
             val url = "$egressEndpoint${request.requestURI}$queryPart"
             val responseBody = serviceClient.doPost(url, headersToRelay, provideBodyAuth(body))
-            metric("POST ${request.requestURI}", "OK")
+            metric("POST ${metricDetail(request)}", "OK")
             ResponseEntity(responseBody, responseContentType, HttpStatus.OK)
         } catch (e: AuthException) {
             unauthorized(e)
@@ -102,7 +102,7 @@ abstract class ControllerBase(
         } catch (e: Oauth2Exception) {
             unauthorized(e)
         } catch (e: ConsumerException) {
-            metric("POST ${request.requestURI}", "error")
+            metric("POST ${metricDetail(request)}", "error")
             log.error("Failed to consume service at $egressEndpoint${request.requestURI}: " + e.message, e)
             ResponseEntity(e.message, responseContentType, HttpStatus.BAD_GATEWAY)
         } finally {
@@ -115,6 +115,8 @@ abstract class ControllerBase(
     protected abstract fun provideHeaderAuth(request: HttpServletRequest, headers: TreeMap<String, String>)
 
     protected abstract fun provideBodyAuth(body: String): String
+
+    protected open fun metricDetail(request: HttpServletRequest): String = request.requestURI
 
     private fun getEgressHeaders(request: HttpServletRequest): TreeMap<String, String> {
         val egressHeaders = TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER)
@@ -156,9 +158,8 @@ abstract class ControllerBase(
 
     private fun contentTypeHeaders(mediaType: MediaType) = HttpHeaders().also { it.contentType = mediaType }
 
-    private fun metric(action: String, status: String) {
+    private fun metric(action: String, status: String) =
         Metrics.counter("request_counter", "action", action, "status", status).increment()
-    }
 
     private val jsonContentType: HttpHeaders
         get() = contentTypeHeaders(MediaType.APPLICATION_JSON)

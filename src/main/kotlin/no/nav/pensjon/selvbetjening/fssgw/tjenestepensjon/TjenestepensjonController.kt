@@ -31,4 +31,9 @@ class TjenestepensjonController(
     override fun consumerTokenRequired(): Boolean {
         return false
     }
+
+    /**
+     * Override in order to hide PID (which is part of request URI)
+     */
+    override fun metricDetail(request: HttpServletRequest): String = "/api/tjenestepensjon"
 }
