@@ -31,4 +31,9 @@ class EregController(
     override fun consumerTokenRequired(): Boolean {
         return false
     }
+
+    /**
+     * Override in order to exclude organisasjonsnummer from metric
+     */
+    override fun metricDetail(request: HttpServletRequest): String = "/ereg/api/v1/organisasjon/noekkelinfo"
 }

@@ -45,4 +45,9 @@ class PenController(
     override fun consumerTokenRequired(): Boolean {
         return false
     }
+
+    /**
+     * Override in order to exclude krav-ID and vedtak-ID from metric
+     */
+    override fun metricDetail(request: HttpServletRequest): String = "PEN"
 }
