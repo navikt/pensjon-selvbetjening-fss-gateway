@@ -1,5 +1,6 @@
 package no.nav.pensjon.selvbetjening.fssgw.common
 
+import no.nav.pensjon.selvbetjening.fssgw.common.SoapPasswordInserter.insertPassword
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import java.util.*
 import javax.servlet.http.HttpServletRequest
@@ -15,37 +16,12 @@ abstract class EgressBodyAuthController(
     serviceClient: ServiceClient,
     callIdGenerator: CallIdGenerator,
     egressEndpoint: String,
-    password: String)
+    private val password: String)
     : TokenProtectedController(ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint) {
 
-    private val replacement: String = ">${escapeXml(password)}</"
-
-    override fun provideBodyAuth(body: String) = body.replace(">__password__</", replacement)
+    override fun provideBodyAuth(body: String) = insertPassword(body, password)
 
     override fun provideHeaderAuth(request: HttpServletRequest, headers: TreeMap<String, String>) {
         // No auth header – auth is instead provided in SOAP header (in HTTP body)
-    }
-
-    companion object {
-        fun escapeXml(text: String?): String {
-            if (text == null) {
-                return ""
-            }
-
-            val builder = StringBuilder()
-
-            for (element in text) {
-                when (element) {
-                    '<' -> builder.append("&lt;")
-                    '>' -> builder.append("&gt;")
-                    '\"' -> builder.append("&quot;")
-                    '\'' -> builder.append("&apos;")
-                    '&' -> builder.append("&amp;")
-                    else -> builder.append(element)
-                }
-            }
-
-            return builder.toString()
-        }
     }
 }

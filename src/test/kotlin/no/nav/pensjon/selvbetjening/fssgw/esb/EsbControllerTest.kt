@@ -96,7 +96,7 @@ internal class EsbControllerTest {
             post(path)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_XML_VALUE)
-                .content("""<?xml version="1.0" encoding="UTF-8"?><auth>__password__</auth><foo/>"""))
+                .content("""<?xml version="1.0" encoding="UTF-8"?><soapenv:Header><wsse:UsernameToken><wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">__password__</wsse:Password></wsse:UsernameToken></soapenv:Header><body><foo /></body>"""))
             .andExpect(status().isOk)
             .andExpect(header().string(HttpHeaders.CONTENT_TYPE, expectedMediaType.toString()))
             .andExpect(content().xml(expectedResponseBody))
@@ -104,6 +104,6 @@ internal class EsbControllerTest {
         verify(serviceClient, times(1)).doPost(
             "https://tjenestebuss-q2.adeo.no$path",
             mapOf("Content-Type" to "text/xml;charset=UTF-8", "Nav-Call-Id" to "call ID 1"),
-            """<?xml version="1.0" encoding="UTF-8"?><auth>&amp;secret</auth><foo/>""")
+            """<?xml version="1.0" encoding="UTF-8"?><soapenv:Header><wsse:UsernameToken><wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">&amp;secret</wsse:Password></wsse:UsernameToken></soapenv:Header><body><foo /></body>""")
     }
 }
