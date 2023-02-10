@@ -25,7 +25,10 @@ class PensjonReglerController(
         return super.doGet(request)
     }
 
-    @PostMapping("hentGrunnbelopListe")
+    @PostMapping(
+        value = [
+            "hentGrunnbelopListe",
+            "simulerAlderspensjon"])
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
         return super.doPost(request, body)
     }
