@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*
 import javax.servlet.http.HttpServletRequest
 
 @RestController
-@RequestMapping("bprof")
 class PensjonFullmaktController(
     ingressTokenValidator: JwsValidator,
     egressTokenGetter: ServiceTokenGetter,
@@ -21,7 +20,7 @@ class PensjonFullmaktController(
     : EgressHeaderAuthController(
     ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter) {
 
-    @GetMapping("finnFullmakter")
+    @GetMapping(value=["bprof/finnFullmakter", "harFullmaktsforhold"])
     fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> {
         return super.doGet(request)
     }
