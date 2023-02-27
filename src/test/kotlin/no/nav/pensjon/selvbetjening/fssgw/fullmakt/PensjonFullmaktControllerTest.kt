@@ -41,20 +41,39 @@ internal class PensjonFullmaktControllerTest {
     @Test
     fun `when OK then finnFullmakter request returns data`() {
         `when`(serviceClient.doGet(anyString(), anyMap()))
-            .thenReturn(responseBody())
+                .thenReturn(responseFinnFullmakterBody())
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
         mvc.perform(
-            get("/bprof/finnFullmakter")
-                .header(HttpHeaders.AUTHORIZATION, auth)
-                .header("aktorNr", "05845997316"))
-            .andExpect(status().isOk)
-            .andExpect(
-                content().json(responseBody()))
+                get("/bprof/finnFullmakter")
+                        .header(HttpHeaders.AUTHORIZATION, auth)
+                        .header("aktorNr", "05845997316"))
+                .andExpect(status().isOk)
+                .andExpect(
+                        content().json(responseFinnFullmakterBody()))
+    }
+
+    @Test
+    fun `when OK then harFullmaktsforhold request returns data`() {
+        `when`(serviceClient.doGet(anyString(), anyMap()))
+                .thenReturn(responseHarFullmaktsforholdBody())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+
+        mvc.perform(
+                get("/harFullmaktsforhold")
+                        .header(HttpHeaders.AUTHORIZATION, auth)
+                        .header("fNrGiver", "05845997316")
+                        .header("fNrFullmektig", "00000000000"))
+
+                .andExpect(status().isOk)
+                .andExpect(
+                        content().string(responseHarFullmaktsforholdBody()))
     }
 
     companion object {
-        private fun responseBody() = """
+        private fun responseHarFullmaktsforholdBody() = """true"""
+
+        private fun responseFinnFullmakterBody() = """
     {
         "aktor": {
             "kodeAktorType": "PERSON",
