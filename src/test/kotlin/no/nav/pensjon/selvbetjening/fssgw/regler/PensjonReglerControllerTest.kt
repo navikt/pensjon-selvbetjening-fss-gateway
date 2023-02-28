@@ -2,9 +2,7 @@ package no.nav.pensjon.selvbetjening.fssgw.regler
 
 import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
-import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
-import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyMap
 import org.mockito.ArgumentMatchers.anyString
@@ -29,9 +27,6 @@ internal class PensjonReglerControllerTest {
     lateinit var jwsValidator: JwsValidator
 
     @MockBean
-    lateinit var egressTokenGetter: ServiceTokenGetter
-
-    @MockBean
     lateinit var serviceClient: ServiceClient
 
     @MockBean
@@ -40,8 +35,7 @@ internal class PensjonReglerControllerTest {
     @Test
     fun `hentGrunnbelopListe request results in JSON response`() {
         `when`(serviceClient.doPost(anyString(), anyMap(), anyString()))
-            .thenReturn("""{ "response": "bar"}""")
-        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+            .thenReturn(RESPONSE_BODY)
 
         mvc.perform(
             post(HENT_GRUNNBELOP_LISTE_PATH)
@@ -49,7 +43,7 @@ internal class PensjonReglerControllerTest {
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .content(REQUEST_BODY))
             .andExpect(status().isOk)
-            .andExpect(content().json("""{ "response": "bar"}"""))
+            .andExpect(content().json(RESPONSE_BODY))
     }
 
     @Test
@@ -63,6 +57,18 @@ internal class PensjonReglerControllerTest {
 
     private companion object {
         const val HENT_GRUNNBELOP_LISTE_PATH = "/api/hentGrunnbelopListe"
-        const val REQUEST_BODY = "foo"
+
+        const val REQUEST_BODY = """{
+    "fom": 1676042011910,
+    "tom": 1676042011910
+}"""
+
+        const val RESPONSE_BODY = """{
+    "satsResultater": ["java.util.ArrayList", [{
+        "fom": 1651399200000,
+        "tom": 253402254000000,
+        "verdi": 111477.0
+    }]]
+}"""
     }
 }
