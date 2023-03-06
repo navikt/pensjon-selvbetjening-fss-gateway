@@ -12,6 +12,7 @@ spec:
     min: 2
     max: 2
   ingresses:
+    - https://pensjon-selvbetjening-fss-gateway.intern.dev.nav.no
     - https://pensjon-selvbetjening-fss-gateway.dev.intern.nav.no
     - https://pensjon-selvbetjening-fss-gateway.dev-fss-pub.nais.io
   liveness:
