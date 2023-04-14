@@ -1,4 +1,4 @@
-name: Dev build, push, deploy
+name: Build, push, deploy
 
 on:
   push:
@@ -9,6 +9,12 @@ on:
       - 'CODEOWNERS'
       - 'LICENSE.md'
       - 'README.md'
+  workflow_dispatch:
+    inputs:
+      prod:
+        description: Deploy to production
+        type: boolean
+        required: false
 
 jobs:
   build:
@@ -44,9 +50,25 @@ jobs:
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
     outputs:
       image: ${{ steps.image-creation.outputs.image }}
-  deploy-dev:
-    name: Deploy to dev-fss
+  deploy-q2:
+    name: Deploy Q2 to dev-fss
     needs: [ build ]
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3.5.0
+      - name: Deploy to dev-fss
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-fss
+          IMAGE: ${{ needs.build.outputs.image }}
+          RESOURCE: .nais/dev-fss.yml
+  deploy-q0-q1:
+    name: Deploy Q0, Q1 to dev-fss
+    needs: [ build ]
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -62,3 +84,21 @@ jobs:
           IMAGE: ${{ needs.build.outputs.image }}
           RESOURCE: .nais/dev-fss-multienv.yml
           VAR: environment=${{ matrix.environment }}
+  deploy-prod:
+    name: Deploy to prod-fss
+    needs: [ build ]
+    if: |
+      github.ref == 'refs/heads/main' &&
+      github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.prod == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3.5.0
+      - name: Deploy to prod-fss
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-fss
+          IMAGE: ${{ needs.build.outputs.image }}
+          RESOURCE: .nais/prod-fss.yml
