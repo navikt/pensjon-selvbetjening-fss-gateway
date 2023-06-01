@@ -40,7 +40,9 @@ class PenController(
     @PostMapping(
         value = [
             "api/soknad/alderspensjon/behandle",
-            "springapi/simulering/alderspensjon"])
+            "springapi/simulering/alderspensjon",
+            "springapi/uttaksalder"
+        ])
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
         return super.doPost(request, body)
     }
