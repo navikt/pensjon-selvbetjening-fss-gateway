@@ -47,9 +47,11 @@ class EsbController(
             "nav-tjeneste-person_v2Web/sca/PersonWSEXP",
             "nav-tjeneste-trekk_v1Web/sca/TrekkWSEXP",
             "nav-tjeneste-utbetaling_v1Web/sca/UtbetalingWSEXP",
+            "pen/services/Vedtak_v2",
             "pensjon-microflow-behandleEndretForventetArbeidsinntektProxyWeb/sca/BehandleEndretForventetArbeidsinntektWSEXP",
             "pensjon-tjeneste-iverksattVedtakBehandling_v1Web/sca/IverksattVedtakBehandlingWSEXP",
-            "pensjon-tjeneste-samordning_v1Web/sca/SamordningWSEXP"])
+            "pensjon-tjeneste-samordning_v1Web/sca/SamordningWSEXP",
+            "tpsws-aura/ws/Person/v3"])
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
         return super.doPost(request, body)
     }

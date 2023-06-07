@@ -139,6 +139,90 @@ object EsbXml {
         </soapenv:Body>
     </soapenv:Envelope>"""
 
+    val journalbehandlingRequestBody: String
+        get() = """<?xml version='1.0' encoding='UTF-8'?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+    <S:Header>
+        <To xmlns="http://www.w3.org/2005/08/addressing">https://tjenestebuss-q2.adeo.no/nav-tjeneste-journalbehandling_v1Web/sca/JournalbehandlingWSEXP</To>
+        <Action xmlns="http://www.w3.org/2005/08/addressing">http://nav.no/virksomhet/tjenester/arkiv/journalbehandling/v1/Journalbehandling/lagreDokumentOgOpprettJournalpostRequest</Action>
+        <ReplyTo xmlns="http://www.w3.org/2005/08/addressing">
+            <Address>http://www.w3.org/2005/08/addressing/anonymous</Address>
+        </ReplyTo>
+        <FaultTo xmlns="http://www.w3.org/2005/08/addressing">
+            <Address>http://www.w3.org/2005/08/addressing/anonymous</Address>
+        </FaultTo>
+        <MessageID xmlns="http://www.w3.org/2005/08/addressing">uuid:44a6d212-766c-492a-9e8b-8c3b913fe716</MessageID>
+        <scp:StelvioContext xmlns="" xmlns:scp="http://www.nav.no/StelvioContextPropagation">
+            <applicationId>PP01</applicationId>
+            <correlationId>4dcbaf90-30f2-4b89-bdae-4cb22d418c2d</correlationId>
+            <userId>PP01</userId>
+        </scp:StelvioContext>
+        <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" S:mustUnderstand="1">
+            <wsse:UsernameToken>
+                <wsse:Username>********</wsse:Username>
+                <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">********</wsse:Password>
+            </wsse:UsernameToken>
+        </wsse:Security>
+    </S:Header>
+    <S:Body>
+        <ns2:lagreDokumentOgOpprettJournalpost xmlns:ns2="http://nav.no/virksomhet/tjenester/arkiv/journalbehandling/v1">
+            <request>
+                <saksrelasjon>
+                    <fagsystemKode>PEN</fagsystemKode>
+                    <feilregistrert>false</feilregistrert>
+                    <sakId>22966681</sakId>
+                    <endretAvNavn>Selvbetjening</endretAvNavn>
+                </saksrelasjon>
+                <journalpostDokumentInfoRelasjonListe>
+                    <dokumentInfo>
+                        <fildetaljerListe>
+                            <fil>JVBERi0xLjQKJaqrrK0KMSAwIG9iago8PAovVGl0b...zCj4+CnN0YXJ0eHJlZgo1MzI1MAolJUVPRgo=</fil>
+                            <filtypeKode>PDF</filtypeKode>
+                            <variantFormatKode>ARKIV</variantFormatKode>
+                        </fildetaljerListe>
+                        <kategoriKode>ES</kategoriKode>
+                        <tittel>Søknad om endring av alderspensjon</tittel>
+                        <sensitivt>false</sensitivt>
+                    </dokumentInfo>
+                    <tilknyttetJournalpostSomKode>HOVEDDOKUMENT</tilknyttetJournalpostSomKode>
+                    <tilknyttetAvNavn>Selvbetjening</tilknyttetAvNavn>
+                </journalpostDokumentInfoRelasjonListe>
+                <faktiskDistribusjonskanalKode>E</faktiskDistribusjonskanalKode>
+                <gjelderListe>
+                    <brukerId>01896097551</brukerId>
+                    <brukertypeKode>PERSON</brukertypeKode>
+                </gjelderListe>
+                <mottattDato>2023-01-31T00:36:18.533+01:00</mottattDato>
+                <innhold>Søknad om endring av alderspensjon</innhold>
+                <journalForendeEnhetId>9999</journalForendeEnhetId>
+                <journalposttypeKode>I</journalposttypeKode>
+                <journalstatusKode>J</journalstatusKode>
+                <dokumentDato>2023-01-31T00:36:18.533+01:00</dokumentDato>
+                <fagomradeKode>PEN</fagomradeKode>
+                <avsenderMottaker>Vertikal Brille</avsenderMottaker>
+                <avsenderMottakerId>01896097551</avsenderMottakerId>
+                <opprettetAvNavn>Selvbetjening</opprettetAvNavn>
+            </request>
+        </ns2:lagreDokumentOgOpprettJournalpost>
+    </S:Body>
+</S:Envelope>"""
+
+    val journalbehandlingResponseBody: String
+        get() = """<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
+        <wsa:Action>http://nav.no/virksomhet/tjenester/arkiv/journalbehandling/v1/Journalbehandling/lagreDokumentOgOpprettJournalpostResponse</wsa:Action>
+        <wsa:RelatesTo>uuid:44a6d212-766c-492a-9e8b-8c3b913fe716</wsa:RelatesTo>
+    </soapenv:Header>
+    <soapenv:Body>
+        <v1:lagreDokumentOgOpprettJournalpostResponse xmlns:v1="http://nav.no/virksomhet/tjenester/arkiv/journalbehandling/v1">
+            <response>
+                <journalpostId>453826525</journalpostId>
+            </response>
+        </v1:lagreDokumentOgOpprettJournalpostResponse>
+    </soapenv:Body>
+</soapenv:Envelope>"""
+
     val ppen004ResponseBody: String
         get() = """<?xml version="1.0" encoding="UTF-8"?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
