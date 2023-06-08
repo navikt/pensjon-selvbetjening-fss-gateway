@@ -59,6 +59,8 @@ spec:
       value: https://pensjon-fullmakt.intern.nav.no
     - name: PENSJONREGLER_URL
       value: https://pensjon-regler.intern.nav.no
+    - name: PEP_GW_URL
+      value: https://pep-gw.oera.no:9443
     - name: POPP_URL
       value: https://pensjon-popp.nais.adeo.no
     - name: PREG_URL
@@ -96,6 +98,11 @@ spec:
         - application: pensjon-pselv
           namespace: pensjondeployer
           cluster: prod-gcp
+    outbound:
+      external:
+        - host: pep-gw.oera.no
+          ports:
+            - port: 9443
   vault:
     enabled: true
     paths:

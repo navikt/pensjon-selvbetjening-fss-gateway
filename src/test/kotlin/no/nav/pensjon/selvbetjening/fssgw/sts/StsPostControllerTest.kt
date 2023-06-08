@@ -34,7 +34,6 @@ internal class StsPostControllerTest {
     fun `token exchange request results in SAML token response`() {
         `when`(serviceClient.doPost(anyString(), anyMap(), anyString()))
             .thenReturn(SAML_TOKEN_RESPONSE_BODY)
-        //`when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
 
         mvc.perform(
             post(TOKEN_EXCHANGE_PATH)

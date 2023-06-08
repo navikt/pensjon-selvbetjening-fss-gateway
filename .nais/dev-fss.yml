@@ -57,6 +57,8 @@ spec:
       value: https://pensjon-fullmakt-q2.dev.intern.nav.no
     - name: PENSJONREGLER_URL
       value: https://pensjon-regler-q2.dev.adeo.no
+    - name: PEP_GW_URL
+      value: https://pep-gw-q1.oera-q.local:9443
     - name: POPP_URL
       value: https://pensjon-popp-q2.dev.adeo.no
     - name: PREG_URL
@@ -99,6 +101,11 @@ spec:
         - application: pensjon-pselv-q2
           namespace: teampensjon
           cluster: dev-gcp
+    outbound:
+      external:
+        - host: pep-gw-q1.oera-q.local
+          ports:
+            - port: 9443
   vault:
     enabled: true
     paths:
