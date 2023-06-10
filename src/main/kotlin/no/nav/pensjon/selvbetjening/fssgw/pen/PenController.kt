@@ -33,9 +33,7 @@ class PenController(
             "springapi/vedtak",
             "springapi/vedtak/bestemgjeldende",
             "springapi/vedtak/{vedtakId}/beregninger"])
-    fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> {
-        return super.doGet(request)
-    }
+    fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> = super.doGet(request)
 
     @PostMapping(
         value = [
@@ -43,16 +41,12 @@ class PenController(
             "springapi/simulering/alderspensjon",
             "springapi/uttaksalder"
         ])
-    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
-        return super.doPost(request, body)
-    }
+    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest) = super.doPost(request, body)
 
-    override fun consumerTokenRequired(): Boolean {
-        return false
-    }
+    override fun consumerTokenRequired() = false
 
     /**
      * Override in order to exclude krav-ID and vedtak-ID from metric
      */
-    override fun metricDetail(request: HttpServletRequest): String = "PEN"
+    override fun metricDetail(request: HttpServletRequest) = "PEN"
 }

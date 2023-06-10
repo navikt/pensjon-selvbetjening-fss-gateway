@@ -7,7 +7,6 @@ import no.nav.pensjon.selvbetjening.fssgw.tech.basicauth.BasicAuthValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
 import javax.servlet.http.HttpServletRequest
@@ -23,9 +22,7 @@ class SimulerTjenestepensjonPingController(
     : BasicProtectedControllerBase(authValidator, serviceClient, callIdGenerator, egressEndpoint) {
 
     @GetMapping("api/simuler/tjenestepensjon/ping")
-    fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> {
-        return super.doGet(request)
-    }
+    fun handleGetRequest(request: HttpServletRequest)= super.doGet(request)
 
     override fun provideHeaderAuth(request: HttpServletRequest, headers: TreeMap<String, String>) {
         val token = egressTokenGetter.getServiceUserToken().accessToken
