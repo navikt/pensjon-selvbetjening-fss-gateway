@@ -147,9 +147,7 @@ abstract class ControllerBase(
         headers[headerName] = request.getHeader(headerName)
     }
 
-    private fun unauthorized(e: Exception): ResponseEntity<String> {
-        return unauthorized(e.message)
-    }
+    private fun unauthorized(e: Exception) = unauthorized(e.message)
 
     private fun unauthorized(message: String?): ResponseEntity<String> {
         log.error("Unauthorized: $message")
@@ -167,13 +165,12 @@ abstract class ControllerBase(
     private val xmlContentType: HttpHeaders
         get() = contentTypeHeaders(MediaType(MediaType.TEXT_XML, StandardCharsets.UTF_8))
 
-    private fun resolveCallId(headers: TreeMap<String, String>): String {
-        return NAV_CALL_ID_HEADER_NAMES
+    private fun resolveCallId(headers: TreeMap<String, String>) =
+        NAV_CALL_ID_HEADER_NAMES
             .asSequence()
             .mapNotNull { headers[it] }
             .firstOrNull { it.isNotEmpty() }
             ?: callIdGenerator.newCallId()
-    }
 
     companion object {
         const val CALL_ID_HEADER_NAME_1 = "Nav-Call-Id"

@@ -13,7 +13,7 @@ abstract class UnprotectedControllerBase(
         // No operation
     }
 
-    override fun provideBodyAuth(body: String): String = body
+    override fun provideBodyAuth(body: String) = body
 
     override fun provideHeaderAuth(request: HttpServletRequest, headers: TreeMap<String, String>) {
         // No operation
