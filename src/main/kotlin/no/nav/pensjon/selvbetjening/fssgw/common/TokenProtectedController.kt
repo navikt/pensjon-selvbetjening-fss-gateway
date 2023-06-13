@@ -4,7 +4,7 @@ import io.jsonwebtoken.JwtException
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import org.springframework.http.HttpHeaders
 import org.springframework.util.StringUtils
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 
 abstract class TokenProtectedController(
     private val tokenValidator: JwsValidator,

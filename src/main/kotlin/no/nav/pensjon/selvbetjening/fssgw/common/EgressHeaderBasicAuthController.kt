@@ -3,7 +3,7 @@ package no.nav.pensjon.selvbetjening.fssgw.common
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import org.springframework.http.HttpHeaders
 import java.util.*
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 
 /**
  * Controller used for requests where basic auth credentials are to be inserted into the Authorization header.

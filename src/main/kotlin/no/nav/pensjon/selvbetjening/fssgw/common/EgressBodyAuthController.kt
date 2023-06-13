@@ -3,7 +3,7 @@ package no.nav.pensjon.selvbetjening.fssgw.common
 import no.nav.pensjon.selvbetjening.fssgw.common.SoapPasswordInserter.insertPassword
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import java.util.*
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 
 /**
  * Controller used for requests where credentials are to be inserted into the request body.

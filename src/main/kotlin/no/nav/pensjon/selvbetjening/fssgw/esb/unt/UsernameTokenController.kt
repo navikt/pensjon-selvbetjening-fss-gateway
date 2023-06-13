@@ -15,8 +15,8 @@ import org.springframework.http.ResponseEntity
 import org.springframework.util.StringUtils.hasText
 import org.springframework.web.bind.annotation.*
 import java.nio.charset.StandardCharsets
-import javax.security.auth.message.AuthException
-import javax.servlet.http.HttpServletRequest
+import jakarta.security.auth.message.AuthException
+import jakarta.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("ws-support")

@@ -2,7 +2,7 @@ package no.nav.pensjon.selvbetjening.fssgw.common
 
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import java.util.*
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 
 /**
  * Controller for requests that require no egress auth.

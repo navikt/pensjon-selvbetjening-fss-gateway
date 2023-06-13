@@ -1,7 +1,7 @@
 package no.nav.pensjon.selvbetjening.fssgw.common
 
 import java.util.*
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 
 abstract class UnprotectedControllerBase(
     serviceClient: ServiceClient,
