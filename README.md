@@ -2,15 +2,15 @@
 
 Gateway-/proxy-applikasjon for at pensjonsrelaterte applikasjoner i allmenn sky (GCP) skal kunne nå tjenester i Fagsystemsonen (FSS).
 
-Teknologi: Java 17, Kotlin, Spring Boot og Maven.
-
 Støttede tjenester:
 
 - EREG (Enhetsregisteret)
 - ESB (Enterprise Service Bus, tjenestebuss)
 - Dok-arkiv (JOARK)
+- Gandalf STS
 - Inntektskomponenten
 - Kodeverk
+- Norsk Pensjon
 - PDL (Persondataløsningen)
 - PEN (Pensjonsfaglig kjerne)
 - POPP (Pensjonsfaglig opptjeningsregister)
@@ -19,10 +19,21 @@ Støttede tjenester:
 
 For å benytte endepunktene kreves *bearer*-token (TokenX, Azure AD On-Behalf-Of, eller Client credentials).
 
+## API
+
+Se [Swagger/OpenAPI-dokumentasjon](https://pensjon-selvbetjening-fss-gateway.dev.intern.nav.no/swagger-ui/index.html)
+
+## Teknologi
+
+* [Java 17](https://openjdk.org/projects/jdk/17/)
+* [Kotlin](https://kotlinlang.org/)
+* [Spring Boot](https://spring.io/projects/spring-boot)
+* [Maven](https://maven.apache.org/)
+
 ## Øvrig dokumentasjon
 
 NAV-intern dokumentasjon (Confluence): [FSS-gateway-app](https://confluence.adeo.no/display/PEN/FSS-gateway-app)
 
 ## Henvendelser
 
-NAV-interne henvendelser kan sendes via Slack i kanalen [#po-pensjon-teamselvbetjening](https://nav-it.slack.com/archives/C014M7U1GBY).
+NAV-interne henvendelser kan sendes via Slack i kanalen [#pensjonskalkulator](https://nav-it.slack.com/archives/C04M46SPSRL).
