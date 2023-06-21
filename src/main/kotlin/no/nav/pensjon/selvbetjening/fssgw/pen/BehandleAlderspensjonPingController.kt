@@ -1,31 +1,29 @@
 package no.nav.pensjon.selvbetjening.fssgw.pen
 
-import no.nav.pensjon.selvbetjening.fssgw.common.BasicProtectedControllerBase
+import jakarta.servlet.http.HttpServletRequest
 import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
+import no.nav.pensjon.selvbetjening.fssgw.common.EgressHeaderAuthController
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
-import no.nav.pensjon.selvbetjening.fssgw.tech.basicauth.BasicAuthValidator
+import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.HttpHeaders
-import org.springframework.web.bind.annotation.*
-import java.util.*
-import jakarta.servlet.http.HttpServletRequest
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("pen")
 class BehandleAlderspensjonPingController(
-    authValidator: BasicAuthValidator,
-    private val egressTokenGetter: ServiceTokenGetter,
-    serviceClient: ServiceClient,
-    callIdGenerator: CallIdGenerator,
-    @Value("\${pen.url}") egressEndpoint: String)
-    : BasicProtectedControllerBase(authValidator, serviceClient, callIdGenerator, egressEndpoint) {
+        ingressTokenValidator: JwsValidator,
+        egressTokenGetter: ServiceTokenGetter,
+        serviceClient: ServiceClient,
+        callIdGenerator: CallIdGenerator,
+        @Value("\${pen.url}") egressEndpoint: String)
+    : EgressHeaderAuthController(
+        ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter) {
 
     @GetMapping("api/soknad/alderspensjon/behandle/ping")
     fun handleGetRequest(request: HttpServletRequest)= super.doGet(request)
 
-    override fun provideHeaderAuth(request: HttpServletRequest, headers: TreeMap<String, String>) {
-        val token = egressTokenGetter.getServiceUserToken().accessToken
-        headers[HttpHeaders.AUTHORIZATION] = "Bearer $token"
-    }
+    override fun consumerTokenRequired() = false
 }
