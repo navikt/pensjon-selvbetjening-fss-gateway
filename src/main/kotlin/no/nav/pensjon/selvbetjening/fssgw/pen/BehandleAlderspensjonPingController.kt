@@ -22,7 +22,7 @@ class BehandleAlderspensjonPingController(
     : EgressHeaderAuthController(
         ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter) {
 
-    @GetMapping("api/soknad/alderspensjon/behandle/ping")
+    @GetMapping("api/soknad/alderspensjon/ping")
     fun handleGetRequest(request: HttpServletRequest)= super.doGet(request)
 
     override fun consumerTokenRequired() = false
