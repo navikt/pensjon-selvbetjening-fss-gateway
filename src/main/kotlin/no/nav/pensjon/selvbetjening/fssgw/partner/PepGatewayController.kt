@@ -23,7 +23,11 @@ class PepGatewayController(
     @Value("\${pep-gw.url}") egressEndpoint: String)
     : EgressNoAuthController(ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint) {
 
-    @PostMapping("privat.pensjonsrettighetstjeneste/privatPensjonTjenesteV2_0")
+    @PostMapping(
+        value = [
+            "kalkulator.pensjonsrettighetstjeneste/v3/kalkulatorPensjonTjeneste",
+            "privat.pensjonsrettighetstjeneste/privatPensjonTjenesteV2_0"
+        ])
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
         return super.doPost(request, body)
     }
