@@ -23,8 +23,13 @@ class TjenestepensjonController(
     : EgressHeaderAuthController(
     ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter) {
 
+    @GetMapping("haveYtelse")
+    fun handleHaveYtelseRequest(request: HttpServletRequest): ResponseEntity<String> {
+        return super.doGet(request)
+    }
+
     @GetMapping("{pid}/haveYtelse")
-    fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> {
+    fun handleLegacyHaveYtelseRequest(request: HttpServletRequest): ResponseEntity<String> {
         return super.doGet(request)
     }
 
