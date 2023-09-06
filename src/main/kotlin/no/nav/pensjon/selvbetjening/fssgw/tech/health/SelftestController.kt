@@ -30,7 +30,7 @@ class SelftestController(
         val webClient = WebClientPreparer.webClient(false, "notinuse")
         val issuer = Oauth2ConfigClient(webClient, externalUserWellKnownUrl).getIssuer()
         val status = if (hasLength(issuer)) "up" else "down"
-        return "TokenDings: $status"
+        return "TokenX: $status"
     }
 
     private fun testInternalUserOauth2WellKnownUrl(): String {
