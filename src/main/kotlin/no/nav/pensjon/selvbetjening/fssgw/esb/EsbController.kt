@@ -50,6 +50,8 @@ class EsbController(
             "pensjon-microflow-behandleEndretForventetArbeidsinntektProxyWeb/sca/BehandleEndretForventetArbeidsinntektWSEXP",
             "pensjon-tjeneste-iverksattVedtakBehandling_v1Web/sca/IverksattVedtakBehandlingWSEXP",
             "pensjon-tjeneste-samordning_v1Web/sca/SamordningWSEXP",
-            "tpsws-aura/ws/Person/v3"])
+            "tpsws-aura/ws/Person/v3",
+            "nav-cons-test-getapplicationversionWeb/sca/TESTGetApplicationVersionWSEXP",
+            "nav-tjeneste-arkiv_v1Web/sca/ArkivWSEXP"])
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest) = super.doPost(request, body)
 }
