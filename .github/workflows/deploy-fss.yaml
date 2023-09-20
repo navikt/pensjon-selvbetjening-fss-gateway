@@ -27,7 +27,7 @@ jobs:
       security-events: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
         with:
@@ -61,7 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3.5.0
+        uses: actions/checkout@v4
       - name: Deploy to dev-fss
         uses: nais/deploy/actions/deploy@v1
         env:
@@ -79,7 +79,7 @@ jobs:
         environment: [q0, q1]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3.5.0
+        uses: actions/checkout@v4
       - name: Deploy to dev-fss
         uses: nais/deploy/actions/deploy@v1
         env:
@@ -98,7 +98,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3.5.0
+        uses: actions/checkout@v4
       - name: Deploy to prod-fss
         uses: nais/deploy/actions/deploy@v1
         env:
