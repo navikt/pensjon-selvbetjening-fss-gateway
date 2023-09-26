@@ -11,6 +11,11 @@ spec:
   replicas:
     min: 2
     max: 4
+  resources:
+    limits:
+      memory: "2Gi"
+    requests:
+      memory: "1Gi"
   ingresses:
     - https://pensjon-selvbetjening-fss-gateway.intern.nav.no
     - https://pensjon-selvbetjening-fss-gateway.prod-fss-pub.nais.io
