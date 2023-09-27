@@ -2,8 +2,10 @@ package no.nav.pensjon.selvbetjening.fssgw.common
 
 import io.jsonwebtoken.JwtException
 import io.micrometer.core.instrument.Metrics
+import jakarta.security.auth.message.AuthException
+import jakarta.servlet.http.HttpServletRequest
+import mu.KotlinLogging
 import no.nav.pensjon.selvbetjening.fssgw.tech.oauth2.Oauth2Exception
-import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -12,15 +14,13 @@ import org.springframework.http.ResponseEntity
 import org.springframework.util.StringUtils.hasText
 import java.nio.charset.StandardCharsets
 import java.util.*
-import jakarta.security.auth.message.AuthException
-import jakarta.servlet.http.HttpServletRequest
 
 abstract class ControllerBase(
     private val serviceClient: ServiceClient,
     private val callIdGenerator: CallIdGenerator,
     private val egressEndpoint: String) {
 
-    private val log = LoggerFactory.getLogger(javaClass)
+    private val log = KotlinLogging.logger {}
     private val locale = Locale.getDefault()
 
     private val notRelayedHeaders = listOf(
@@ -49,10 +49,8 @@ abstract class ControllerBase(
             unauthorized(e)
         } catch (e: Oauth2Exception) {
             unauthorized(e)
-        } catch (e: ConsumerException) {
-            metric("GET ${metricDetail(request)}", "error")
-            log.error("Failed to consume service at $egressEndpoint${request.requestURI}: " + e.message, e)
-            ResponseEntity(e.message, responseContentType, HttpStatus.BAD_GATEWAY)
+        } catch (e: EgressException) {
+            handleError(request, "GET", e, responseContentType)
         } finally {
             MDC.clear()
         }
@@ -75,10 +73,8 @@ abstract class ControllerBase(
             unauthorized(e)
         } catch (e: Oauth2Exception) {
             unauthorized(e)
-        } catch (e: ConsumerException) {
-            metric("OPTIONS ${metricDetail(request)}", "error")
-            log.error("Failed to consume service at $egressEndpoint${request.requestURI}: " + e.message, e)
-            ResponseEntity(e.message, responseContentType, HttpStatus.BAD_GATEWAY)
+        } catch (e: EgressException) {
+            handleError(request, "OPTIONS", e, responseContentType)
         } finally {
             MDC.clear()
         }
@@ -101,10 +97,8 @@ abstract class ControllerBase(
             unauthorized(e)
         } catch (e: Oauth2Exception) {
             unauthorized(e)
-        } catch (e: ConsumerException) {
-            metric("POST ${metricDetail(request)}", "error")
-            log.error("Failed to consume service at $egressEndpoint${request.requestURI}: " + e.message, e)
-            ResponseEntity(e.message, responseContentType, HttpStatus.BAD_GATEWAY)
+        } catch (e: EgressException) {
+            handleError(request, "POST", e, responseContentType)
         } finally {
             MDC.clear()
         }
@@ -159,11 +153,19 @@ abstract class ControllerBase(
     private fun metric(action: String, status: String) =
         Metrics.counter("request_counter", "action", action, "status", status).increment()
 
-    private val jsonContentType: HttpHeaders
-        get() = contentTypeHeaders(MediaType.APPLICATION_JSON)
+    private fun handleError(
+        request: HttpServletRequest,
+        method: String,
+        e: EgressException,
+        responseContentType: HttpHeaders): ResponseEntity<String> {
+        metric("$method ${metricDetail(request)}", "error")
+        log.error(e) { "Failed to $method $egressEndpoint${request.requestURI}: ${e.message} (${e.statusCode})" }
+        return ResponseEntity(e.message, responseContentType, statusCode(e))
+    }
 
-    private val xmlContentType: HttpHeaders
-        get() = contentTypeHeaders(MediaType(MediaType.TEXT_XML, StandardCharsets.UTF_8))
+    private val jsonContentType: HttpHeaders = contentTypeHeaders(MediaType.APPLICATION_JSON)
+
+    private val xmlContentType: HttpHeaders = contentTypeHeaders(MediaType(MediaType.TEXT_XML, StandardCharsets.UTF_8))
 
     private fun resolveCallId(headers: TreeMap<String, String>): String {
         return NAV_CALL_ID_HEADER_NAMES
@@ -187,4 +189,10 @@ abstract class ControllerBase(
                 "Nav-Callid",
                 "X-Correlation-Id")
     }
+
+    private fun statusCode(e: EgressException) =
+        if (e.statusCode.is4xxClientError)
+            e.statusCode
+        else
+            HttpStatus.BAD_GATEWAY
 }

@@ -1,7 +1,7 @@
 package no.nav.pensjon.selvbetjening.fssgw.ereg
 
 import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
-import no.nav.pensjon.selvbetjening.fssgw.common.ConsumerException
+import no.nav.pensjon.selvbetjening.fssgw.common.EgressException
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
@@ -42,7 +42,7 @@ internal class EregRestPingControllerTest{
     @Test
     fun `when error then Ereg API ping request responds with bad gateway and error message`() {
         `when`(serviceClient.doGet(ArgumentMatchers.anyString(), ArgumentMatchers.anyMap()))
-                .thenAnswer { throw ConsumerException("""{"error": "oops"}""") }
+                .thenAnswer { throw EgressException("""{"error": "oops"}""") }
 
         mvc.perform(
                 MockMvcRequestBuilders.get("/ereg/api/ping")

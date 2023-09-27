@@ -6,14 +6,16 @@ import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.anyMap
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpHeaders
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -39,12 +41,12 @@ internal class InntektControllerTest {
 
     @Test
     fun `when OK then ForventedeInntekter request returns data`() {
-        `when`(serviceClient.doGet(ArgumentMatchers.anyString(), ArgumentMatchers.anyMap()))
+        `when`(serviceClient.doGet(anyString(), anyMap()))
             .thenReturn("""{ "response": "ForventedeInntekter"}""")
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
         mvc.perform(
-            MockMvcRequestBuilders.get("/inntektskomponenten-ws/rs/api/v1/forventetinntekt")
+            get("/inntektskomponenten-ws/rs/api/v1/forventetinntekt")
                 .header(HttpHeaders.AUTHORIZATION, auth)
                 .header("pid", "01023456789")
                 .header("aar-list", "2020")
@@ -55,12 +57,12 @@ internal class InntektControllerTest {
 
     @Test
     fun `when OK then ForventedeInntekter post returns data`() {
-        `when`(serviceClient.doPost(ArgumentMatchers.anyString(), ArgumentMatchers.anyMap(), ArgumentMatchers.anyString()))
+        `when`(serviceClient.doPost(anyString(), anyMap(), anyString()))
             .thenReturn("""{ "response": "ForventedeInntekter"}""")
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
         mvc.perform(
-            MockMvcRequestBuilders.post("/inntektskomponenten-ws/rs/api/v1/forventetinntekt")
+            post("/inntektskomponenten-ws/rs/api/v1/forventetinntekt")
                 .header(HttpHeaders.AUTHORIZATION, auth)
                 .content("body"))
             .andExpect(status().isOk)
@@ -69,12 +71,12 @@ internal class InntektControllerTest {
 
     @Test
     fun `when OK then hentdetaljerteabonnerteinntekter post returns data`() {
-        `when`(serviceClient.doPost(ArgumentMatchers.anyString(), ArgumentMatchers.anyMap(), ArgumentMatchers.anyString()))
+        `when`(serviceClient.doPost(anyString(), anyMap(), anyString()))
             .thenReturn("""{ "response": "hentdetaljerteabonnerteinntekter"}""")
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
         mvc.perform(
-            MockMvcRequestBuilders.post("/inntektskomponenten-ws/rs/api/v1/hentdetaljerteabonnerteinntekter")
+            post("/inntektskomponenten-ws/rs/api/v1/hentdetaljerteabonnerteinntekter")
                 .header(HttpHeaders.AUTHORIZATION, auth)
                 .content("body"))
             .andExpect(status().isOk)
@@ -83,12 +85,12 @@ internal class InntektControllerTest {
 
     @Test
     fun `when OK then hentabonnerteinntekterbolk post returns data`() {
-        `when`(serviceClient.doPost(ArgumentMatchers.anyString(), ArgumentMatchers.anyMap(), ArgumentMatchers.anyString()))
+        `when`(serviceClient.doPost(anyString(), anyMap(), anyString()))
             .thenReturn("""{ "response": "hentabonnerteinntekterbolk"}""")
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
 
         mvc.perform(
-            MockMvcRequestBuilders.post("/inntektskomponenten-ws/rs/api/v1/hentabonnerteinntekterbolk")
+            post("/inntektskomponenten-ws/rs/api/v1/hentabonnerteinntekterbolk")
                 .header(HttpHeaders.AUTHORIZATION, auth)
                 .content("body"))
             .andExpect(status().isOk)

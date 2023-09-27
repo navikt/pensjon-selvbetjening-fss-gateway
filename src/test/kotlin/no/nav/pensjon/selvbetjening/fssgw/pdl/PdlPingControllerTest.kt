@@ -1,7 +1,7 @@
 package no.nav.pensjon.selvbetjening.fssgw.pdl
 
 import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
-import no.nav.pensjon.selvbetjening.fssgw.common.ConsumerException
+import no.nav.pensjon.selvbetjening.fssgw.common.EgressException
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
@@ -52,7 +52,7 @@ internal class PdlPingControllerTest {
     @Test
     fun `when error then Spring API ping request responds with bad gateway and error message`() {
         `when`(serviceClient.doOptions(anyString(), anyMap()))
-            .thenAnswer { throw ConsumerException("""{"error": "oops"}""") }
+            .thenAnswer { throw EgressException("""{"error": "oops"}""") }
 
         mvc.perform(
             options("/graphql")

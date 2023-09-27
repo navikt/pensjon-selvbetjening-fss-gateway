@@ -1,8 +1,9 @@
 package no.nav.pensjon.selvbetjening.fssgw.pen
 
 import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
+import no.nav.pensjon.selvbetjening.fssgw.common.EgressException
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
-import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil
+import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil.serviceTokenData
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
@@ -13,8 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -42,7 +45,7 @@ internal class PenControllerTest {
     fun `when OK then AFP-historikk request returns data`() {
         `when`(serviceClient.doGet(anyString(), anyMap()))
             .thenReturn("""{ "response": "AFP-historikken"}""")
-        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
 
         mvc.perform(
             get("/pen/api/person/afphistorikk")
@@ -56,7 +59,7 @@ internal class PenControllerTest {
     fun `when OK then uforehistorikk request returns data`() {
         `when`(serviceClient.doGet(anyString(), anyMap()))
             .thenReturn("""{ "response": "uførehistorikken"}""")
-        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
 
         mvc.perform(
             get("/pen/api/person/uforehistorikk")
@@ -70,7 +73,7 @@ internal class PenControllerTest {
     fun `when OK then uttaksgrad person request returns data`() {
         `when`(serviceClient.doGet(anyString(), anyMap()))
             .thenReturn("""{ "response": "uttaksgraden"}""")
-        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
 
         mvc.perform(
             get("/pen/api/uttaksgrad/person?sakType=ALDER")
@@ -84,7 +87,7 @@ internal class PenControllerTest {
     fun `when OK then uttaksgrad search request returns data`() {
         `when`(serviceClient.doGet(anyString(), anyMap()))
             .thenReturn("""{ "response": "uttaksgradene"}""")
-        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
 
         mvc.perform(
             get("/pen/api/uttaksgrad/search?vedtakId=1&vedtakId=2&vedtakId=3")
@@ -97,7 +100,7 @@ internal class PenControllerTest {
     fun `when OK then krav request returns data`() {
         `when`(serviceClient.doGet(anyString(), anyMap()))
             .thenReturn("""{ "response": "kravet"}""")
-        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
 
         mvc.perform(
             get("/pen/springapi/krav")
@@ -112,7 +115,7 @@ internal class PenControllerTest {
     fun `when OK then sakssammendrag request returns data`() {
         `when`(serviceClient.doGet(anyString(), anyMap()))
             .thenReturn("""{ "response": "sammendraget"}""")
-        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
 
         mvc.perform(
             get("/pen/springapi/sak/sammendrag")
@@ -127,7 +130,7 @@ internal class PenControllerTest {
     fun `when OK then vedtak request returns data`() {
         `when`(serviceClient.doGet(anyString(), anyMap()))
             .thenReturn("""{ "response": "vedtakene"}""")
-        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
 
         mvc.perform(
             get("/pen/springapi/vedtak?sakstype=typen&alleVedtak=true&fom=2021-02-03")
@@ -142,7 +145,7 @@ internal class PenControllerTest {
     fun `when OK then bestem gjeldende vedtak request returns data`() {
         `when`(serviceClient.doGet(anyString(), anyMap()))
             .thenReturn("""{ "response": "vedtakene"}""")
-        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
 
         mvc.perform(
             get("/pen/springapi/vedtak/bestemgjeldende")
@@ -152,5 +155,33 @@ internal class PenControllerTest {
                 .header("Nav-Call-Id", "ID 1"))
             .andExpect(status().isOk)
             .andExpect(content().json("""{"response": "vedtakene"}"""))
+    }
+
+    @Test
+    fun `when 4xx error then PEN request responds with 4xx and error message`() {
+        `when`(serviceClient.doPost(anyString(), anyMap(), anyString()))
+            .thenAnswer { throw EgressException("""{"error": "oops"}""", HttpStatus.CONFLICT) }
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
+
+        mvc.perform(
+            post("/pen/springapi/simulering/alderspensjon")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer token")
+                .content("body"))
+            .andExpect(status().isConflict)
+            .andExpect(content().json("""{"error": "oops"}"""))
+    }
+
+    @Test
+    fun `when 5xx error then PEN request responds with 502 and error message`() {
+        `when`(serviceClient.doPost(anyString(), anyMap(), anyString()))
+            .thenAnswer { throw EgressException("""{"error": "oops"}""", HttpStatus.INTERNAL_SERVER_ERROR) }
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
+
+        mvc.perform(
+            post("/pen/springapi/uttaksalder")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer token")
+                .content("body"))
+            .andExpect(status().isBadGateway)
+            .andExpect(content().json("""{"error": "oops"}"""))
     }
 }

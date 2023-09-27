@@ -1,7 +1,7 @@
 package no.nav.pensjon.selvbetjening.fssgw.arena
 
 import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
-import no.nav.pensjon.selvbetjening.fssgw.common.ConsumerException
+import no.nav.pensjon.selvbetjening.fssgw.common.EgressException
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.tech.basicauth.BasicAuthValidator
 import org.junit.jupiter.api.Test
@@ -51,7 +51,7 @@ internal class ArenaPingControllerTest {
     @Test
     fun `when error then arbeidsevnevurdering request responds with bad gateway and error message`() {
         `when`(serviceClient.doPost(anyString(), anyMap(), anyString()))
-            .thenAnswer { throw ConsumerException("""{"error": "oops"}""") }
+            .thenAnswer { throw EgressException("""{"error": "oops"}""") }
         `when`(authValidator.validate(credentials)).thenReturn(true)
 
         mvc.perform(
