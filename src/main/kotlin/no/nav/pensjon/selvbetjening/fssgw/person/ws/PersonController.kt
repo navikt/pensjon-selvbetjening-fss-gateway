@@ -28,7 +28,7 @@ class PersonController(
 
     @PostMapping("ws/Person/v3")
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
-
+        logger.info("Gjør proxykall til tpsws-aura")
         return super.doPost(request, body)
     }
 
