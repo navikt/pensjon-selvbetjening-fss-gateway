@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import jakarta.servlet.http.HttpServletRequest
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 @RestController
 @RequestMapping("tpsws-aura")
@@ -22,8 +24,13 @@ class PersonController(
     @Value("\${sts.password}") private val password: String)
     : EgressBodyAuthController(ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, password) {
 
+    private val log: Logger = LoggerFactory.getLogger(FamilierelasjonService::class.java)
+
     @PostMapping("ws/Person/v3")
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
+
         return super.doPost(request, body)
     }
+
+
 }
