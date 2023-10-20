@@ -6,7 +6,6 @@ import no.nav.pensjon.selvbetjening.fssgw.common.*
 import no.nav.pensjon.selvbetjening.fssgw.common.XmlEscaper.escapeXml
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.oauth2.Oauth2Exception
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.*
 import java.nio.charset.StandardCharsets
 import jakarta.security.auth.message.AuthException
 import jakarta.servlet.http.HttpServletRequest
+import mu.KotlinLogging
 
 @RestController
 @RequestMapping("ws-support")
@@ -24,7 +24,8 @@ class UsernameTokenController(
     private val ingressTokenValidator: JwsValidator,
     @Value("\${sts.username}") private val serviceUsername: String,
     @Value("\${sts.password}") private val servicePassword: String) {
-    private val log = LoggerFactory.getLogger(javaClass)
+
+    private val log = KotlinLogging.logger {}
 
     @GetMapping("unt")
     fun handleGetRequest(request: HttpServletRequest) =
@@ -62,10 +63,9 @@ class UsernameTokenController(
 
     private fun unauthorized(e: Exception) = unauthorized(e.message)
 
-    private fun unauthorized(message: String?): ResponseEntity<String> {
-        log.error("Unauthorized: $message")
-        return ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED)
-    }
+    private fun unauthorized(message: String?): ResponseEntity<String> =
+        ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED)
+            .also { log.error { "Unauthorized: $message" } }
 
     companion object {
         private const val AUTH_TYPE = "Bearer"

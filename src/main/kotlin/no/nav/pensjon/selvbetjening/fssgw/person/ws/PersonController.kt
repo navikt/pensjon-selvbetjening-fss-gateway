@@ -1,5 +1,7 @@
 package no.nav.pensjon.selvbetjening.fssgw.person.ws
 
+import jakarta.servlet.http.HttpServletRequest
+import mu.KotlinLogging
 import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.EgressBodyAuthController
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
@@ -10,12 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import jakarta.servlet.http.HttpServletRequest
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 @RestController
-@RequestMapping("tpsws-aura")
+@RequestMapping("deprecated-tpsws-aura")
 class PersonController(
     ingressTokenValidator: JwsValidator,
     serviceClient: ServiceClient,
@@ -24,13 +23,10 @@ class PersonController(
     @Value("\${sts.password}") private val password: String)
     : EgressBodyAuthController(ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, password) {
 
-    private val log: Logger = LoggerFactory.getLogger(PersonController::class.java)
+    private val log = KotlinLogging.logger {}
 
     @PostMapping("ws/Person/v3")
-    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
-        log.info("Gjør proxykall til tpsws-aura")
-        return super.doPost(request, body)
-    }
-
-
+    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> =
+        super.doPost(request, body)
+            .also { log.info { "Gjør proxykall til tpsws-aura" } }
 }
