@@ -24,11 +24,11 @@ class PersonController(
     @Value("\${sts.password}") private val password: String)
     : EgressBodyAuthController(ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, password) {
 
-    private val log: Logger = LoggerFactory.getLogger(FamilierelasjonService::class.java)
+    private val log: Logger = LoggerFactory.getLogger(PersonController::class.java)
 
     @PostMapping("ws/Person/v3")
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
-        logger.info("Gjør proxykall til tpsws-aura")
+        log.info("Gjør proxykall til tpsws-aura")
         return super.doPost(request, body)
     }
 
