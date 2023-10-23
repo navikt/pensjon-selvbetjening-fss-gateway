@@ -21,7 +21,7 @@ class JwsValidator(
     fun validate(jwsString: String): Claims {
         log.debug("Validating '{}'", jwsString)
 
-        val claims = Jwts.parser()
+        val claims = Jwts.parserBuilder()
             .setSigningKeyResolver(signingKeyResolver)
             .build()
             .parseClaimsJws(jwsString)
@@ -32,7 +32,7 @@ class JwsValidator(
     }
 
     private fun validate(claims: Claims) {
-        val audiences: Set<String> = claims.audience
+        val audience = claims.audience
         val acceptedAudience = multiIssuerSupport.getOauth2HandlerForIssuer(claims.issuer).acceptedAudience
 
         if (log.isDebugEnabled) {
@@ -43,8 +43,8 @@ class JwsValidator(
             }
         }
 
-        if (audiences.contains(acceptedAudience)) {
-            val message = "Invalid audience '$audiences'"
+        if (acceptedAudience != audience) {
+            val message = "Invalid audience '$audience'"
             log.error(message)
             throw JwtException(message)
         }

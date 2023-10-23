@@ -21,7 +21,7 @@ class Oauth2SigningKeyResolver(private val multiIssuerSupport: MultiIssuerSuppor
 
     private val cachedKeysById: MutableMap<String, Key> = ConcurrentHashMap()
 
-    override fun resolveSigningKey(header: JwsHeader, claims: Claims): Key {
+    override fun resolveSigningKey(header: JwsHeader<*>, claims: Claims): Key {
         val keyId = header.keyId
 
         return cachedKeysById.computeIfAbsent(keyId) {
