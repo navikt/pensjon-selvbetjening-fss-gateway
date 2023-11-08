@@ -4,8 +4,8 @@ import io.jsonwebtoken.Claims
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SigningKeyResolver
+import mu.KotlinLogging
 import no.nav.pensjon.selvbetjening.fssgw.tech.oauth2.MultiIssuerSupport
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 /**
@@ -16,10 +16,10 @@ class JwsValidator(
     private val multiIssuerSupport: MultiIssuerSupport,
     private val signingKeyResolver: SigningKeyResolver) {
 
-    private val log = LoggerFactory.getLogger(javaClass)
+    private val log = KotlinLogging.logger {}
 
     fun validate(jwsString: String): Claims {
-        log.debug("Validating '{}'", jwsString)
+        log.trace { "Validating '$jwsString'" }
 
         val claims = Jwts.parserBuilder()
             .setSigningKeyResolver(signingKeyResolver)
@@ -39,13 +39,13 @@ class JwsValidator(
             val roles = claims["roles"]
 
             if (roles is List<*> && roles.contains("access_as_application")) {
-                log.debug("Access as application")
+                log.debug { "Access as application" }
             }
         }
 
         if (acceptedAudience != audience) {
             val message = "Invalid audience '$audience'"
-            log.error(message)
+            log.error { message }
             throw JwtException(message)
         }
     }

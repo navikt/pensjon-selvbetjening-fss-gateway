@@ -22,7 +22,7 @@ class StsPingController(
     @Value("\${sts.url}") egressEndpoint: String)
     : BasicProtectedControllerBase(authValidator, serviceClient, callIdGenerator, egressEndpoint) {
 
-    @GetMapping(value = ["samltoken", "token"])
+    @GetMapping("samltoken")
     fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> {
         return super.doGet(request)
     }
