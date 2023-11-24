@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import jakarta.servlet.http.HttpServletRequest
+import mu.KotlinLogging
 
 @RestController
 @RequestMapping("api/v1/kodeverk")
@@ -23,12 +24,11 @@ class KodeverkController(
     : EgressHeaderAuthController(
     ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter) {
 
-    @GetMapping("Postnummer/koder/betydninger")
-    fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> {
-        return super.doGet(request)
-    }
+    private val log = KotlinLogging.logger {}
 
-    override fun consumerTokenRequired(): Boolean {
-        return false
-    }
+    @GetMapping("Postnummer/koder/betydninger")
+    fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> =
+        super.doGet(request).also { log.warn { "Kodeverk support is deprecated" } }
+
+    override fun consumerTokenRequired(): Boolean = false
 }

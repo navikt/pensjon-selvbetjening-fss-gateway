@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import jakarta.servlet.http.HttpServletRequest
+import mu.KotlinLogging
 
 @RestController
 @RequestMapping("graphql")
@@ -24,12 +25,11 @@ class PdlController(
     : EgressHeaderAuthController(
     ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter) {
 
-    @PostMapping
-    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
-        return super.doPost(request, body)
-    }
+    private val log = KotlinLogging.logger {}
 
-    override fun consumerTokenRequired(): Boolean {
-        return true
-    }
+    @PostMapping
+    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> =
+        super.doPost(request, body).also { log.warn { "PDL support is deprecated" } }
+
+    override fun consumerTokenRequired(): Boolean = true
 }
