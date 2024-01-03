@@ -29,7 +29,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v3
         with:
           languages: java
       - name: Setup java
@@ -41,7 +41,7 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
       - name: Perform CodeQL analysis
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v3
         with:
           category: "/language:java"
       - name: Create Docker image
@@ -59,13 +59,14 @@ jobs:
     needs: [ build ]
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Deploy to dev-fss
-        uses: nais/deploy/actions/deploy@v1
+        uses: nais/deploy/actions/deploy@v2
         env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-fss
           IMAGE: ${{ needs.build.outputs.image }}
           RESOURCE: .nais/dev-fss.yml
@@ -74,6 +75,8 @@ jobs:
     needs: [ build ]
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     strategy:
       matrix:
         environment: [q0, q1]
@@ -81,9 +84,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Deploy to dev-fss
-        uses: nais/deploy/actions/deploy@v1
+        uses: nais/deploy/actions/deploy@v2
         env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-fss
           IMAGE: ${{ needs.build.outputs.image }}
           RESOURCE: .nais/dev-fss-multienv.yml
@@ -96,13 +98,14 @@ jobs:
       github.event_name == 'workflow_dispatch' &&
       github.event.inputs.prod == 'true'
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Deploy to prod-fss
-        uses: nais/deploy/actions/deploy@v1
+        uses: nais/deploy/actions/deploy@v2
         env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: prod-fss
           IMAGE: ${{ needs.build.outputs.image }}
           RESOURCE: .nais/prod-fss.yml
