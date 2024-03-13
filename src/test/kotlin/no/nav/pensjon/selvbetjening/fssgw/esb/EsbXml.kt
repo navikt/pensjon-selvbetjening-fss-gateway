@@ -16,20 +16,6 @@ object EsbXml {
     </soapenv:Body>
 </soapenv:Envelope>"""
 
-    val ppen015ResponseBody: String
-        get() = """<?xml version="1.0" encoding="UTF-8"?>
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
-    <soapenv:Body>
-        <inf:hentPpen015ListeResponse xmlns:inf="http://nav-cons-pen-pselv-ppen015/no/nav/inf">
-            <hentPpen015ListeResponse>
-                <ppen015Liste>
-                    <ppen015Id>1</ppen015Id>
-                </ppen015Liste>
-            </hentPpen015ListeResponse>
-        </inf:hentPpen015ListeResponse>
-    </soapenv:Body>
-</soapenv:Envelope>"""
-
     val brukerprofilResponseBody: String
         get() = """<?xml version="1.0" encoding="UTF-8"?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
@@ -220,34 +206,6 @@ object EsbXml {
                 <journalpostId>453826525</journalpostId>
             </response>
         </v1:lagreDokumentOgOpprettJournalpostResponse>
-    </soapenv:Body>
-</soapenv:Envelope>"""
-
-    val ppen004ResponseBody: String
-        get() = """<?xml version="1.0" encoding="UTF-8"?>
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
-    <soapenv:Body>
-        <inf:hentPpen004ListeResponse xmlns:inf="http://nav-cons-pen-pselv-ppen004/no/nav/inf">
-            <hentPpen004ListeResponse>
-                <ppen004Liste>
-                    <ppen004Id>1</ppen004Id>
-                </ppen004Liste>
-            </hentPpen004ListeResponse>
-        </inf:hentPpen004ListeResponse>
-    </soapenv:Body>
-</soapenv:Envelope>"""
-
-    val samhandlerResponseBody: String
-        get() = """<?xml version="1.0" encoding="UTF-8"?>
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
-    <soapenv:Body>
-        <inf:hentSamhandlerListeResponse xmlns:inf="http://nav-cons-pen-pselv-samhandler/no/nav/inf">
-            <hentSamhandlerListeResponse>
-                <samhandlere>
-                    <samhandlerId>1</samhandlerId>
-                </samhandlere>
-            </hentSamhandlerListeResponse>
-        </inf:hentSamhandlerListeResponse>
     </soapenv:Body>
 </soapenv:Envelope>"""
 
