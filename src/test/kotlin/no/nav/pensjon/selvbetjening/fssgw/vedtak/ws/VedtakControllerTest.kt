@@ -1,5 +1,6 @@
 package no.nav.pensjon.selvbetjening.fssgw.vedtak.ws
 
+import io.jsonwebtoken.Claims
 import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil.serviceTokenData
@@ -8,6 +9,7 @@ import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyMap
 import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -25,8 +27,11 @@ internal class VedtakControllerTest {
     @Autowired
     lateinit var mvc: MockMvc
 
+    @Mock
+    lateinit var claims: Claims
+
     @MockBean
-    lateinit var jwsValidator: JwsValidator
+    lateinit var ingressTokenValidator: JwsValidator
 
     @MockBean
     lateinit var egressTokenGetter: ServiceTokenGetter
@@ -41,6 +46,7 @@ internal class VedtakControllerTest {
     fun `vedtak request results in vedtak response XML`() {
         `when`(serviceClient.doPost(anyString(), anyMap(), anyString())).thenReturn(RESPONSE_BODY)
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
         val expectedMediaType = MediaType(MediaType.TEXT_XML, StandardCharsets.UTF_8)
 
         mvc.perform(

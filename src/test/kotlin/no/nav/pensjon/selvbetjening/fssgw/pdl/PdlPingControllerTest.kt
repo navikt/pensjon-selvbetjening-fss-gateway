@@ -1,5 +1,6 @@
 package no.nav.pensjon.selvbetjening.fssgw.pdl
 
+import io.jsonwebtoken.Claims
 import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.EgressException
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
@@ -8,6 +9,7 @@ import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyMap
 import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -24,8 +26,11 @@ internal class PdlPingControllerTest {
     @Autowired
     lateinit var mvc: MockMvc
 
+    @Mock
+    lateinit var claims: Claims
+
     @MockBean
-    lateinit var authValidator: JwsValidator
+    lateinit var ingressTokenValidator: JwsValidator
 
     @MockBean
     lateinit var egressTokenGetter: ServiceTokenGetter
@@ -38,8 +43,8 @@ internal class PdlPingControllerTest {
 
     @Test
     fun `when OK then PDL ping request results in JSON response`() {
-        `when`(serviceClient.doOptions(anyString(), anyMap()))
-            .thenReturn("""{ "response": "bar"}""")
+        `when`(serviceClient.doOptions(anyString(), anyMap())).thenReturn("""{ "response": "bar"}""")
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
             options("/graphql")
@@ -51,8 +56,11 @@ internal class PdlPingControllerTest {
 
     @Test
     fun `when error then Spring API ping request responds with bad gateway and error message`() {
-        `when`(serviceClient.doOptions(anyString(), anyMap()))
-            .thenAnswer { throw EgressException("""{"error": "oops"}""") }
+        `when`(
+            serviceClient.doOptions(
+                anyString(),
+                anyMap())).thenAnswer { throw EgressException("""{"error": "oops"}""") }
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
             options("/graphql")

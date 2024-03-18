@@ -9,9 +9,7 @@ abstract class UnprotectedControllerBase(
     egressEndpoint: String)
     : ControllerBase(serviceClient, callIdGenerator, egressEndpoint) {
 
-    override fun checkIngressAuth(request: HttpServletRequest) {
-        // No operation
-    }
+    override fun checkIngressAuth(request: HttpServletRequest): String = "none"
 
     override fun provideBodyAuth(body: String) = body
 

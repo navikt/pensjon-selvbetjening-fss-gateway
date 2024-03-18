@@ -1,5 +1,6 @@
 package no.nav.pensjon.selvbetjening.fssgw.inntekt
 
+import io.jsonwebtoken.Claims
 import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil
@@ -7,6 +8,8 @@ import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -25,8 +28,11 @@ internal class InntektPingRsControllerTest {
     @Autowired
     lateinit var mvc: MockMvc
 
+    @Mock
+    lateinit var claims: Claims
+
     @MockBean
-    lateinit var jwsValidator: JwsValidator
+    lateinit var ingressTokenValidator: JwsValidator
 
     @MockBean
     lateinit var egressTokenGetter: ServiceTokenGetter
@@ -39,9 +45,9 @@ internal class InntektPingRsControllerTest {
 
     @Test
     fun `when OK then Inntekt ping request responds with OK`() {
-        `when`(serviceClient.doGet(ArgumentMatchers.anyString(), ArgumentMatchers.anyMap()))
-            .thenReturn("""{ "response": "pong"}""")
+        `when`(serviceClient.doGet(anyString(), ArgumentMatchers.anyMap())).thenReturn("""{ "response": "pong"}""")
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
             MockMvcRequestBuilders.get("/inntektskomponenten-ws/rs/api/ping")

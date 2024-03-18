@@ -1,10 +1,11 @@
 package no.nav.pensjon.selvbetjening.fssgw.partner
 
+import io.jsonwebtoken.Claims
 import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -22,8 +23,11 @@ class PepGatewayControllerTest {
     @Autowired
     lateinit var mvc: MockMvc
 
+    @Mock
+    lateinit var claims: Claims
+
     @MockBean
-    lateinit var jwsValidator: JwsValidator
+    lateinit var ingressTokenValidator: JwsValidator
 
     @MockBean
     lateinit var serviceClient: ServiceClient
@@ -35,6 +39,7 @@ class PepGatewayControllerTest {
     fun `when authenticated request then response is OK`() {
         `when`(serviceClient.doPost(anyString(), anyMap(), anyString())).thenReturn(RESPONSE_BODY)
         `when`(callIdGenerator.newCallId()).thenReturn("call ID 1")
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
         val expectedMediaType = MediaType(MediaType.TEXT_XML, StandardCharsets.UTF_8)
 
         mvc.perform(

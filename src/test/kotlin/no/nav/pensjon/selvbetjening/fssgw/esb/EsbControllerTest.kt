@@ -1,11 +1,13 @@
 package no.nav.pensjon.selvbetjening.fssgw.esb
 
+import io.jsonwebtoken.Claims
 import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyMap
 import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -30,8 +32,11 @@ internal class EsbControllerTest {
     @Autowired
     lateinit var mvc: MockMvc
 
+    @Mock
+    lateinit var claims: Claims
+
     @MockBean
-    lateinit var jwsValidator: JwsValidator
+    lateinit var ingressTokenValidator: JwsValidator
 
     @MockBean
     lateinit var serviceClient: ServiceClient
@@ -72,6 +77,7 @@ internal class EsbControllerTest {
     private fun doTest(path: String, expectedResponseBody: String) {
         `when`(serviceClient.doPost(anyString(), anyMap(), anyString())).thenReturn(expectedResponseBody)
         `when`(callIdGenerator.newCallId()).thenReturn("call ID 1")
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
         val expectedMediaType = MediaType(MediaType.TEXT_XML, StandardCharsets.UTF_8)
 
         mvc.perform(

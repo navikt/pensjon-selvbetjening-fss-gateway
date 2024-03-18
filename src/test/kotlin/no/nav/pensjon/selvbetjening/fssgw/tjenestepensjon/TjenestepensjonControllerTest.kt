@@ -1,14 +1,15 @@
 package no.nav.pensjon.selvbetjening.fssgw.tjenestepensjon
 
+import io.jsonwebtoken.Claims
 import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil.serviceTokenData
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyMap
 import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -18,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.util.*
 
 @WebMvcTest(TjenestepensjonController::class)
 class TjenestepensjonControllerTest {
@@ -27,6 +27,9 @@ class TjenestepensjonControllerTest {
 
     @Autowired
     lateinit var mvc: MockMvc
+
+    @Mock
+    lateinit var claims: Claims
 
     @MockBean
     lateinit var ingressTokenValidator: JwsValidator
@@ -45,6 +48,7 @@ class TjenestepensjonControllerTest {
         val egressToken = serviceTokenData()
         `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "value": true}""")
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(egressToken)
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
         `when`(callIdGenerator.newCallId()).thenReturn(CALL_ID)
 
         mvc.perform(

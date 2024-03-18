@@ -1,13 +1,15 @@
 package no.nav.pensjon.selvbetjening.fssgw.kodeverk
 
+import io.jsonwebtoken.Claims
 import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
-import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil
+import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil.serviceTokenData
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyMap
 import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -24,8 +26,11 @@ internal class KodeverkControllerTest {
     @Autowired
     lateinit var mvc: MockMvc
 
+    @Mock
+    lateinit var claims: Claims
+
     @MockBean
-    lateinit var jwsValidator: JwsValidator
+    lateinit var ingressTokenValidator: JwsValidator
 
     @MockBean
     lateinit var egressTokenGetter: ServiceTokenGetter
@@ -39,7 +44,8 @@ internal class KodeverkControllerTest {
     @Test
     fun `Kodeverk request results in JSON response`() {
         `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "response": "bar"}""")
-        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
             get("/api/v1/kodeverk/Postnummer/koder/betydninger?spraak=nb")

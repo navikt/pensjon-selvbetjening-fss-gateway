@@ -1,5 +1,6 @@
 package no.nav.pensjon.selvbetjening.fssgw.fullmakt
 
+import io.jsonwebtoken.Claims
 import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil
@@ -8,6 +9,7 @@ import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyMap
 import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -26,6 +28,9 @@ internal class PensjonFullmaktControllerTest {
     @Autowired
     lateinit var mvc: MockMvc
 
+    @Mock
+    lateinit var claims: Claims
+
     @MockBean
     lateinit var ingressTokenValidator: JwsValidator
 
@@ -40,34 +45,34 @@ internal class PensjonFullmaktControllerTest {
 
     @Test
     fun `when OK then finnFullmakter request returns data`() {
-        `when`(serviceClient.doGet(anyString(), anyMap()))
-                .thenReturn(responseFinnFullmakterBody())
+        `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn(responseFinnFullmakterBody())
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
-                get("/bprof/finnFullmakter")
-                        .header(HttpHeaders.AUTHORIZATION, auth)
-                        .header("aktorNr", "05845997316"))
-                .andExpect(status().isOk)
-                .andExpect(
-                        content().json(responseFinnFullmakterBody()))
+            get("/bprof/finnFullmakter")
+                .header(HttpHeaders.AUTHORIZATION, auth)
+                .header("aktorNr", "05845997316"))
+            .andExpect(status().isOk)
+            .andExpect(
+                content().json(responseFinnFullmakterBody()))
     }
 
     @Test
     fun `when OK then harFullmaktsforhold request returns data`() {
-        `when`(serviceClient.doGet(anyString(), anyMap()))
-                .thenReturn(responseHarFullmaktsforholdBody())
+        `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn(responseHarFullmaktsforholdBody())
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
-                get("/harFullmaktsforhold")
-                        .header(HttpHeaders.AUTHORIZATION, auth)
-                        .header("fNrGiver", "05845997316")
-                        .header("fNrFullmektig", "00000000000"))
+            get("/harFullmaktsforhold")
+                .header(HttpHeaders.AUTHORIZATION, auth)
+                .header("fNrGiver", "05845997316")
+                .header("fNrFullmektig", "00000000000"))
 
-                .andExpect(status().isOk)
-                .andExpect(
-                        content().string(responseHarFullmaktsforholdBody()))
+            .andExpect(status().isOk)
+            .andExpect(
+                content().string(responseHarFullmaktsforholdBody()))
     }
 
     companion object {

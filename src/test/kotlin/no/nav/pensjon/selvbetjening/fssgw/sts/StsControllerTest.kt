@@ -1,5 +1,6 @@
 package no.nav.pensjon.selvbetjening.fssgw.sts
 
+import io.jsonwebtoken.Claims
 import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil.serviceTokenData
@@ -8,6 +9,7 @@ import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.*
+import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -24,8 +26,11 @@ internal class StsControllerTest {
     @Autowired
     lateinit var mvc: MockMvc
 
+    @Mock
+    lateinit var claims: Claims
+
     @MockBean
-    lateinit var jwsValidator: JwsValidator
+    lateinit var ingressTokenValidator: JwsValidator
 
     @MockBean
     lateinit var egressTokenGetter: ServiceTokenGetter
@@ -38,9 +43,9 @@ internal class StsControllerTest {
 
     @Test
     fun `access token request results in JWT access token response`() {
-        `when`(serviceClient.doGet(anyString(), anyMap()))
-            .thenReturn(JWT_ACCESS_TOKEN_RESPONSE_BODY)
+        `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn(JWT_ACCESS_TOKEN_RESPONSE_BODY)
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
             get(JWT_ACCESS_TOKEN_PATH)
@@ -59,8 +64,8 @@ internal class StsControllerTest {
 
     @Test
     fun `token exchange request results in SAML token response`() {
-        `when`(serviceClient.doPost(anyString(), anyMap(), anyString()))
-            .thenReturn(SAML_TOKEN_RESPONSE_BODY)
+        `when`(serviceClient.doPost(anyString(), anyMap(), anyString())).thenReturn(SAML_TOKEN_RESPONSE_BODY)
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
             MockMvcRequestBuilders.post(TOKEN_EXCHANGE_PATH)

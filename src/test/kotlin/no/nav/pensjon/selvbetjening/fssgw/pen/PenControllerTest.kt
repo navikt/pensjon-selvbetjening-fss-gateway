@@ -1,5 +1,6 @@
 package no.nav.pensjon.selvbetjening.fssgw.pen
 
+import io.jsonwebtoken.Claims
 import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.EgressException
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
@@ -9,6 +10,7 @@ import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyMap
 import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -29,6 +31,9 @@ internal class PenControllerTest {
     @Autowired
     lateinit var mvc: MockMvc
 
+    @Mock
+    lateinit var claims: Claims
+
     @MockBean
     lateinit var ingressTokenValidator: JwsValidator
 
@@ -43,9 +48,9 @@ internal class PenControllerTest {
 
     @Test
     fun `when OK then AFP-historikk request returns data`() {
-        `when`(serviceClient.doGet(anyString(), anyMap()))
-            .thenReturn("""{ "response": "AFP-historikken"}""")
+        `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "response": "AFP-historikken"}""")
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
             get("/pen/api/person/afphistorikk")
@@ -57,9 +62,9 @@ internal class PenControllerTest {
 
     @Test
     fun `when OK then uforehistorikk request returns data`() {
-        `when`(serviceClient.doGet(anyString(), anyMap()))
-            .thenReturn("""{ "response": "uførehistorikken"}""")
+        `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "response": "uførehistorikken"}""")
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
             get("/pen/api/person/uforehistorikk")
@@ -71,9 +76,9 @@ internal class PenControllerTest {
 
     @Test
     fun `when OK then uttaksgrad person request returns data`() {
-        `when`(serviceClient.doGet(anyString(), anyMap()))
-            .thenReturn("""{ "response": "uttaksgraden"}""")
+        `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "response": "uttaksgraden"}""")
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
             get("/pen/api/uttaksgrad/person?sakType=ALDER")
@@ -85,9 +90,9 @@ internal class PenControllerTest {
 
     @Test
     fun `when OK then uttaksgrad search request returns data`() {
-        `when`(serviceClient.doGet(anyString(), anyMap()))
-            .thenReturn("""{ "response": "uttaksgradene"}""")
+        `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "response": "uttaksgradene"}""")
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
             get("/pen/api/uttaksgrad/search?vedtakId=1&vedtakId=2&vedtakId=3")
@@ -98,9 +103,9 @@ internal class PenControllerTest {
 
     @Test
     fun `when OK then krav request returns data`() {
-        `when`(serviceClient.doGet(anyString(), anyMap()))
-            .thenReturn("""{ "response": "kravet"}""")
+        `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "response": "kravet"}""")
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
             get("/pen/springapi/krav")
@@ -113,9 +118,9 @@ internal class PenControllerTest {
 
     @Test
     fun `when OK then sakssammendrag request returns data`() {
-        `when`(serviceClient.doGet(anyString(), anyMap()))
-            .thenReturn("""{ "response": "sammendraget"}""")
+        `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "response": "sammendraget"}""")
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
             get("/pen/springapi/sak/sammendrag")
@@ -131,6 +136,7 @@ internal class PenControllerTest {
         `when`(serviceClient.doGet(anyString(), anyMap()))
             .thenReturn("""{ "response": "vedtakene"}""")
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
             get("/pen/springapi/vedtak?sakstype=typen&alleVedtak=true&fom=2021-02-03")
@@ -146,6 +152,7 @@ internal class PenControllerTest {
         `when`(serviceClient.doGet(anyString(), anyMap()))
             .thenReturn("""{ "response": "vedtakene"}""")
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
             get("/pen/springapi/vedtak/bestemgjeldende")
@@ -162,6 +169,7 @@ internal class PenControllerTest {
         `when`(serviceClient.doPost(anyString(), anyMap(), anyString()))
             .thenAnswer { throw EgressException("""{"error": "oops"}""", HttpStatus.CONFLICT) }
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
             post("/pen/springapi/simulering/alderspensjon")
@@ -176,6 +184,7 @@ internal class PenControllerTest {
         `when`(serviceClient.doPost(anyString(), anyMap(), anyString()))
             .thenAnswer { throw EgressException("""{"error": "oops"}""", HttpStatus.INTERNAL_SERVER_ERROR) }
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
             post("/pen/springapi/uttaksalder")

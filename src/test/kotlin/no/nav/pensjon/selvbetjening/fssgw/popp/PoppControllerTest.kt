@@ -1,5 +1,6 @@
 package no.nav.pensjon.selvbetjening.fssgw.popp
 
+import io.jsonwebtoken.Claims
 import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil
@@ -8,6 +9,7 @@ import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyMap
 import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -27,8 +29,11 @@ internal class PoppControllerTest {
     @Autowired
     lateinit var mvc: MockMvc
 
+    @Mock
+    lateinit var claims: Claims
+
     @MockBean
-    lateinit var jwsValidator: JwsValidator
+    lateinit var ingressTokenValidator: JwsValidator
 
     @MockBean
     lateinit var egressTokenGetter: ServiceTokenGetter
@@ -41,9 +46,9 @@ internal class PoppControllerTest {
 
     @Test
     fun `when OK then opptjeningsgrunnlag request returns data`() {
-        `when`(serviceClient.doGet(anyString(), anyMap()))
-            .thenReturn("""{ "response": "opptjeningsgrunnlaget"}""")
+        `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "response": "opptjeningsgrunnlaget"}""")
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
             MockMvcRequestBuilders.get(poppApiUrl + "opptjeningsgrunnlag/01023456789?fomAr=2001&tomAr=2022")
@@ -54,9 +59,9 @@ internal class PoppControllerTest {
 
     @Test
     fun `when OK then pensjonspoeng request returns data`() {
-        `when`(serviceClient.doGet(anyString(), anyMap()))
-            .thenReturn("""{ "response": "pensjonspoengene"}""")
+        `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "response": "pensjonspoengene"}""")
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
             MockMvcRequestBuilders.get(poppApiUrl + "pensjonspoeng/01023456789")
@@ -67,9 +72,9 @@ internal class PoppControllerTest {
 
     @Test
     fun `when OK then restpensjon request returns data`() {
-        `when`(serviceClient.doGet(anyString(), anyMap()))
-            .thenReturn("""{ "response": "restpensjonen"}""")
+        `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "response": "restpensjonen"}""")
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
             MockMvcRequestBuilders.get(poppApiUrl + "restpensjon/01023456789?hentSiste=false")
@@ -80,9 +85,9 @@ internal class PoppControllerTest {
 
     @Test
     fun `when OK then beholdning request returns data`() {
-        `when`(serviceClient.doPost(anyString(), anyMap(), anyString()))
-            .thenReturn("""{ "response": "beholdningen"}""")
+        `when`(serviceClient.doPost(anyString(), anyMap(), anyString())).thenReturn("""{ "response": "beholdningen"}""")
         `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
             MockMvcRequestBuilders.post(poppApiUrl + "beholdning")

@@ -36,12 +36,12 @@ abstract class ControllerBase(
         val responseContentType = getResponseContentType(request)
 
         return try {
-            checkIngressAuth(request)
+            val authorizedParty = checkIngressAuth(request)
             val headersToRelay = getEgressHeaders(request)
             val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
             val url = "$egressEndpoint${request.requestURI}$queryPart"
             val responseBody = serviceClient.doGet(url, headersToRelay)
-            metric("GET ${metricDetail(request)}", "OK")
+            metric("GET ${metricDetail(request)}", authorizedParty)
             ResponseEntity(responseBody, responseContentType, HttpStatus.OK)
         } catch (e: AuthException) {
             unauthorized(e)
@@ -60,12 +60,12 @@ abstract class ControllerBase(
         val responseContentType = getResponseContentType(request)
 
         return try {
-            checkIngressAuth(request)
+            val authorizedParty = checkIngressAuth(request)
             val headersToRelay = getEgressHeaders(request)
             val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
             val url = "$egressEndpoint${request.requestURI}$queryPart"
             val responseBody = serviceClient.doOptions(url, headersToRelay)
-            metric("OPTIONS ${metricDetail(request)}", "OK")
+            metric("OPTIONS ${metricDetail(request)}", authorizedParty)
             ResponseEntity(responseBody, responseContentType, HttpStatus.OK)
         } catch (e: AuthException) {
             unauthorized(e)
@@ -84,12 +84,12 @@ abstract class ControllerBase(
         val responseContentType = getResponseContentType(request)
 
         return try {
-            checkIngressAuth(request)
+            val authorizedParty = checkIngressAuth(request)
             val headersToRelay = getEgressHeaders(request)
             val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
             val url = "$egressEndpoint${request.requestURI}$queryPart"
             val responseBody = serviceClient.doPost(url, headersToRelay, provideBodyAuth(body))
-            metric("POST ${metricDetail(request)}", "OK")
+            metric("POST ${metricDetail(request)}", authorizedParty)
             ResponseEntity(responseBody, responseContentType, HttpStatus.OK)
         } catch (e: AuthException) {
             unauthorized(e)
@@ -104,7 +104,7 @@ abstract class ControllerBase(
         }
     }
 
-    protected abstract fun checkIngressAuth(request: HttpServletRequest)
+    protected abstract fun checkIngressAuth(request: HttpServletRequest) : String
 
     protected abstract fun provideHeaderAuth(request: HttpServletRequest, headers: TreeMap<String, String>)
 

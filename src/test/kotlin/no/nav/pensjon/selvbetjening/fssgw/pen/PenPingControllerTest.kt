@@ -1,14 +1,16 @@
 package no.nav.pensjon.selvbetjening.fssgw.pen
 
+import io.jsonwebtoken.Claims
 import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.EgressException
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
-import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil
+import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil.serviceTokenData
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyMap
 import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -25,8 +27,11 @@ internal class PenPingControllerTest {
     @Autowired
     lateinit var mvc: MockMvc
 
+    @Mock
+    lateinit var claims: Claims
+
     @MockBean
-    lateinit var authValidator: JwsValidator
+    lateinit var ingressTokenValidator: JwsValidator
 
     @MockBean
     lateinit var egressTokenGetter: ServiceTokenGetter
@@ -40,7 +45,8 @@ internal class PenPingControllerTest {
     @Test
     fun `when OK then Spring API ping request responds with OK`() {
         `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("Ok")
-        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
             get("/pen/springapi/ping")
@@ -54,7 +60,8 @@ internal class PenPingControllerTest {
     fun `when error then Spring API ping request responds with bad gateway and error message`() {
         `when`(serviceClient.doGet(anyString(), anyMap()))
             .thenAnswer { throw EgressException("""{"error": "oops"}""") }
-        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
             get("/pen/springapi/ping")

@@ -12,7 +12,7 @@ abstract class BasicProtectedControllerBase(
     callIdGenerator: CallIdGenerator,
     egressEndpoint: String) : ControllerBase(serviceClient, callIdGenerator, egressEndpoint) {
 
-    override fun checkIngressAuth(request: HttpServletRequest) {
+    override fun checkIngressAuth(request: HttpServletRequest): String {
         val auth = request.getHeader(HttpHeaders.AUTHORIZATION)
         val credentials = auth?.substring(AUTH_TYPE.length + 1) ?: ""
         val authorized = authValidator.validate(credentials)
@@ -20,6 +20,8 @@ abstract class BasicProtectedControllerBase(
         if (!authorized) {
             throw AuthException("Wrong or missing basic auth credentials")
         }
+
+        return ""
     }
 
     override fun provideBodyAuth(body: String) = body
@@ -28,7 +30,7 @@ abstract class BasicProtectedControllerBase(
         // No auth header by default
     }
 
-    private companion object{
+    private companion object {
         private const val AUTH_TYPE = "Basic"
     }
 }
