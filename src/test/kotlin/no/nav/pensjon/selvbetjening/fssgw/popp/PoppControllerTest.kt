@@ -3,7 +3,7 @@ package no.nav.pensjon.selvbetjening.fssgw.popp
 import io.jsonwebtoken.Claims
 import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
-import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil
+import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil.serviceTokenData
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
@@ -47,7 +47,7 @@ internal class PoppControllerTest {
     @Test
     fun `when OK then opptjeningsgrunnlag request returns data`() {
         `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "response": "opptjeningsgrunnlaget"}""")
-        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
@@ -60,7 +60,7 @@ internal class PoppControllerTest {
     @Test
     fun `when OK then pensjonspoeng request returns data`() {
         `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "response": "pensjonspoengene"}""")
-        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
@@ -73,7 +73,7 @@ internal class PoppControllerTest {
     @Test
     fun `when OK then restpensjon request returns data`() {
         `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "response": "restpensjonen"}""")
-        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
@@ -86,7 +86,7 @@ internal class PoppControllerTest {
     @Test
     fun `when OK then beholdning request returns data`() {
         `when`(serviceClient.doPost(anyString(), anyMap(), anyString())).thenReturn("""{ "response": "beholdningen"}""")
-        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(MockUtil.serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
