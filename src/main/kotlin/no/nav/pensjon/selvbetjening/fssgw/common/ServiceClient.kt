@@ -12,7 +12,7 @@ class ServiceClient {
 
     private val log = KotlinLogging.logger {}
 
-    // Use large buffer, since response from kodeverk/Postnummer/koder/betydninger is 600 KB
+    // Use large buffer, since JournalWSEXP calls sometimes exceed 10 MB
     // (which is more than the default 262 KB)
     private val webClient: WebClient = WebClientPreparer.largeBufferWebClient()
 
