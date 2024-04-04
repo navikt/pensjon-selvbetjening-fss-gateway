@@ -46,8 +46,6 @@ spec:
       value: https://app.adeo.no
     - name: JOURNALFORING_URL
       value: https://dokarkiv.nais.adeo.no
-    - name: KODEVERK_URL
-      value: http://kodeverk.org.svc.nais.local
     - name: MODAPP_URL
       value: https://modapp.adeo.no
     - name: NORG2_URL

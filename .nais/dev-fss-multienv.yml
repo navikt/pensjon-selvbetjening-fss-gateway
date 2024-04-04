@@ -39,8 +39,6 @@ spec:
       value: https://app-{{ environment }}.adeo.no
     - name: JOURNALFORING_URL
       value: https://dokarkiv-{{ environment }}.dev.intern.nav.no
-    - name: KODEVERK_URL
-      value: http://kodeverk.org.svc.nais.local
     - name: NORG2_URL
       value: https://norg2.nais.preprod.local
     - name: OPPGAVE_URL

@@ -9,7 +9,6 @@ Støttede tjenester:
 - Dok-arkiv (JOARK)
 - Gandalf STS
 - Inntektskomponenten
-- Kodeverk
 - Norsk Pensjon
 - PDL (Persondataløsningen)
 - PEN (Pensjonsfaglig kjerne)
