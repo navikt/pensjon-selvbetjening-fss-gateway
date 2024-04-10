@@ -10,7 +10,6 @@ Støttede tjenester:
 - Gandalf STS
 - Inntektskomponenten
 - Norsk Pensjon
-- PDL (Persondataløsningen)
 - PEN (Pensjonsfaglig kjerne)
 - POPP (Pensjonsfaglig opptjeningsregister)
 - TP (Tjenestepensjon)

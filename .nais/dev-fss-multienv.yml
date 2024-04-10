@@ -45,8 +45,6 @@ spec:
       value: https://oppgave-{{ environment }}.nais.preprod.local
     - name: PARALLELLESANNHETER_URL
       value: https://pensjon-parallelle-sannheter.dev.intern.nav.no
-    - name: PDL_URL
-      value: https://pdl-api-{{ environment }}.dev.intern.nav.no
     - name: PEN_URL
       value: https://pensjon-pen-{{ environment }}.nais.preprod.local
     - name: PENSJON_FULLMAKT_URL

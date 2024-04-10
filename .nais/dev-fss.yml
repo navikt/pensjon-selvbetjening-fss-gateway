@@ -47,8 +47,6 @@ spec:
       value: https://oppgave-q2.nais.preprod.local
     - name: PARALLELLESANNHETER_URL
       value: https://pensjon-parallelle-sannheter.dev.intern.nav.no
-    - name: PDL_URL
-      value: http://pdl-api.pdl.svc.nais.local
     - name: PEN_URL
       value: https://pensjon-pen-q2.dev.adeo.no
     - name: PENSJON_FULLMAKT_URL
