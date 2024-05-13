@@ -21,14 +21,12 @@ class EsbController(
 
     @PostMapping(
         value = [
-            "nav-cons-pen-pen-batch-oppdragWeb/sca/PENOppdragBatchWSEXP", // sca = Service Component Architecture
-            "nav-cons-pen-pen-fullmaktWeb/sca/PENFullmaktWSEXP",
+            "nav-cons-pen-pen-fullmaktWeb/sca/PENFullmaktWSEXP", // sca = Service Component Architecture
             "nav-cons-pen-pen-inntektWeb/sca/PENInntektWSEXP",
             "nav-cons-pen-pen-oppdragWeb/sca/PENOppdragWSEXP",
             "nav-cons-pen-pen-personWeb/sca/PENPersonWSEXP",
             "nav-cons-pen-pen-tjenestepensjonWeb/sca/PENTjenestepensjonWSEXP",
             "nav-cons-pen-pselv-brukerprofilWeb/sca/PSELVBrukerprofilWSEXP",
-            "nav-cons-pen-pselv-fullmaktWeb/sca/PSELVFullmaktWSEXP",
             "nav-cons-pen-pselv-personWeb/sca/PSELVPersonWSEXP",
             "nav-cons-pen-pselv-tjenestepensjonWeb/sca/PSELVTjenestepensjonWSEXP",
             "nav-cons-pen-pselv-utbetalingWeb/sca/PSELVUtbetalingWSEXP",
