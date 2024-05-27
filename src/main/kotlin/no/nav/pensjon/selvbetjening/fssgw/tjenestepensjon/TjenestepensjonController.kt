@@ -24,18 +24,9 @@ class TjenestepensjonController(
     ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter) {
 
     @GetMapping("haveYtelse")
-    fun handleHaveYtelseRequest(request: HttpServletRequest): ResponseEntity<String> {
-        return super.doGet(request)
-    }
+    fun handleHaveYtelseRequest(request: HttpServletRequest): ResponseEntity<String> = super.doGet(request)
 
-    @GetMapping("{pid}/haveYtelse")
-    fun handleLegacyHaveYtelseRequest(request: HttpServletRequest): ResponseEntity<String> {
-        return super.doGet(request)
-    }
-
-    override fun consumerTokenRequired(): Boolean {
-        return false
-    }
+    override fun consumerTokenRequired() = false
 
     /**
      * Override in order to hide PID (which is part of request URI)
