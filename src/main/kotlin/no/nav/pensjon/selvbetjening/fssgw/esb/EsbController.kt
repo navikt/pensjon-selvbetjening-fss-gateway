@@ -27,6 +27,7 @@ class EsbController(
             "nav-cons-pen-pen-personWeb/sca/PENPersonWSEXP",
             "nav-cons-pen-pselv-brukerprofilWeb/sca/PSELVBrukerprofilWSEXP",
             "nav-cons-pen-pselv-personWeb/sca/PSELVPersonWSEXP",
+            "nav-cons-pen-pselv-tjenestepensjonWeb/sca/PSELVTjenestepensjonWSEXP",
             "nav-cons-pen-pselv-utbetalingWeb/sca/PSELVUtbetalingWSEXP",
             "nav-tjeneste-behandleTrekk_v1Web/sca/BehandleTrekkWSEXP",
             "nav-tjeneste-institusjonsopphold_v1Web/sca/InstitusjonsoppholdWSEXP",
@@ -35,10 +36,6 @@ class EsbController(
             "nav-tjeneste-person_v2Web/sca/PersonWSEXP",
             "nav-tjeneste-trekk_v1Web/sca/TrekkWSEXP",
             "nav-tjeneste-utbetaling_v1Web/sca/UtbetalingWSEXP",
-            "pen/services/Vedtak_v2",
-            "pensjon-microflow-behandleEndretForventetArbeidsinntektProxyWeb/sca/BehandleEndretForventetArbeidsinntektWSEXP",
-            "pensjon-tjeneste-iverksattVedtakBehandling_v1Web/sca/IverksattVedtakBehandlingWSEXP",
-            "pensjon-tjeneste-samordning_v1Web/sca/SamordningWSEXP",
-            "nav-tjeneste-arkiv_v1Web/sca/ArkivWSEXP"])
+            "pen/services/Vedtak_v2"])
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest) = super.doPost(request, body)
 }
