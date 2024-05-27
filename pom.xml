@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.5</version>
+        <version>3.3.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>no.nav.pensjon</groupId>
@@ -17,7 +17,7 @@
         <java.version>17</java.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <kotlin.version>1.9.24</kotlin.version>
+        <kotlin.version>2.0.0</kotlin.version>
         <jjwt-version>0.11.5</jjwt-version>
         <okhttp3.version>4.12.0</okhttp3.version>
     </properties>
@@ -54,7 +54,7 @@
         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>oauth2-oidc-sdk</artifactId>
-            <version>11.10.1</version>
+            <version>11.12</version>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
