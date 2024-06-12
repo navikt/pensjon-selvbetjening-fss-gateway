@@ -14,7 +14,12 @@ abstract class EgressNoAuthController(
     egressEndpoint: String)
     : TokenProtectedController(tokenValidator, serviceClient, callIdGenerator, egressEndpoint) {
 
-    override fun provideHeaderAuth(request: HttpServletRequest, headers: TreeMap<String, String>) {
+    override fun provideHeaderAuth(
+        request: HttpServletRequest,
+        headers: TreeMap<String, String>,
+        useServiceUser2: Boolean
+    ) {
+        // No operation
     }
 
     override fun provideBodyAuth(body: String) = body

@@ -44,7 +44,7 @@ internal class JournalforingControllerTest {
     @Test
     fun `Journalforing request results in JSON response`() {
         `when`(serviceClient.doPost(anyString(), anyMap(), anyString())).thenReturn("""{ "response": "bar"}""")
-        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken(useServiceUser2 = false)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(

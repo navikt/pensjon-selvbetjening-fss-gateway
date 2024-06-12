@@ -2,13 +2,12 @@ package no.nav.pensjon.selvbetjening.fssgw.tech.sts
 
 import no.nav.pensjon.selvbetjening.fssgw.mock.WebClientTest
 import okhttp3.mockwebserver.MockResponse
-import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
-import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.LocalDateTime
 
@@ -24,15 +23,22 @@ internal class StsClientTest : WebClientTest() {
     @BeforeEach
     fun initialize() {
         setUp()
-        Mockito.`when`(expirationChecker.time()).thenReturn(issuedAt)
-        consumer = StsClient(expirationChecker, baseUrl(), "username", "password")
+        `when`(expirationChecker.time()).thenReturn(issuedAt)
+
+        consumer = StsClient(
+            expirationChecker,
+            baseUrl(),
+            serviceUsername = "username1",
+            servicePassword = "password1",
+            serviceUsername2 = "username2",
+            servicePassword2 = "password2")
     }
 
     @Test
     fun getServiceUserToken_returns_tokenData_when_ok() {
         prepare(response1())
 
-        val token: ServiceTokenData = consumer.getServiceUserToken()
+        val token: ServiceTokenData = consumer.getServiceUserToken(useServiceUser2 = false)
 
         assertEquals("j.w.t", token.accessToken)
         assertEquals(3600L, token.expiresInSeconds)
@@ -44,9 +50,9 @@ internal class StsClientTest : WebClientTest() {
     fun getServiceUserToken_caches_tokenData() {
         prepare(response1())
 
-        val token: ServiceTokenData = consumer.getServiceUserToken()
+        val token: ServiceTokenData = consumer.getServiceUserToken(useServiceUser2 = false)
         // Next line will fail if not cached, since only one response is queued:
-        val cachedToken: ServiceTokenData = consumer.getServiceUserToken()
+        val cachedToken: ServiceTokenData = consumer.getServiceUserToken(useServiceUser2 = false)
 
         assertEquals("j.w.t", token.accessToken)
         assertEquals("j.w.t", cachedToken.accessToken)
@@ -57,9 +63,9 @@ internal class StsClientTest : WebClientTest() {
         prepare(response1())
         prepare(response2())
 
-        val token1: ServiceTokenData = consumer.getServiceUserToken()
+        val token1: ServiceTokenData = consumer.getServiceUserToken(useServiceUser2 = false)
         expireToken()
-        val token2: ServiceTokenData = consumer.getServiceUserToken()
+        val token2: ServiceTokenData = consumer.getServiceUserToken(useServiceUser2 = false)
 
         assertEquals("j.w.t", token1.accessToken)
         assertEquals("jj.ww.tt", token2.accessToken)
@@ -69,24 +75,22 @@ internal class StsClientTest : WebClientTest() {
     }
 
     private fun expireToken() {
-        Mockito.`when`(expirationChecker.isExpired(issuedAt, 3600)).thenReturn(true)
+        `when`(expirationChecker.isExpired(issuedAt, 3600)).thenReturn(true)
     }
 
-    private fun response1(): MockResponse {
-        return jsonResponse().setBody(
+    private fun response1(): MockResponse =
+        jsonResponse().setBody(
             """{
     "access_token": "j.w.t",
     "token_type": "Bearer",
     "expires_in": 3600
 }""")
-    }
 
-    private fun response2(): MockResponse {
-        return jsonResponse().setBody(
+    private fun response2(): MockResponse =
+        jsonResponse().setBody(
             """{
     "access_token": "jj.ww.tt",
     "token_type": "Bearer",
     "expires_in": 1800
 }""")
-    }
 }

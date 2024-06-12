@@ -6,14 +6,18 @@ import jakarta.servlet.http.HttpServletRequest
 abstract class UnprotectedControllerBase(
     serviceClient: ServiceClient,
     callIdGenerator: CallIdGenerator,
-    egressEndpoint: String)
-    : ControllerBase(serviceClient, callIdGenerator, egressEndpoint) {
-
+    egressEndpoint: String) : ControllerBase(
+    serviceClient, callIdGenerator, egressEndpoint
+) {
     override fun checkIngressAuth(request: HttpServletRequest): String = "none"
 
     override fun provideBodyAuth(body: String) = body
 
-    override fun provideHeaderAuth(request: HttpServletRequest, headers: TreeMap<String, String>) {
+    override fun provideHeaderAuth(
+        request: HttpServletRequest,
+        headers: TreeMap<String, String>,
+        useServiceUser2: Boolean
+    ) {
         // No operation
     }
 }

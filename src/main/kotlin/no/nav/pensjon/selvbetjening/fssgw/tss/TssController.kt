@@ -22,11 +22,13 @@ class TssController(
     egressTokenGetter: ServiceTokenGetter,
     serviceClient: ServiceClient,
     callIdGenerator: CallIdGenerator,
-    @Value("\${wasapp.url}") egressEndpoint: String)
-    : EgressHeaderAuthController(jwsValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter) {
-
+    @Value("\${wasapp.url}") egressEndpoint: String
+) : EgressHeaderAuthController(
+    jwsValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter
+) {
     @PostMapping("hentSamhandler")
-    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest) = super.doPost(request, body)
+    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest) =
+        super.doPost(request, body, useServiceUser2 = false)
 
     override fun consumerTokenRequired() = false
 }

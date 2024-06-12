@@ -21,7 +21,11 @@ abstract class EgressBodyAuthController(
 
     override fun provideBodyAuth(body: String) = insertPassword(body, password)
 
-    override fun provideHeaderAuth(request: HttpServletRequest, headers: TreeMap<String, String>) {
+    override fun provideHeaderAuth(
+        request: HttpServletRequest,
+        headers: TreeMap<String, String>,
+        useServiceUser2: Boolean
+    ) {
         // No auth header – auth is instead provided in SOAP header (in HTTP body)
     }
 }

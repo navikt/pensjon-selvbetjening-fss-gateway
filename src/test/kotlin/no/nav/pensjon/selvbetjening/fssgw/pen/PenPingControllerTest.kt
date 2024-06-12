@@ -45,7 +45,7 @@ internal class PenPingControllerTest {
     @Test
     fun `when OK then Spring API ping request responds with OK`() {
         `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("Ok")
-        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken(useServiceUser2 = false)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
@@ -60,7 +60,7 @@ internal class PenPingControllerTest {
     fun `when error then Spring API ping request responds with bad gateway and error message`() {
         `when`(serviceClient.doGet(anyString(), anyMap()))
             .thenAnswer { throw EgressException("""{"error": "oops"}""") }
-        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken(useServiceUser2 = false)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(

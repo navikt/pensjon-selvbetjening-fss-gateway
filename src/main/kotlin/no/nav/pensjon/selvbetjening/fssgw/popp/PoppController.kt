@@ -17,26 +17,22 @@ class PoppController(
     egressTokenGetter: ServiceTokenGetter,
     serviceClient: ServiceClient,
     callIdGenerator: CallIdGenerator,
-    @Value("\${popp.url}") egressEndpoint: String)
-    : EgressHeaderAuthController(jwsValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter) {
-
+    @Value("\${popp.url}") egressEndpoint: String
+) : EgressHeaderAuthController(
+    jwsValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter
+) {
     @GetMapping(
         value = [
             "api/opptjeningsgrunnlag/{pid}",
             "api/pensjonspoeng/{pid}",
             "api/restpensjon/{pid}"])
-    fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> {
-        return super.doGet(request)
-    }
+    fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> = super.doGet(request)
 
     @PostMapping("api/beholdning")
-    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
-        return super.doPost(request, body)
-    }
+    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> =
+        super.doPost(request, body, useServiceUser2 = false)
 
-    override fun consumerTokenRequired(): Boolean {
-        return false
-    }
+    override fun consumerTokenRequired(): Boolean = false
 
     /**
      * Override in order to hide PID (which is part of request URI)

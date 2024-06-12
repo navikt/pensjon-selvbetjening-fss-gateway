@@ -19,7 +19,11 @@ abstract class EgressHeaderBasicAuthController(
 
     private val credentials = Base64.getEncoder().encodeToString("$serviceUsername:$servicePassword".toByteArray())
 
-    override fun provideHeaderAuth(request: HttpServletRequest, headers: TreeMap<String, String>) {
+    override fun provideHeaderAuth(
+        request: HttpServletRequest,
+        headers: TreeMap<String, String>,
+        useServiceUser2: Boolean
+    ) {
         headers[HttpHeaders.AUTHORIZATION] = "$AUTH_TYPE $credentials"
     }
 

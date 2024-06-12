@@ -20,15 +20,15 @@ class PepGatewayController(
     ingressTokenValidator: JwsValidator,
     serviceClient: ServiceClient,
     callIdGenerator: CallIdGenerator,
-    @Value("\${pep-gw.url}") egressEndpoint: String)
-    : EgressNoAuthController(ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint) {
-
+    @Value("\${pep-gw.url}") egressEndpoint: String
+) : EgressNoAuthController(
+    ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint
+) {
     @PostMapping(
         value = [
             "kalkulator.pensjonsrettighetstjeneste/v3/kalkulatorPensjonTjeneste",
             "privat.pensjonsrettighetstjeneste/privatPensjonTjenesteV2_0"
         ])
-    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
-        return super.doPost(request, body)
-    }
+    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> =
+        super.doPost(request, body, useServiceUser2 = false)
 }

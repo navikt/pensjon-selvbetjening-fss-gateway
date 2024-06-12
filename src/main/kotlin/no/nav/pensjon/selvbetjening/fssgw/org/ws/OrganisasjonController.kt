@@ -19,11 +19,11 @@ class OrganisasjonController(
     serviceClient: ServiceClient,
     callIdGenerator: CallIdGenerator,
     @Value("\${ereg.ws.url}") egressEndpoint: String,
-    @Value("\${sts.password}") private val password: String)
-    : EgressBodyAuthController(ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, password) {
-
+    @Value("\${sts.password}") private val password: String
+) : EgressBodyAuthController(
+    ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, password
+) {
     @PostMapping("v4")
-    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
-        return super.doPost(request, body)
-    }
+    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> =
+        super.doPost(request, body, useServiceUser2 = false)
 }

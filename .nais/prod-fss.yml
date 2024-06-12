@@ -66,6 +66,8 @@ spec:
       value: https://pensjon-popp.nais.adeo.no
     - name: PREG_URL
       value: https://pensjon-preg.nais.adeo.no
+    - name: SPORINGSLOGG_URL
+      value: https://pensjon-sporingslogg-integrasjon.intern.nav.no
     - name: STS_URL
       value: http://security-token-service.aura.svc.nais.local
     - name: TP_URL
@@ -109,3 +111,5 @@ spec:
     paths:
       - kvPath: /serviceuser/data/prod/srvpselv
         mountPath: /secrets/serviceuser
+      - kvPath: /serviceuser/data/prod/srvpensjon
+        mountPath: /secrets/serviceuser2

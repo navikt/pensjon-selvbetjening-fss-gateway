@@ -17,10 +17,10 @@ class PenController(
     egressTokenGetter: ServiceTokenGetter,
     serviceClient: ServiceClient,
     callIdGenerator: CallIdGenerator,
-    @Value("\${pen.url}") egressEndpoint: String)
-    : EgressHeaderAuthController(
-    ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter) {
-
+    @Value("\${pen.url}") egressEndpoint: String
+) : EgressHeaderAuthController(
+    ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter
+) {
     @GetMapping(
         value = [
             "api/person/afphistorikk",
@@ -41,7 +41,8 @@ class PenController(
             "springapi/simulering/alderspensjon",
             "springapi/uttaksalder"
         ])
-    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest) = super.doPost(request, body)
+    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest) =
+        super.doPost(request, body, useServiceUser2 = false)
 
     override fun consumerTokenRequired() = false
 

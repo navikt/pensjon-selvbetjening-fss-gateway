@@ -37,5 +37,6 @@ class EsbController(
             "nav-tjeneste-trekk_v1Web/sca/TrekkWSEXP",
             "nav-tjeneste-utbetaling_v1Web/sca/UtbetalingWSEXP",
             "pen/services/Vedtak_v2"])
-    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest) = super.doPost(request, body)
+    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest) =
+        super.doPost(request, body, useServiceUser2 = false)
 }
