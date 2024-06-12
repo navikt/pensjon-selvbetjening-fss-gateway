@@ -87,6 +87,9 @@ spec:
         - application: pensjonskalkulator-backend
           namespace: pensjonskalkulator
           cluster: dev-gcp
+        - application: pensjonssimulator
+          namespace: pensjonskalkulator
+          cluster: dev-gcp
         - application: pensjon-selvbetjening-opptjening-backend
           namespace: pensjonselvbetjening
           cluster: dev-gcp
