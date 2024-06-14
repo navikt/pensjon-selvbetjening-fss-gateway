@@ -105,7 +105,7 @@ spec:
         - application: pensjon-pselv-q2 # for pselv on localhost
           namespace: teampensjon
           cluster: dev-fss
-        - application: pensjon-selvbetjening-skattetrekk-backend-q2 # for pselv on localhost
+        - application: skattetrekk-backend-q2 # for pselv on localhost
           namespace: pensjonselvbetjening
           cluster: dev-gcp
     outbound:
