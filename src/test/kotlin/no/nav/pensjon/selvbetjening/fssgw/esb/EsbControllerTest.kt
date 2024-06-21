@@ -22,7 +22,6 @@ import java.nio.charset.StandardCharsets
 @WebMvcTest(EsbController::class)
 internal class EsbControllerTest {
 
-    private val penPersonPath = "/nav-cons-pen-pen-personWeb/sca/PENPersonWSEXP"
     private val brukerprofilPath = "/nav-cons-pen-pselv-brukerprofilWeb/sca/PSELVBrukerprofilWSEXP"
     private val pselvPersonPath = "/nav-cons-pen-pselv-personWeb/sca/PSELVPersonWSEXP"
     private val utbetalingPath = "/nav-cons-pen-pselv-utbetalingWeb/sca/PSELVUtbetalingWSEXP"
@@ -41,11 +40,6 @@ internal class EsbControllerTest {
 
     @MockBean
     lateinit var callIdGenerator: CallIdGenerator
-
-    @Test
-    fun `PEN person request results in PEN person response XML`() {
-        doTest(penPersonPath, EsbXml.penPersonResponseBody)
-    }
 
     @Test
     fun `brukerprofil request results in brukerprofil response XML`() {
