@@ -37,7 +37,7 @@ abstract class ControllerBase(
 
         return try {
             val authorizedParty = checkIngressAuth(request)
-            val headersToRelay = getEgressHeaders(request)
+            val headersToRelay = getEgressHeaders(request, useServiceUser2 = false)
             val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
             val url = "$egressEndpoint${request.requestURI}$queryPart"
             val responseBody = serviceClient.doGet(url, headersToRelay)
@@ -61,7 +61,7 @@ abstract class ControllerBase(
 
         return try {
             val authorizedParty = checkIngressAuth(request)
-            val headersToRelay = getEgressHeaders(request)
+            val headersToRelay = getEgressHeaders(request, useServiceUser2 = false)
             val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
             val url = "$egressEndpoint${request.requestURI}$queryPart"
             val responseBody = serviceClient.doOptions(url, headersToRelay)
@@ -80,12 +80,12 @@ abstract class ControllerBase(
         }
     }
 
-    fun doPost(request: HttpServletRequest, body: String): ResponseEntity<String> {
+    fun doPost(request: HttpServletRequest, body: String, useServiceUser2: Boolean = false): ResponseEntity<String> {
         val responseContentType = getResponseContentType(request)
 
         return try {
             val authorizedParty = checkIngressAuth(request)
-            val headersToRelay = getEgressHeaders(request)
+            val headersToRelay = getEgressHeaders(request, useServiceUser2)
             val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
             val url = "$egressEndpoint${request.requestURI}$queryPart"
             val responseBody = serviceClient.doPost(url, headersToRelay, provideBodyAuth(body))
@@ -104,18 +104,22 @@ abstract class ControllerBase(
         }
     }
 
-    protected abstract fun checkIngressAuth(request: HttpServletRequest) : String
+    protected abstract fun checkIngressAuth(request: HttpServletRequest): String
 
-    protected abstract fun provideHeaderAuth(request: HttpServletRequest, headers: TreeMap<String, String>)
+    protected abstract fun provideHeaderAuth(
+        request: HttpServletRequest,
+        headers: TreeMap<String, String>,
+        useServiceUser2: Boolean
+    )
 
     protected abstract fun provideBodyAuth(body: String): String
 
     protected open fun metricDetail(request: HttpServletRequest): String = request.requestURI
 
-    private fun getEgressHeaders(request: HttpServletRequest): TreeMap<String, String> {
+    private fun getEgressHeaders(request: HttpServletRequest, useServiceUser2: Boolean): TreeMap<String, String> {
         val egressHeaders = TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER)
         request.headerNames.toList().forEach { copyHeader(request, it, egressHeaders) }
-        provideHeaderAuth(request, egressHeaders)
+        provideHeaderAuth(request, egressHeaders, useServiceUser2)
         addCallIdHeader(egressHeaders)
         return egressHeaders
     }

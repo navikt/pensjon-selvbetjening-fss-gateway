@@ -16,13 +16,14 @@ class StsController(
     callIdGenerator: CallIdGenerator,
     @Value("\${sts.url}") egressEndpoint: String,
     @Value("\${sts.username}") serviceUsername: String,
-    @Value("\${sts.password}") servicePassword: String)
-    : EgressHeaderBasicAuthController(
-    ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, serviceUsername, servicePassword) {
-
+    @Value("\${sts.password}") servicePassword: String
+) : EgressHeaderBasicAuthController(
+    ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, serviceUsername, servicePassword
+) {
     @GetMapping("token")
     fun handleGetRequest(request: HttpServletRequest) = super.doGet(request)
 
     @PostMapping("token/exchange")
-    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest) = super.doPost(request, body)
+    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest) =
+        super.doPost(request, body, useServiceUser2 = false)
 }

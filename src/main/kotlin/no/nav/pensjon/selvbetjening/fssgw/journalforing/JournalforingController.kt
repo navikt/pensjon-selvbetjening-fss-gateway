@@ -20,16 +20,13 @@ class JournalforingController(
     egressTokenGetter: ServiceTokenGetter,
     serviceClient: ServiceClient,
     callIdGenerator: CallIdGenerator,
-    @Value("\${journalforing.url}") egressEndpoint: String)
-    : EgressHeaderAuthController(
-    ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter) {
-
+    @Value("\${journalforing.url}") egressEndpoint: String
+) : EgressHeaderAuthController(
+    ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter
+) {
     @PostMapping("v1/journalpost")
-    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
-        return super.doPost(request, body)
-    }
+    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> =
+        super.doPost(request, body, useServiceUser2 = false)
 
-    override fun consumerTokenRequired(): Boolean {
-        return false
-    }
+    override fun consumerTokenRequired(): Boolean = false
 }

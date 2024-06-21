@@ -21,14 +21,11 @@ class EsbController(
     @Value("\${sts.password}") private val password: String)
     : EgressBodyAuthController(ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, password) {
 
-        private val logger = LoggerFactory.getLogger(EsbController::class.java)
+    private val logger = LoggerFactory.getLogger(EsbController::class.java)
 
     @PostMapping(
         value = [
             "nav-cons-pen-pen-fullmaktWeb/sca/PENFullmaktWSEXP", // sca = Service Component Architecture
-            "nav-cons-pen-pen-inntektWeb/sca/PENInntektWSEXP",
-            "nav-cons-pen-pen-oppdragWeb/sca/PENOppdragWSEXP",
-            "nav-cons-pen-pen-personWeb/sca/PENPersonWSEXP",
             "nav-cons-pen-pselv-brukerprofilWeb/sca/PSELVBrukerprofilWSEXP",
             "nav-cons-pen-pselv-personWeb/sca/PSELVPersonWSEXP",
             "nav-cons-pen-pselv-tjenestepensjonWeb/sca/PSELVTjenestepensjonWSEXP",
@@ -40,10 +37,12 @@ class EsbController(
             "nav-tjeneste-person_v2Web/sca/PersonWSEXP",
             "nav-tjeneste-trekk_v1Web/sca/TrekkWSEXP",
             "nav-tjeneste-utbetaling_v1Web/sca/UtbetalingWSEXP",
-            "pen/services/Vedtak_v2"])
+            "pen/services/Vedtak_v2"]
+    )
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
         logger.info("Request url: ${request.requestURL}")
         logger.info("Body:\n$body")
-        return super.doPost(request, body)
+        return super.doPost(request, body, useServiceUser2 = false)
+
     }
 }

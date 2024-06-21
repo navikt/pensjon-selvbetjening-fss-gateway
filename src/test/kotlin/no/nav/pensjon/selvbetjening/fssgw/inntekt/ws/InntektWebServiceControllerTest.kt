@@ -45,7 +45,7 @@ internal class InntektWebServiceControllerTest {
     @Test
     fun `inntekt request results in inntekt response XML`() {
         `when`(serviceClient.doPost(anyString(), anyMap(), anyString())).thenReturn(RESPONSE_BODY)
-        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken(useServiceUser2 = false)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
         val expectedMediaType = MediaType(MediaType.TEXT_XML, StandardCharsets.UTF_8)
 
@@ -71,7 +71,7 @@ internal class InntektWebServiceControllerTest {
     @Test
     fun `behandleInntekt request results in behandleInntekt response XML`() {
         `when`(serviceClient.doPost(anyString(), anyMap(), anyString())).thenReturn(RESPONSE_BODY)
-        `when`(egressTokenGetter.getServiceUserToken()).thenReturn(serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken(useServiceUser2 = false)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
         val expectedMediaType = MediaType(MediaType.TEXT_XML, StandardCharsets.UTF_8)
 

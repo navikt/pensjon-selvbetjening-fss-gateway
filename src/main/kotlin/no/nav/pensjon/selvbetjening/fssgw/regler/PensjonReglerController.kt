@@ -14,15 +14,15 @@ class PensjonReglerController(
     jwsValidator: JwsValidator,
     serviceClient: ServiceClient,
     callIdGenerator: CallIdGenerator,
-    @Value("\${pensjonregler.url}") egressEndpoint: String)
-    : EgressNoAuthController(jwsValidator, serviceClient, callIdGenerator, egressEndpoint) {
+    @Value("\${pensjonregler.url}") egressEndpoint: String
+) : EgressNoAuthController(
+    jwsValidator, serviceClient, callIdGenerator, egressEndpoint
+) {
     @GetMapping(
         value = [
             "api/merknad",
             "info"])
-    fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> {
-        return super.doGet(request)
-    }
+    fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> = super.doGet(request)
 
     @PostMapping(
         value = [
@@ -34,7 +34,6 @@ class PensjonReglerController(
             "api/revurderingAlderspensjon2025",
             "api/simulerAlderspensjon",
             "api/vilkarsprovAlderspensjonOver67"])
-    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
-        return super.doPost(request, body)
-    }
+    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> =
+        super.doPost(request, body, useServiceUser2 = false)
 }

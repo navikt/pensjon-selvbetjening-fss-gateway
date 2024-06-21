@@ -59,6 +59,8 @@ spec:
       value: https://pensjon-popp-q2.dev.adeo.no
     - name: PREG_URL
       value: https://pensjon-preg-q2.nais.preprod.local
+    - name: SPORINGSLOGG_URL
+      value: https://pensjon-sporingslogg-integrasjon.intern.dev.nav.no
     - name: STS_URL
       value: http://security-token-service.aura.svc.nais.local
     - name: TP_URL
@@ -85,6 +87,9 @@ spec:
         - application: pensjonskalkulator-backend
           namespace: pensjonskalkulator
           cluster: dev-gcp
+        - application: pensjonssimulator
+          namespace: pensjonskalkulator
+          cluster: dev-gcp
         - application: pensjon-selvbetjening-opptjening-backend
           namespace: pensjonselvbetjening
           cluster: dev-gcp
@@ -100,6 +105,9 @@ spec:
         - application: pensjon-pselv-q2 # for pselv on localhost
           namespace: teampensjon
           cluster: dev-fss
+        - application: skattetrekk-backend-q2 # for pselv on localhost
+          namespace: pensjonselvbetjening
+          cluster: dev-gcp
     outbound:
       external:
         - host: pep-gw-q1.oera-q.local
@@ -110,3 +118,5 @@ spec:
     paths:
       - kvPath: /serviceuser/data/dev/srvpselv
         mountPath: /secrets/serviceuser
+      - kvPath: /serviceuser/data/dev/srvpensjon
+        mountPath: /secrets/serviceuser2

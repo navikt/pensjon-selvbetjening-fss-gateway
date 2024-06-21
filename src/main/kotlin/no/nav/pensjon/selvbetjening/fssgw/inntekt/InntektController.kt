@@ -19,10 +19,10 @@ class InntektController(
     egressTokenGetter: ServiceTokenGetter,
     serviceClient: ServiceClient,
     callIdGenerator: CallIdGenerator,
-    @Value("\${inntekt.url}") egressEndpoint: String)
-    : EgressHeaderAuthController(
-    ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter) {
-
+    @Value("\${inntekt.url}") egressEndpoint: String
+) : EgressHeaderAuthController(
+    ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter
+) {
     @GetMapping("${PATH}forventetinntekt")
     fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> {
         return super.doGet(request)
@@ -33,11 +33,8 @@ class InntektController(
             "${PATH}forventetinntekt",
             "${PATH}hentdetaljerteabonnerteinntekter",
             "${PATH}hentabonnerteinntekterbolk"])
-    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
-        return super.doPost(request, body)
-    }
+    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> =
+        super.doPost(request, body, useServiceUser2 = false)
 
-    override fun consumerTokenRequired(): Boolean {
-        return true
-    }
+    override fun consumerTokenRequired(): Boolean = true
 }
