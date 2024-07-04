@@ -57,7 +57,7 @@ jobs:
   deploy-q2:
     name: Deploy Q2 to dev-fss
     needs: [ build ]
-    if: github.event_name == 'push'
+    if: github.event.inputs.prod != 'true'
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -73,7 +73,7 @@ jobs:
   deploy-q0-q1:
     name: Deploy Q0, Q1 to dev-fss
     needs: [ build ]
-    if: github.event_name == 'push'
+    if: github.event.inputs.prod != 'true'
     runs-on: ubuntu-latest
     permissions:
       id-token: write
