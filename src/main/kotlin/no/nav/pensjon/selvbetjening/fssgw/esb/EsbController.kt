@@ -41,7 +41,6 @@ class EsbController(
     )
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
         logger.info("Request url: ${request.requestURL}")
-        logger.info("Body:\n$body")
         return super.doPost(request, body, useServiceUser2 = false)
 
     }
