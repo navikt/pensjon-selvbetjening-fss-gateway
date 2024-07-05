@@ -88,6 +88,7 @@ abstract class ControllerBase(
             val headersToRelay = getEgressHeaders(request, useServiceUser2)
             val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
             val url = "$egressEndpoint${request.requestURI}$queryPart"
+            log.info("BODY: ${provideBodyAuth(body)}")
             val responseBody = serviceClient.doPost(url, headersToRelay, provideBodyAuth(body))
             metric("POST ${metricDetail(request)}", authorizedParty)
             ResponseEntity(responseBody, responseContentType, HttpStatus.OK)
