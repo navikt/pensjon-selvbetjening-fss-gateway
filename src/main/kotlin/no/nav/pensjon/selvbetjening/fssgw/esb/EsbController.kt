@@ -27,14 +27,12 @@ class EsbController(
         value = [
             "nav-cons-pen-pen-fullmaktWeb/sca/PENFullmaktWSEXP", // sca = Service Component Architecture
             "nav-cons-pen-pselv-brukerprofilWeb/sca/PSELVBrukerprofilWSEXP",
-            "nav-cons-pen-pselv-personWeb/sca/PSELVPersonWSEXP",
             "nav-cons-pen-pselv-tjenestepensjonWeb/sca/PSELVTjenestepensjonWSEXP",
             "nav-cons-pen-pselv-utbetalingWeb/sca/PSELVUtbetalingWSEXP",
             "nav-tjeneste-behandleTrekk_v1Web/sca/BehandleTrekkWSEXP",
             "nav-tjeneste-institusjonsopphold_v1Web/sca/InstitusjonsoppholdWSEXP",
             "nav-tjeneste-journal_v2Web/sca/JournalWSEXP",
             "nav-tjeneste-journalbehandling_v1Web/sca/JournalbehandlingWSEXP",
-            "nav-tjeneste-person_v2Web/sca/PersonWSEXP",
             "nav-tjeneste-trekk_v1Web/sca/TrekkWSEXP",
             "nav-tjeneste-utbetaling_v1Web/sca/UtbetalingWSEXP",
             "pen/services/Vedtak_v2"]
