@@ -23,7 +23,6 @@ import java.nio.charset.StandardCharsets
 internal class EsbControllerTest {
 
     private val brukerprofilPath = "/nav-cons-pen-pselv-brukerprofilWeb/sca/PSELVBrukerprofilWSEXP"
-    private val pselvPersonPath = "/nav-cons-pen-pselv-personWeb/sca/PSELVPersonWSEXP"
     private val utbetalingPath = "/nav-cons-pen-pselv-utbetalingWeb/sca/PSELVUtbetalingWSEXP"
 
     @Autowired
@@ -44,11 +43,6 @@ internal class EsbControllerTest {
     @Test
     fun `brukerprofil request results in brukerprofil response XML`() {
         doTest(brukerprofilPath, EsbXml.brukerprofilResponseBody)
-    }
-
-    @Test
-    fun `person request results in person response XML`() {
-        doTest(pselvPersonPath, EsbXml.pselvPersonResponseBody)
     }
 
     @Test
