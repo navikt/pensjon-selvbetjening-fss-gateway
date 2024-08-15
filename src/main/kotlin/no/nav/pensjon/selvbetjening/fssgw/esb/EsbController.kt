@@ -25,8 +25,7 @@ class EsbController(
 
     @PostMapping(
         value = [
-            "nav-cons-pen-pen-fullmaktWeb/sca/PENFullmaktWSEXP", // sca = Service Component Architecture
-            "nav-cons-pen-pselv-brukerprofilWeb/sca/PSELVBrukerprofilWSEXP",
+            "nav-cons-pen-pselv-brukerprofilWeb/sca/PSELVBrukerprofilWSEXP", // sca = Service Component Architecture
             "nav-cons-pen-pselv-tjenestepensjonWeb/sca/PSELVTjenestepensjonWSEXP",
             "nav-cons-pen-pselv-utbetalingWeb/sca/PSELVUtbetalingWSEXP",
             "nav-tjeneste-behandleTrekk_v1Web/sca/BehandleTrekkWSEXP",
@@ -34,8 +33,7 @@ class EsbController(
             "nav-tjeneste-journal_v2Web/sca/JournalWSEXP",
             "nav-tjeneste-journalbehandling_v1Web/sca/JournalbehandlingWSEXP",
             "nav-tjeneste-trekk_v1Web/sca/TrekkWSEXP",
-            "nav-tjeneste-utbetaling_v1Web/sca/UtbetalingWSEXP",
-            "pen/services/Vedtak_v2"]
+            "nav-tjeneste-utbetaling_v1Web/sca/UtbetalingWSEXP"]
     )
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
         logger.info("Request url: ${request.requestURL}")
