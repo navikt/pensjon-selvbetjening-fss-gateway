@@ -54,7 +54,7 @@
         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>oauth2-oidc-sdk</artifactId>
-            <version>11.15</version>
+            <version>11.16</version>
         </dependency>
         <dependency>
             <groupId>io.github.microutils</groupId>
