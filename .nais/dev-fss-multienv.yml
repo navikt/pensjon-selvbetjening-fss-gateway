@@ -109,6 +109,9 @@ spec:
         - application: pensjon-pselv-q2
           namespace: teampensjon
           cluster: dev-fss
+        - application: tjenestepensjon-simulering
+          namespace: pensjonskalkulator
+          cluster: dev-gcp
     outbound:
       external:
         - host: pep-gw-q1.oera-q.local

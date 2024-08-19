@@ -105,6 +105,9 @@ spec:
         - application: pensjon-pselv
           namespace: pensjondeployer
           cluster: prod-gcp
+        - application: tjenestepensjon-simulering
+          namespace: pensjonskalkulator
+          cluster: prod-gcp
     outbound:
       external:
         - host: pep-gw.oera.no

@@ -114,6 +114,9 @@ spec:
         - application: skattetrekk-backend-q2 # for pselv on localhost
           namespace: pensjonselvbetjening
           cluster: dev-gcp
+        - application: tjenestepensjon-simulering
+          namespace: pensjonskalkulator
+          cluster: dev-gcp
     outbound:
       external:
         - host: pep-gw-q1.oera-q.local
