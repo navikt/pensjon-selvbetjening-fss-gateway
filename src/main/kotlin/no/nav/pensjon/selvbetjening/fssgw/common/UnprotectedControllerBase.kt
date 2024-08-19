@@ -16,7 +16,7 @@ abstract class UnprotectedControllerBase(
     override fun provideHeaderAuth(
         request: HttpServletRequest,
         headers: TreeMap<String, String>,
-        useServiceUser2: Boolean
+        serviceUserId: Int
     ) {
         // No operation
     }

@@ -22,7 +22,7 @@ abstract class EgressHeaderBasicAuthController(
     override fun provideHeaderAuth(
         request: HttpServletRequest,
         headers: TreeMap<String, String>,
-        useServiceUser2: Boolean
+        serviceUserId: Int
     ) {
         headers[HttpHeaders.AUTHORIZATION] = "$AUTH_TYPE $credentials"
     }

@@ -42,7 +42,7 @@ class PenController(
             "springapi/uttaksalder"
         ])
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest) =
-        super.doPost(request, body, useServiceUser2 = false)
+        super.doPost(request, body, serviceUserId = 1)
 
     override fun consumerTokenRequired() = false
 

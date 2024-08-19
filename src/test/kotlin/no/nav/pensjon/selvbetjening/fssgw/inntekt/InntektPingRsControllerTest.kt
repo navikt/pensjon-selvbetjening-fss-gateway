@@ -46,7 +46,7 @@ internal class InntektPingRsControllerTest {
     @Test
     fun `when OK then Inntekt ping request responds with OK`() {
         `when`(serviceClient.doGet(anyString(), ArgumentMatchers.anyMap())).thenReturn("""{ "response": "pong"}""")
-        `when`(egressTokenGetter.getServiceUserToken(useServiceUser2 = false)).thenReturn(serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 1)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(

@@ -24,7 +24,7 @@ abstract class EgressBodyAuthController(
     override fun provideHeaderAuth(
         request: HttpServletRequest,
         headers: TreeMap<String, String>,
-        useServiceUser2: Boolean
+        serviceUserId: Int
     ) {
         // No auth header – auth is instead provided in SOAP header (in HTTP body)
     }

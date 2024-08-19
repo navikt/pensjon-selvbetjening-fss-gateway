@@ -129,3 +129,5 @@ spec:
         mountPath: /secrets/serviceuser
       - kvPath: /serviceuser/data/dev/srvpensjon
         mountPath: /secrets/serviceuser2
+      - kvPath: /serviceuser/data/dev/srvtjenestepensjon
+        mountPath: /secrets/serviceuser3

@@ -17,28 +17,32 @@ class StsClient(
     @Value("\${sts.username}") private val serviceUsername: String,
     @Value("\${sts.password}") private val servicePassword: String,
     @Value("\${sts.username2}") private val serviceUsername2: String,
-    @Value("\${sts.password2}") private val servicePassword2: String
+    @Value("\${sts.password2}") private val servicePassword2: String,
+    @Value("\${sts.username3}") private val serviceUsername3: String,
+    @Value("\${sts.password3}") private val servicePassword3: String
 ) : ServiceTokenGetter {
 
     private val webClient: WebClient = WebClient.create()
     private val log = LoggerFactory.getLogger(javaClass)
     private var tokenData: ServiceTokenData? = null
     private var tokenData2: ServiceTokenData? = null
+    private var tokenData3: ServiceTokenData? = null
 
-    override fun getServiceUserToken(useServiceUser2: Boolean): ServiceTokenData =
-        if (useServiceUser2) {
-            if (isCachedTokenValid(tokenData2))
-                tokenData2!!
-            else
-                freshTokenData(useServiceUser2 = true).also { tokenData2 = it }
-        } else {
-            if (isCachedTokenValid(tokenData))
-                tokenData!!
-            else
-                freshTokenData(useServiceUser2 = false).also { tokenData = it }
+    override fun getServiceUserToken(serviceUserId: Int): ServiceTokenData =
+        when (serviceUserId) {
+            1 -> if (isCachedTokenValid(tokenData)) tokenData!!
+            else freshTokenData(serviceUserId).also { tokenData = it }
+
+            2 -> if (isCachedTokenValid(tokenData2)) tokenData2!!
+            else freshTokenData(serviceUserId).also { tokenData2 = it }
+
+            3 -> if (isCachedTokenValid(tokenData3)) tokenData3!!
+            else freshTokenData(serviceUserId).also { tokenData3 = it }
+
+            else -> throw RuntimeException("Unexpected serviceUserId: $serviceUserId")
         }
 
-    private fun freshTokenData(useServiceUser2: Boolean): ServiceTokenData {
+    private fun freshTokenData(serviceUserId: Int): ServiceTokenData {
         log.debug("Retrieving new token for service user")
         val uriBuilder = UriComponentsBuilder.fromHttpUrl("$baseUrl/$TOKEN_PATH")
             .queryParam(Oauth2ParamNames.GRANT_TYPE, GRANT_TYPE)
@@ -49,7 +53,7 @@ class StsClient(
             val data: ServiceTokenDataDto = webClient
                 .get()
                 .uri(uri)
-                .header(HttpHeaders.AUTHORIZATION, authHeader(useServiceUser2))
+                .header(HttpHeaders.AUTHORIZATION, authHeader(serviceUserId))
                 .retrieve()
                 .bodyToMono(ServiceTokenDataDto::class.java)
                 .block()
@@ -71,16 +75,18 @@ class StsClient(
     private fun isCachedTokenValid(cachedValue: ServiceTokenData?): Boolean =
         cachedValue?.let { !expirationChecker.isExpired(it.issuedTime, it.expiresInSeconds) } ?: false
 
-    private fun authHeader(useServiceUser2: Boolean): String = "$AUTH_TYPE ${credentials(useServiceUser2)}"
+    private fun authHeader(serviceUserId: Int): String = "$AUTH_TYPE ${credentials(serviceUserId)}"
 
-    private fun credentials(useServiceUser2: Boolean): String =
-        Base64.getEncoder().encodeToString(plaintextCredentials(useServiceUser2).toByteArray())
+    private fun credentials(serviceUserId: Int): String =
+        Base64.getEncoder().encodeToString(plaintextCredentials(serviceUserId).toByteArray())
 
-    private fun plaintextCredentials(useServiceUser2: Boolean) =
-        if (useServiceUser2)
-            "$serviceUsername2:$servicePassword2"
-        else
-            "$serviceUsername:$servicePassword"
+    private fun plaintextCredentials(serviceUserId: Int) =
+        when (serviceUserId) {
+            1 -> "$serviceUsername:$servicePassword"
+            2 -> "$serviceUsername2:$servicePassword2"
+            3 -> "$serviceUsername3:$servicePassword3"
+            else -> throw RuntimeException("Unexpected serviceUserId: $serviceUserId")
+        }
 
     private companion object {
         private const val TOKEN_PATH = "rest/v1/sts/token"

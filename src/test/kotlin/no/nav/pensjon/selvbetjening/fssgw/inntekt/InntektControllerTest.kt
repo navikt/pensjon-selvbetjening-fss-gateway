@@ -47,7 +47,7 @@ internal class InntektControllerTest {
     @Test
     fun `when OK then ForventedeInntekter request returns data`() {
         `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "response": "ForventedeInntekter"}""")
-        `when`(egressTokenGetter.getServiceUserToken(useServiceUser2 = false)).thenReturn(serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 1)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
@@ -64,7 +64,7 @@ internal class InntektControllerTest {
     fun `when OK then ForventedeInntekter post returns data`() {
         `when`(serviceClient.doPost(anyString(), anyMap(), anyString()))
             .thenReturn("""{ "response": "ForventedeInntekter"}""")
-        `when`(egressTokenGetter.getServiceUserToken(useServiceUser2 = false)).thenReturn(serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 1)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
@@ -79,7 +79,7 @@ internal class InntektControllerTest {
     fun `when OK then hentdetaljerteabonnerteinntekter post returns data`() {
         `when`(serviceClient.doPost(anyString(), anyMap(), anyString()))
             .thenReturn("""{ "response": "hentdetaljerteabonnerteinntekter"}""")
-        `when`(egressTokenGetter.getServiceUserToken(useServiceUser2 = false)).thenReturn(serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 1)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
@@ -94,7 +94,7 @@ internal class InntektControllerTest {
     fun `when OK then hentabonnerteinntekterbolk post returns data`() {
         `when`(serviceClient.doPost(anyString(), anyMap(), anyString()))
             .thenReturn("""{ "response": "hentabonnerteinntekterbolk"}""")
-        `when`(egressTokenGetter.getServiceUserToken(useServiceUser2 = false)).thenReturn(serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 1)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
