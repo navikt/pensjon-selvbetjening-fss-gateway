@@ -20,8 +20,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@WebMvcTest(PoppController::class)
-internal class PoppControllerTest {
+@WebMvcTest(PoppBeholdningController::class)
+internal class PoppBeholdningControllerTest {
 
     private val poppApiUrl = "/popp/api/"
     private val auth = "Bearer jwt"
@@ -45,41 +45,22 @@ internal class PoppControllerTest {
     lateinit var callIdGenerator: CallIdGenerator
 
     @Test
-    fun `when OK then opptjeningsgrunnlag request returns data`() {
-        `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "response": "opptjeningsgrunnlaget"}""")
+    fun `when OK then beholdning request returns data`() {
+        `when`(serviceClient.doPost(anyString(), anyMap(), anyString())).thenReturn("""{ "response": "beholdningen"}""")
         `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 1)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
-            MockMvcRequestBuilders.get(poppApiUrl + "opptjeningsgrunnlag/01023456789?fomAr=2001&tomAr=2022")
-                .header(HttpHeaders.AUTHORIZATION, auth))
+            MockMvcRequestBuilders.post(poppApiUrl + "beholdning")
+                .header(HttpHeaders.AUTHORIZATION, auth)
+                .content(
+                    """
+                   {
+                     "fnr": "01023456789",
+                     "beholdningType":"PEN_B",
+                     "serviceDirectiveTPOPP006", "INKL_GRUNNLAG"
+                    }"""))
             .andExpect(status().isOk)
-            .andExpect(content().json("""{"response": "opptjeningsgrunnlaget"}"""))
-    }
-
-    @Test
-    fun `when OK then pensjonspoeng request returns data`() {
-        `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "response": "pensjonspoengene"}""")
-        `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 1)).thenReturn(serviceTokenData())
-        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
-
-        mvc.perform(
-            MockMvcRequestBuilders.get(poppApiUrl + "pensjonspoeng/01023456789")
-                .header(HttpHeaders.AUTHORIZATION, auth))
-            .andExpect(status().isOk)
-            .andExpect(content().json("""{"response": "pensjonspoengene"}"""))
-    }
-
-    @Test
-    fun `when OK then restpensjon request returns data`() {
-        `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "response": "restpensjonen"}""")
-        `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 1)).thenReturn(serviceTokenData())
-        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
-
-        mvc.perform(
-            MockMvcRequestBuilders.get(poppApiUrl + "restpensjon/01023456789?hentSiste=false")
-                .header(HttpHeaders.AUTHORIZATION, auth))
-            .andExpect(status().isOk)
-            .andExpect(content().json("""{"response": "restpensjonen"}"""))
+            .andExpect(content().json("""{"response": "beholdningen"}"""))
     }
 }

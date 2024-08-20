@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("popp")
-class PoppController(
+class PoppBeholdningController(
     jwsValidator: JwsValidator,
     egressTokenGetter: ServiceTokenGetter,
     serviceClient: ServiceClient,
@@ -21,17 +21,9 @@ class PoppController(
 ) : EgressHeaderAuthController(
     jwsValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter
 ) {
-    @GetMapping(
-        value = [
-            "api/opptjeningsgrunnlag/{pid}",
-            "api/pensjonspoeng/{pid}",
-            "api/restpensjon/{pid}"])
-    fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> = super.doGet(request)
+    @PostMapping("api/beholdning")
+    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> =
+        super.doPost(request, body, serviceUserId = 1)
 
     override fun consumerTokenRequired(): Boolean = false
-
-    /**
-     * Override in order to hide PID (which is part of request URI)
-     */
-    override fun metricDetail(request: HttpServletRequest): String = "popp/api/*/pid"
 }

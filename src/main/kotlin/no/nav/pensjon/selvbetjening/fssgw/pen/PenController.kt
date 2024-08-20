@@ -28,11 +28,9 @@ class PenController(
             "api/uttaksgrad/person",
             "api/uttaksgrad/search",
             "springapi/krav",
-            "springapi/krav/{kravId}",
             "springapi/sak/sammendrag",
             "springapi/vedtak",
-            "springapi/vedtak/bestemgjeldende",
-            "springapi/vedtak/{vedtakId}/beregninger"])
+            "springapi/vedtak/bestemgjeldende"])
     fun handleGetRequest(request: HttpServletRequest): ResponseEntity<String> = super.doGet(request)
 
     @PostMapping(
@@ -45,9 +43,4 @@ class PenController(
         super.doPost(request, body, serviceUserId = 1)
 
     override fun consumerTokenRequired() = false
-
-    /**
-     * Override in order to exclude krav-ID and vedtak-ID from metric
-     */
-    override fun metricDetail(request: HttpServletRequest) = "PEN"
 }
