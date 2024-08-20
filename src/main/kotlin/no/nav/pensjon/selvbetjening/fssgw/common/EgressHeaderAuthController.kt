@@ -23,9 +23,9 @@ abstract class EgressHeaderAuthController(
     override fun provideHeaderAuth(
         request: HttpServletRequest,
         headers: TreeMap<String, String>,
-        useServiceUser2: Boolean
+        serviceUserId: Int
     ) {
-        val token = egressTokenGetter.getServiceUserToken(useServiceUser2).accessToken
+        val token = egressTokenGetter.getServiceUserToken(serviceUserId).accessToken
         val auth = "$AUTH_TYPE $token"
         headers[HttpHeaders.AUTHORIZATION] = auth
 

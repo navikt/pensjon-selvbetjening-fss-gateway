@@ -45,7 +45,7 @@ internal class SporingsloggControllerTest {
     @Test
     fun `handlePostRequest request results in JSON response`() {
         `when`(serviceClient.doPost(anyString(), anyMap(), anyString())).thenReturn(RESPONSE_BODY)
-        `when`(egressTokenGetter.getServiceUserToken(useServiceUser2 = true)).thenReturn(serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 2)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(

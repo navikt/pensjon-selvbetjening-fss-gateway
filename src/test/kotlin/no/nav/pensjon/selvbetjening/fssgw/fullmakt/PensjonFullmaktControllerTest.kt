@@ -46,7 +46,7 @@ internal class PensjonFullmaktControllerTest {
     @Test
     fun `when OK then finnFullmakter request returns data`() {
         `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn(responseFinnFullmakterBody())
-        `when`(egressTokenGetter.getServiceUserToken(useServiceUser2 = false)).thenReturn(serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 1)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
@@ -61,7 +61,7 @@ internal class PensjonFullmaktControllerTest {
     @Test
     fun `when OK then harFullmaktsforhold request returns data`() {
         `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn(responseHarFullmaktsforholdBody())
-        `when`(egressTokenGetter.getServiceUserToken(useServiceUser2 = false)).thenReturn(serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 1)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(

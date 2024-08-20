@@ -44,7 +44,7 @@ internal class StsControllerTest {
     @Test
     fun `access token request results in JWT access token response`() {
         `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn(JWT_ACCESS_TOKEN_RESPONSE_BODY)
-        `when`(egressTokenGetter.getServiceUserToken(useServiceUser2 = false)).thenReturn(serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 1)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(

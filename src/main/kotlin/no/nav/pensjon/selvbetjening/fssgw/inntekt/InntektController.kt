@@ -34,7 +34,7 @@ class InntektController(
             "${PATH}hentdetaljerteabonnerteinntekter",
             "${PATH}hentabonnerteinntekterbolk"])
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> =
-        super.doPost(request, body, useServiceUser2 = false)
+        super.doPost(request, body, serviceUserId = 1)
 
     override fun consumerTokenRequired(): Boolean = true
 }

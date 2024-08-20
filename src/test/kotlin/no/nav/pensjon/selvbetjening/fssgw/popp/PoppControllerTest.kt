@@ -47,7 +47,7 @@ internal class PoppControllerTest {
     @Test
     fun `when OK then opptjeningsgrunnlag request returns data`() {
         `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "response": "opptjeningsgrunnlaget"}""")
-        `when`(egressTokenGetter.getServiceUserToken(useServiceUser2 = false)).thenReturn(serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 1)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
@@ -60,7 +60,7 @@ internal class PoppControllerTest {
     @Test
     fun `when OK then pensjonspoeng request returns data`() {
         `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "response": "pensjonspoengene"}""")
-        `when`(egressTokenGetter.getServiceUserToken(useServiceUser2 = false)).thenReturn(serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 1)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
@@ -73,7 +73,7 @@ internal class PoppControllerTest {
     @Test
     fun `when OK then restpensjon request returns data`() {
         `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "response": "restpensjonen"}""")
-        `when`(egressTokenGetter.getServiceUserToken(useServiceUser2 = false)).thenReturn(serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 1)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
@@ -86,7 +86,7 @@ internal class PoppControllerTest {
     @Test
     fun `when OK then beholdning request returns data`() {
         `when`(serviceClient.doPost(anyString(), anyMap(), anyString())).thenReturn("""{ "response": "beholdningen"}""")
-        `when`(egressTokenGetter.getServiceUserToken(useServiceUser2 = false)).thenReturn(serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 1)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(

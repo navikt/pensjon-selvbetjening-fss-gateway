@@ -49,7 +49,7 @@ internal class PenControllerTest {
     @Test
     fun `when OK then AFP-historikk request returns data`() {
         `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "response": "AFP-historikken"}""")
-        `when`(egressTokenGetter.getServiceUserToken(useServiceUser2 = false)).thenReturn(serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 1)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
@@ -63,7 +63,7 @@ internal class PenControllerTest {
     @Test
     fun `when OK then uforehistorikk request returns data`() {
         `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "response": "uførehistorikken"}""")
-        `when`(egressTokenGetter.getServiceUserToken(useServiceUser2 = false)).thenReturn(serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 1)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
@@ -77,7 +77,7 @@ internal class PenControllerTest {
     @Test
     fun `when OK then uttaksgrad person request returns data`() {
         `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "response": "uttaksgraden"}""")
-        `when`(egressTokenGetter.getServiceUserToken(useServiceUser2 = false)).thenReturn(serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 1)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
@@ -91,7 +91,7 @@ internal class PenControllerTest {
     @Test
     fun `when OK then uttaksgrad search request returns data`() {
         `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "response": "uttaksgradene"}""")
-        `when`(egressTokenGetter.getServiceUserToken(useServiceUser2 = false)).thenReturn(serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 1)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
@@ -104,7 +104,7 @@ internal class PenControllerTest {
     @Test
     fun `when OK then krav request returns data`() {
         `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "response": "kravet"}""")
-        `when`(egressTokenGetter.getServiceUserToken(useServiceUser2 = false)).thenReturn(serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 1)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
@@ -119,7 +119,7 @@ internal class PenControllerTest {
     @Test
     fun `when OK then sakssammendrag request returns data`() {
         `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "response": "sammendraget"}""")
-        `when`(egressTokenGetter.getServiceUserToken(useServiceUser2 = false)).thenReturn(serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 1)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
@@ -135,7 +135,7 @@ internal class PenControllerTest {
     fun `when OK then vedtak request returns data`() {
         `when`(serviceClient.doGet(anyString(), anyMap()))
             .thenReturn("""{ "response": "vedtakene"}""")
-        `when`(egressTokenGetter.getServiceUserToken(useServiceUser2 = false)).thenReturn(serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 1)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
@@ -151,7 +151,7 @@ internal class PenControllerTest {
     fun `when OK then bestem gjeldende vedtak request returns data`() {
         `when`(serviceClient.doGet(anyString(), anyMap()))
             .thenReturn("""{ "response": "vedtakene"}""")
-        `when`(egressTokenGetter.getServiceUserToken(useServiceUser2 = false)).thenReturn(serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 1)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
@@ -168,7 +168,7 @@ internal class PenControllerTest {
     fun `when 4xx error then PEN request responds with 4xx and error message`() {
         `when`(serviceClient.doPost(anyString(), anyMap(), anyString()))
             .thenAnswer { throw EgressException("""{"error": "oops"}""", HttpStatus.CONFLICT) }
-        `when`(egressTokenGetter.getServiceUserToken(useServiceUser2 = false)).thenReturn(serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 1)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
@@ -183,7 +183,7 @@ internal class PenControllerTest {
     fun `when 5xx error then PEN request responds with 502 and error message`() {
         `when`(serviceClient.doPost(anyString(), anyMap(), anyString()))
             .thenAnswer { throw EgressException("""{"error": "oops"}""", HttpStatus.INTERNAL_SERVER_ERROR) }
-        `when`(egressTokenGetter.getServiceUserToken(useServiceUser2 = false)).thenReturn(serviceTokenData())
+        `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 1)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
