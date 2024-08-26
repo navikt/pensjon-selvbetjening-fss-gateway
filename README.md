@@ -4,14 +4,15 @@ Gateway-/proxy-applikasjon for at pensjonsrelaterte applikasjoner i allmenn sky 
 
 Støttede tjenester:
 
-- EREG (Enhetsregisteret)
 - ESB (Enterprise Service Bus, tjenestebuss)
 - Dok-arkiv (JOARK)
 - Gandalf STS
 - Inntektskomponenten
-- Norsk Pensjon
+- Norsk Pensjon (via partner-gateway)
 - PEN (Pensjonsfaglig kjerne)
 - POPP (Pensjonsfaglig opptjeningsregister)
+- Sporingslogging for pensjon
+- Tjenestepensjonsordninger (via partner-gateway)
 - TP (Tjenestepensjon)
 - TSS (Tjenestebasert samhandlersystem)
 
