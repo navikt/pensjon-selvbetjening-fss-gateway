@@ -24,6 +24,14 @@ class StsController(
     fun handleGetRequest(request: HttpServletRequest) = super.doGet(request)
 
     @PostMapping("token/exchange")
-    fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest) =
-        super.doPost(request, body, serviceUserId = 1)
+    fun handlePostRequest(
+        @RequestBody body: String,
+        @RequestParam(required = false) serviceUserId: Int?,
+        request: HttpServletRequest
+    ) =
+        super.doPost(request, body, serviceUserId = serviceUserId ?: DEFAULT_SERVICE_USER_ID)
+
+    private companion object {
+        private const val DEFAULT_SERVICE_USER_ID = 1 // srvpselv
+    }
 }

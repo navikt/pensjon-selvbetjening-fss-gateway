@@ -61,7 +61,6 @@ internal class StsControllerTest {
             .andExpect(status().isUnauthorized)
     }
 
-
     @Test
     fun `token exchange request results in SAML token response`() {
         `when`(serviceClient.doPost(anyString(), anyMap(), anyString())).thenReturn(SAML_TOKEN_RESPONSE_BODY)
@@ -69,6 +68,19 @@ internal class StsControllerTest {
 
         mvc.perform(
             MockMvcRequestBuilders.post(TOKEN_EXCHANGE_PATH)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
+                .content(SAML_TOKEN_REQUEST_BODY))
+            .andExpect(status().isOk)
+            .andExpect(content().json(SAML_TOKEN_RESPONSE_BODY))
+    }
+
+    @Test
+    fun `token exchange request with service-user-ID results in SAML token response`() {
+        `when`(serviceClient.doPost(anyString(), anyMap(), anyString())).thenReturn(SAML_TOKEN_RESPONSE_BODY)
+        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
+
+        mvc.perform(
+            MockMvcRequestBuilders.post("$TOKEN_EXCHANGE_PATH?serviceUserId=2")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
                 .content(SAML_TOKEN_REQUEST_BODY))
             .andExpect(status().isOk)
