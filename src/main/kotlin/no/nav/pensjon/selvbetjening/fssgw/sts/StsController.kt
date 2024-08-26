@@ -15,10 +15,22 @@ class StsController(
     serviceClient: ServiceClient,
     callIdGenerator: CallIdGenerator,
     @Value("\${sts.url}") egressEndpoint: String,
-    @Value("\${sts.username}") serviceUsername: String,
-    @Value("\${sts.password}") servicePassword: String
+    @Value("\${sts.username}") serviceUsername1: String,
+    @Value("\${sts.password}") servicePassword1: String,
+    @Value("\${sts.username2}") serviceUsername2: String,
+    @Value("\${sts.password2}") servicePassword2: String,
+    @Value("\${sts.username3}") serviceUsername3: String,
+    @Value("\${sts.password3}") servicePassword3: String
 ) : EgressHeaderBasicAuthController(
-    ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, serviceUsername, servicePassword
+    ingressTokenValidator,
+    serviceClient,
+    callIdGenerator,
+    egressEndpoint,
+    mapOf(
+        1 to "$serviceUsername1:$servicePassword1",
+        2 to "$serviceUsername2:$servicePassword2",
+        3 to "$serviceUsername3:$servicePassword3"
+    )
 ) {
     @GetMapping("token")
     fun handleGetRequest(request: HttpServletRequest) = super.doGet(request)

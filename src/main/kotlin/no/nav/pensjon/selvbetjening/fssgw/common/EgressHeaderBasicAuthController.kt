@@ -13,23 +13,28 @@ abstract class EgressHeaderBasicAuthController(
     serviceClient: ServiceClient,
     callIdGenerator: CallIdGenerator,
     egressEndpoint: String,
-    serviceUsername: String,
-    servicePassword: String)
-    : TokenProtectedController(ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint) {
-
-    private val credentials = Base64.getEncoder().encodeToString("$serviceUsername:$servicePassword".toByteArray())
+    private val serviceUserCredentials: Map<Int, String>
+) : TokenProtectedController(ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint) {
 
     override fun provideHeaderAuth(
         request: HttpServletRequest,
         headers: TreeMap<String, String>,
         serviceUserId: Int
     ) {
-        headers[HttpHeaders.AUTHORIZATION] = "$AUTH_TYPE $credentials"
+        headers[HttpHeaders.AUTHORIZATION] = "$AUTH_TYPE ${encodedCredentials(serviceUserId)}"
     }
 
     override fun provideBodyAuth(body: String) = body
 
+    private fun encodedCredentials(serviceUserId: Int): String =
+        serviceUserCredentials[serviceUserId]?.let(::base64Encode)
+            ?: throw IllegalArgumentException("Invalid serviceUserId: $serviceUserId")
+
+
     companion object {
         private const val AUTH_TYPE = "Basic"
+
+        private fun base64Encode(value: String): String =
+            Base64.getEncoder().encodeToString(value.toByteArray())
     }
 }
