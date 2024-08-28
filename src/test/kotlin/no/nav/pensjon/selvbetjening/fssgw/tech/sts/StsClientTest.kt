@@ -28,8 +28,8 @@ internal class StsClientTest : WebClientTest() {
         consumer = StsClient(
             expirationChecker,
             baseUrl(),
-            serviceUsername = "username1",
-            servicePassword = "password1",
+            serviceUsername1 = "username1",
+            servicePassword1 = "password1",
             serviceUsername2 = "username2",
             servicePassword2 = "password2",
             serviceUsername3 = "username3",

@@ -18,26 +18,16 @@ import java.util.*
 abstract class ControllerBase(
     private val serviceClient: ServiceClient,
     private val callIdGenerator: CallIdGenerator,
-    private val egressEndpoint: String) {
-
+    private val egressEndpoint: String
+) {
     private val log = KotlinLogging.logger {}
-    private val locale = Locale.getDefault()
-
-    private val notRelayedHeaders = listOf(
-        HttpHeaders.ACCEPT.lowercase(locale),
-        HttpHeaders.AUTHORIZATION.lowercase(locale),
-        HttpHeaders.HOST.lowercase(locale),
-        HttpHeaders.USER_AGENT.lowercase(locale),
-        HttpHeaders.CONTENT_LENGTH.lowercase(locale),
-        CONSUMER_TOKEN_HEADER_NAME.lowercase(locale)
-    )
 
     fun doGet(request: HttpServletRequest): ResponseEntity<String> {
-        val responseContentType = getResponseContentType(request)
+        val responseContentType: HttpHeaders = getResponseContentType(request)
 
         return try {
             val authorizedParty = checkIngressAuth(request)
-            val headersToRelay = getEgressHeaders(request, serviceUserId = 1)
+            val headersToRelay = getEgressHeaders(request, DEFAULT_SERVICE_USER_ID)
             val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
             val url = "$egressEndpoint${request.requestURI}$queryPart"
             val responseBody = serviceClient.doGet(url, headersToRelay)
@@ -57,11 +47,11 @@ abstract class ControllerBase(
     }
 
     fun doOptions(request: HttpServletRequest): ResponseEntity<String> {
-        val responseContentType = getResponseContentType(request)
+        val responseContentType: HttpHeaders = getResponseContentType(request)
 
         return try {
             val authorizedParty = checkIngressAuth(request)
-            val headersToRelay = getEgressHeaders(request, serviceUserId = 1)
+            val headersToRelay = getEgressHeaders(request, DEFAULT_SERVICE_USER_ID)
             val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
             val url = "$egressEndpoint${request.requestURI}$queryPart"
             val responseBody = serviceClient.doOptions(url, headersToRelay)
@@ -81,7 +71,7 @@ abstract class ControllerBase(
     }
 
     fun doPost(request: HttpServletRequest, body: String, serviceUserId: Int = 1): ResponseEntity<String> {
-        val responseContentType = getResponseContentType(request)
+        val responseContentType: HttpHeaders = getResponseContentType(request)
 
         return try {
             val authorizedParty = checkIngressAuth(request)
@@ -116,10 +106,10 @@ abstract class ControllerBase(
 
     protected open fun metricDetail(request: HttpServletRequest): String = request.requestURI
 
-    private fun getEgressHeaders(request: HttpServletRequest, serviceUserId: Int): TreeMap<String, String> {
+    private fun getEgressHeaders(request: HttpServletRequest, defaultServiceUserId: Int): TreeMap<String, String> {
         val egressHeaders = TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER)
         request.headerNames.toList().forEach { copyHeader(request, it, egressHeaders) }
-        provideHeaderAuth(request, egressHeaders, serviceUserId)
+        provideHeaderAuth(request, egressHeaders, serviceUserId = serviceUserId(request) ?: defaultServiceUserId)
         addCallIdHeader(egressHeaders)
         return egressHeaders
     }
@@ -127,22 +117,15 @@ abstract class ControllerBase(
     private fun getResponseContentType(request: HttpServletRequest): HttpHeaders {
         val requestContentType: String? = request.getHeader(HttpHeaders.CONTENT_TYPE)
 
-        return if (requestContentType != null && requestContentType.startsWith(MediaType.TEXT_XML_VALUE))
+        return if (requestContentType?.startsWith(MediaType.TEXT_XML_VALUE) == true)
             xmlContentType else jsonContentType
     }
 
     private fun addCallIdHeader(headers: TreeMap<String, String>) {
-        val callId = resolveCallId(headers)
-        MDC.put(CALL_ID_HEADER_NAME_1, callId)
-        headers[CALL_ID_HEADER_NAME_1] = callId
-    }
-
-    private fun copyHeader(request: HttpServletRequest, headerName: String, headers: TreeMap<String, String>) {
-        if (notRelayedHeaders.contains(headerName.lowercase(locale))) {
-            return
+        with(resolveCallId(headers)) {
+            MDC.put(CALL_ID_HEADER_NAME_1, this)
+            headers[CALL_ID_HEADER_NAME_1] = this
         }
-
-        headers[headerName] = request.getHeader(headerName)
     }
 
     private fun unauthorized(e: Exception) = unauthorized(e.message)
@@ -152,51 +135,77 @@ abstract class ControllerBase(
         return ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED)
     }
 
-    private fun contentTypeHeaders(mediaType: MediaType) = HttpHeaders().also { it.contentType = mediaType }
-
-    private fun metric(action: String, status: String) =
-        Metrics.counter("request_counter", "action", action, "status", status).increment()
-
     private fun handleError(
         request: HttpServletRequest,
         method: String,
         e: EgressException,
-        responseContentType: HttpHeaders): ResponseEntity<String> {
+        responseContentType: HttpHeaders
+    ): ResponseEntity<String> {
         metric("$method ${metricDetail(request)}", "error")
         log.error(e) { "Failed to $method $egressEndpoint${request.requestURI}: ${e.message} (${e.statusCode})" }
         return ResponseEntity(e.message, responseContentType, statusCode(e))
     }
 
-    private val jsonContentType: HttpHeaders = contentTypeHeaders(MediaType.APPLICATION_JSON)
-
-    private val xmlContentType: HttpHeaders = contentTypeHeaders(MediaType(MediaType.TEXT_XML, StandardCharsets.UTF_8))
-
-    private fun resolveCallId(headers: TreeMap<String, String>): String {
-        return NAV_CALL_ID_HEADER_NAMES
+    private fun resolveCallId(headers: TreeMap<String, String>): String =
+        NAV_CALL_ID_HEADER_NAMES
             .asSequence()
             .mapNotNull { headers[it] }
             .firstOrNull { it.isNotEmpty() }
             ?: callIdGenerator.newCallId()
-    }
 
     companion object {
         const val CALL_ID_HEADER_NAME_1 = "Nav-Call-Id"
         const val CONSUMER_TOKEN_HEADER_NAME = "Nav-Consumer-Token"
+        private const val SERVICE_USER_ID_HEADER_NAME = "Service-User-Id"
+        private const val DEFAULT_SERVICE_USER_ID = 1 // srvpselv
+        private val locale = Locale.getDefault()
+
+        private val notRelayedHeaders = listOf(
+            HttpHeaders.ACCEPT.lowercase(locale),
+            HttpHeaders.AUTHORIZATION.lowercase(locale),
+            HttpHeaders.HOST.lowercase(locale),
+            HttpHeaders.USER_AGENT.lowercase(locale),
+            HttpHeaders.CONTENT_LENGTH.lowercase(locale),
+            CONSUMER_TOKEN_HEADER_NAME.lowercase(locale),
+            SERVICE_USER_ID_HEADER_NAME.lowercase(locale)
+        )
 
         // NB: No consensus in NAV regarding call ID header name,
         // ref. https://github.com/navikt/k9-formidling/blob/master/app/src/main/kotlin/no/nav/k9/formidling/app/logging/LoggingHjelper.kt
-
         val NAV_CALL_ID_HEADER_NAMES =
             setOf(
                 CALL_ID_HEADER_NAME_1,
                 "Nav-CallId",
                 "Nav-Callid",
                 "X-Correlation-Id")
-    }
 
-    private fun statusCode(e: EgressException) =
-        if (e.statusCode.is4xxClientError)
-            e.statusCode
-        else
-            HttpStatus.BAD_GATEWAY
+        private fun copyHeader(request: HttpServletRequest, headerName: String, headers: TreeMap<String, String>) {
+            if (notRelayedHeaders.contains(headerName.lowercase(locale))) {
+                return
+            }
+
+            headers[headerName] = request.getHeader(headerName)
+        }
+
+        private fun serviceUserId(request: HttpServletRequest): Int? =
+            request.getHeader(SERVICE_USER_ID_HEADER_NAME)?.toIntOrNull()
+
+        private val jsonContentType: HttpHeaders =
+            contentTypeHeaders(MediaType.APPLICATION_JSON)
+
+        private val xmlContentType: HttpHeaders =
+            contentTypeHeaders(MediaType(MediaType.TEXT_XML, StandardCharsets.UTF_8))
+
+        private fun contentTypeHeaders(mediaType: MediaType) =
+            HttpHeaders().apply { contentType = mediaType }
+
+        private fun metric(action: String, status: String) =
+            Metrics.counter("request_counter", "action", action, "status", status).increment()
+
+        private fun statusCode(e: EgressException) =
+            if (e.statusCode.is4xxClientError)
+                e.statusCode
+            else
+                HttpStatus.BAD_GATEWAY
+    }
 }
