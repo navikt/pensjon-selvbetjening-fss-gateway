@@ -33,22 +33,12 @@ spec:
     enabled: true
     path: /internal/prometheus
   env:
-    - name: APP_URL
-      value: https://app.adeo.no
-    - name: ARENA_URL
-      value: https://arena.adeo.no
-    - name: BREVDATA_URL
-      value: https://pensjon-brevmetadata-pensjonsbrev.nais.adeo.no
-    - name: EREG_URL
-      value: https://ereg-services.intern.nav.no
     - name: ESB_URL
       value: https://tjenestebuss.adeo.no
     - name: INNTEKT_URL
       value: https://app.adeo.no
     - name: JOURNALFORING_URL
       value: https://dokarkiv.nais.adeo.no
-    - name: MODAPP_URL
-      value: https://modapp.adeo.no
     - name: NORG2_URL
       value: https://app.adeo.no
     - name: OPPGAVE_URL

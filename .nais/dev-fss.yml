@@ -33,14 +33,6 @@ spec:
     enabled: true
     path: /internal/prometheus
   env:
-    - name: ARENA_URL
-      value: https://arena-q2.adeo.no
-    - name: BREVDATA_URL
-      value: https://pensjon-brevmetadata.dev.intern.nav.no
-    - name: MODAPP_URL
-      value: https://modapp-q2.adeo.no
-    - name: EREG_URL
-      value: https://ereg-services-q2.dev.intern.nav.no
     - name: ESB_URL
       value: https://tjenestebuss-q2.adeo.no
     - name: INNTEKT_URL
@@ -71,8 +63,6 @@ spec:
       value: http://security-token-service.aura.svc.nais.local
     - name: TP_URL
       value: https://tp-q2.dev.intern.nav.no
-    - name: APP_URL
-      value: https://app-q2.adeo.no
     - name: WASAPP_URL
       value: https://wasapp-q2.adeo.no
     - name: FSSGW_LOGGING_LEVEL
