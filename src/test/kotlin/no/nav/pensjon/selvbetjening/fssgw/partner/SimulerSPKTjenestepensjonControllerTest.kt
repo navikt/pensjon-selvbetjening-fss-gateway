@@ -71,6 +71,7 @@ class SimulerSPKTjenestepensjonControllerTest {
     fun `unauthorized simulation request results in response status Unauthorized`() {
         mvc.perform(
             post(PATH)
+                .header("scope", "test:spk:nav")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .content(REQUEST_BODY)
         )
