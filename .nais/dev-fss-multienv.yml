@@ -57,6 +57,8 @@ spec:
       value: https://pensjon-popp-{{ environment }}.dev.intern.nav.no
     - name: PREG_URL
       value: https://pensjon-preg-{{ environment }}.nais.preprod.local
+    - name: SPK_URL
+      value: https://api.preprod.spk.no
     - name: SPORINGSLOGG_URL
       value: https://pensjon-sporingslogg-integrasjon.intern.dev.nav.no
     - name: STS_URL
@@ -77,6 +79,11 @@ spec:
   webproxy: true
   tokenx:
     enabled: true
+  maskinporten:
+    enabled: true
+    scopes:
+      consumes:
+        - name: "spk:nav"
   accessPolicy:
     inbound:
       rules:
