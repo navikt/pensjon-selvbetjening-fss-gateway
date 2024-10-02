@@ -30,6 +30,6 @@ class JoarkController(
     )
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
         logger.info("Request url: ${request.requestURL}")
-        return super.doPost(request, body, serviceUserId = 1)
+        return doPost(request, body)
     }
 }

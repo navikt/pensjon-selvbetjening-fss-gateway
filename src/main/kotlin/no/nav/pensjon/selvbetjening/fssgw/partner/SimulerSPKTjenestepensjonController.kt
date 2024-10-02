@@ -30,6 +30,6 @@ class SimulerSPKTjenestepensjonController(
         @RequestHeader("scope", required = true) scope: String,
         request: HttpServletRequest
     ): ResponseEntity<String> {
-        return doPost(request, body)
+        return doPost(request = request, body = body, externalCall = true)
     }
 }

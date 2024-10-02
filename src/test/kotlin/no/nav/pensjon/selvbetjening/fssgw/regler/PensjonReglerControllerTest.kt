@@ -5,8 +5,7 @@ import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.anyMap
-import org.mockito.ArgumentMatchers.anyString
+import org.mockito.ArgumentMatchers.*
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
@@ -39,7 +38,7 @@ internal class PensjonReglerControllerTest {
 
     @Test
     fun `hentGrunnbelopListe request results in JSON response`() {
-        `when`(serviceClient.doPost(anyString(), anyMap(), anyString())).thenReturn(RESPONSE_BODY)
+        `when`(serviceClient.doPost(anyString(), anyMap(), anyString(), anyBoolean())).thenReturn(RESPONSE_BODY)
         `when`(jwsValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(

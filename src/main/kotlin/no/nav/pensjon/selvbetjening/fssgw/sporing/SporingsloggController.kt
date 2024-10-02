@@ -23,7 +23,7 @@ class SporingsloggController(
 ) {
     @PostMapping("sporingslogg")
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest) =
-        super.doPost(request, body, serviceUserId = 2)
+        doPost(request, body, serviceUserId = 2)
 
     override fun consumerTokenRequired() = false
 }

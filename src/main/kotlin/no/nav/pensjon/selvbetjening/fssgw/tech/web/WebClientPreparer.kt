@@ -18,8 +18,17 @@ object WebClientPreparer {
         if (requiresProxy) proxyAwareWebClient(proxyUri)
         else WebClient.create()
 
+    fun externalWebClient(): WebClient = WebClient.builder()
+        .clientConnector(
+            ReactorClientHttpConnector(
+                HttpClient
+                    .create()
+                    .proxyWithSystemProperties()
+            )
+        ).build()
+
     fun largeBufferWebClient(): WebClient {
-        val httpClient = HttpClient.create()
+        val httpClient = HttpClient.create().proxyWithSystemProperties()
 
         val strategies = ExchangeStrategies.builder()
             .codecs { it.defaultCodecs().maxInMemorySize(MAX_IN_MEMORY_SIZE) }

@@ -63,7 +63,7 @@ internal class StsControllerTest {
 
     @Test
     fun `token exchange request results in SAML token response`() {
-        `when`(serviceClient.doPost(anyString(), anyMap(), anyString())).thenReturn(SAML_TOKEN_RESPONSE_BODY)
+        `when`(serviceClient.doPost(anyString(), anyMap(), anyString(), anyBoolean())).thenReturn(SAML_TOKEN_RESPONSE_BODY)
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(
@@ -76,7 +76,7 @@ internal class StsControllerTest {
 
     @Test
     fun `token exchange request with service-user-ID results in SAML token response`() {
-        `when`(serviceClient.doPost(anyString(), anyMap(), anyString())).thenReturn(SAML_TOKEN_RESPONSE_BODY)
+        `when`(serviceClient.doPost(anyString(), anyMap(), anyString(), anyBoolean())).thenReturn(SAML_TOKEN_RESPONSE_BODY)
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
 
         mvc.perform(

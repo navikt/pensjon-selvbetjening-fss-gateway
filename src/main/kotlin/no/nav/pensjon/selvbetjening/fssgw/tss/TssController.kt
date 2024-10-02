@@ -28,7 +28,7 @@ class TssController(
 ) {
     @PostMapping("hentSamhandler")
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest) =
-        super.doPost(request, body, serviceUserId = 1)
+        doPost(request, body)
 
     override fun consumerTokenRequired() = false
 }

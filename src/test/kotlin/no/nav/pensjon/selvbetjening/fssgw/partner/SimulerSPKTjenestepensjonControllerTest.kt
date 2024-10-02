@@ -42,7 +42,7 @@ class SimulerSPKTjenestepensjonControllerTest {
 
     @Test
     fun `when authenticated request then response is OK`() {
-        `when`(serviceClient.doPost(anyString(), anyMap(), anyString())).thenReturn(RESPONSE_BODY)
+        `when`(serviceClient.doPost(anyString(), anyMap(), anyString(), anyBoolean())).thenReturn(RESPONSE_BODY)
         `when`(callIdGenerator.newCallId()).thenReturn("call ID 1")
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
         val scope = "test:spk:nav"
@@ -63,7 +63,8 @@ class SimulerSPKTjenestepensjonControllerTest {
         verify(serviceClient, times(1)).doPost(
             "$BASE_URL$PATH",
             mapOf("Content-Type" to expectedMediaType, "Nav-Call-Id" to "call ID 1", HttpHeaders.AUTHORIZATION to "Bearer jwt"),
-            REQUEST_BODY
+            REQUEST_BODY,
+            true
         )
     }
 

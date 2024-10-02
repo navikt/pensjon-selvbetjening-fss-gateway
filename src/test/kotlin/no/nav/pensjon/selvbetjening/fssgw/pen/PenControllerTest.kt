@@ -8,8 +8,7 @@ import no.nav.pensjon.selvbetjening.fssgw.mock.MockUtil.serviceTokenData
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.sts.ServiceTokenGetter
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.anyMap
-import org.mockito.ArgumentMatchers.anyString
+import org.mockito.ArgumentMatchers.*
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
@@ -166,7 +165,7 @@ internal class PenControllerTest {
 
     @Test
     fun `when 4xx error then PEN request responds with 4xx and error message`() {
-        `when`(serviceClient.doPost(anyString(), anyMap(), anyString()))
+        `when`(serviceClient.doPost(anyString(), anyMap(), anyString(), anyBoolean()))
             .thenAnswer { throw EgressException("""{"error": "oops"}""", HttpStatus.CONFLICT) }
         `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 1)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
@@ -181,7 +180,7 @@ internal class PenControllerTest {
 
     @Test
     fun `when 5xx error then PEN request responds with 502 and error message`() {
-        `when`(serviceClient.doPost(anyString(), anyMap(), anyString()))
+        `when`(serviceClient.doPost(anyString(), anyMap(), anyString(), anyBoolean()))
             .thenAnswer { throw EgressException("""{"error": "oops"}""", HttpStatus.INTERNAL_SERVER_ERROR) }
         `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 1)).thenReturn(serviceTokenData())
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)

@@ -26,5 +26,5 @@ class TjenestepensjonPepGatewayController(
 ) {
     @PostMapping("ekstern-pensjon-tjeneste-tjenestepensjonSimuleringWeb/sca/TjenestepensjonSimuleringWSEXP")
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> =
-        super.doPost(request, body, serviceUserId = 3)
+        doPost(request, body, serviceUserId = 3)
 }
