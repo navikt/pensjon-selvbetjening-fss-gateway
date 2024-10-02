@@ -14,7 +14,6 @@ Støttede tjenester:
 - Sporingslogging for pensjon
 - Tjenestepensjonsordninger (via partner-gateway)
 - TP (Tjenestepensjon)
-- TSS (Tjenestebasert samhandlersystem)
 
 For å benytte endepunktene kreves *bearer*-token (TokenX, Azure AD On-Behalf-Of, eller Client credentials).
 
