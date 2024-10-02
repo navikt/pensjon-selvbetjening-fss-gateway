@@ -116,6 +116,7 @@ spec:
           cluster: dev-gcp
     outbound:
       external:
+        - host: api.preprod.spk.no
         - host: pep-gw-q1.oera-q.local
           ports:
             - port: 9443

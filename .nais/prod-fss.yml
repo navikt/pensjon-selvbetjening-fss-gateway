@@ -107,6 +107,7 @@ spec:
           cluster: prod-gcp
     outbound:
       external:
+        - host: api.prod.spk.no
         - host: pep-gw.oera.no
           ports:
             - port: 9443
