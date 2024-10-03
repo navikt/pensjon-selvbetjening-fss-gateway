@@ -11,12 +11,12 @@ import jakarta.servlet.http.HttpServletRequest
 
 @RestController
 class PensjonReglerController(
-    jwsValidator: JwsValidator,
+    ingressTokenValidator: JwsValidator,
     serviceClient: ServiceClient,
     callIdGenerator: CallIdGenerator,
     @Value("\${pensjonregler.url}") egressEndpoint: String
 ) : EgressNoAuthController(
-    jwsValidator, serviceClient, callIdGenerator, egressEndpoint
+    ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint
 ) {
     @GetMapping(
         value = [
@@ -26,14 +26,24 @@ class PensjonReglerController(
 
     @PostMapping(
         value = [
+            "api/beregnAfpPrivat",
+            "api/beregnAlderspensjon2011ForsteUttak",
+            "api/beregnAlderspensjon2016ForsteUttak",
             "api/beregnAlderspensjon2025ForsteUttak",
             "api/beregnOpptjening",
             "api/beregnPensjonsBeholdning",
             "api/beregnPoengtallBatch",
             "api/fastsettTrygdetid",
             "api/hentGrunnbelopListe",
+            "api/hentGyldigSats",
+            "api/regulerPensjonsbeholdning",
+            "api/revurderingAlderspensjon2011",
+            "api/revurderingAlderspensjon2016",
             "api/revurderingAlderspensjon2025",
             "api/simulerAlderspensjon",
+            "api/vilkarsprovAlderspensjon2011",
+            "api/vilkarsprovAlderspensjon2016",
+            "api/vilkarsprovAlderspensjon2025",
             "api/vilkarsprovAlderspensjonOver67"])
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> =
         doPost(request, body)
