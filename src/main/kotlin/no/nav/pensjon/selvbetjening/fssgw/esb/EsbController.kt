@@ -18,7 +18,7 @@ class EsbController(
     serviceClient: ServiceClient,
     callIdGenerator: CallIdGenerator,
     @Value("\${esb.url}") egressEndpoint: String,
-    @Value("\${sts.password}") private val password: String)
+    @Value("\${fg.sts.selfservice.password}") private val password: String)
     : EgressBodyAuthController(ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, password) {
 
     private val logger = LoggerFactory.getLogger(EsbController::class.java)

@@ -11,8 +11,8 @@ import java.util.*
  */
 @Component
 class BasicAuthValidator(
-    @Value("\${sts.username}") private val username: String,
-    @Value("\${sts.password}") private val password: String) {
+    @Value("\${fg.sts.selfservice.username}") private val username: String,
+    @Value("\${fg.sts.selfservice.password}") private val password: String) {
 
     private val log = LoggerFactory.getLogger(javaClass)
 

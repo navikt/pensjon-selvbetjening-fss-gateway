@@ -2,7 +2,9 @@ package no.nav.pensjon.selvbetjening.fssgw.esb.unt
 
 import io.jsonwebtoken.JwtException
 import io.micrometer.core.instrument.Metrics
-import no.nav.pensjon.selvbetjening.fssgw.common.*
+import jakarta.security.auth.message.AuthException
+import jakarta.servlet.http.HttpServletRequest
+import mu.KotlinLogging
 import no.nav.pensjon.selvbetjening.fssgw.common.XmlEscaper.escapeXml
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import no.nav.pensjon.selvbetjening.fssgw.tech.oauth2.Oauth2Exception
@@ -12,18 +14,17 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.util.StringUtils.hasText
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import java.nio.charset.StandardCharsets
-import jakarta.security.auth.message.AuthException
-import jakarta.servlet.http.HttpServletRequest
-import mu.KotlinLogging
 
 @RestController
 @RequestMapping("ws-support")
 class UsernameTokenController(
     private val ingressTokenValidator: JwsValidator,
-    @Value("\${sts.username}") private val serviceUsername: String,
-    @Value("\${sts.password}") private val servicePassword: String) {
+    @Value("\${fg.sts.selfservice.username}") private val serviceUsername: String,
+    @Value("\${fg.sts.selfservice.password}") private val servicePassword: String) {
 
     private val log = KotlinLogging.logger {}
 

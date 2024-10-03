@@ -15,12 +15,12 @@ class StsController(
     serviceClient: ServiceClient,
     callIdGenerator: CallIdGenerator,
     @Value("\${sts.url}") egressEndpoint: String,
-    @Value("\${sts.username}") serviceUsername1: String,
-    @Value("\${sts.password}") servicePassword1: String,
-    @Value("\${sts.username2}") serviceUsername2: String,
-    @Value("\${sts.password2}") servicePassword2: String,
-    @Value("\${sts.username3}") serviceUsername3: String,
-    @Value("\${sts.password3}") servicePassword3: String
+    @Value("\${fg.sts.selfservice.username}") serviceUsername1: String,
+    @Value("\${fg.sts.selfservice.password}") servicePassword1: String,
+    @Value("\${fg.sts.general.username}") serviceUsername2: String,
+    @Value("\${fg.sts.general.password}") servicePassword2: String,
+    @Value("\${fg.sts.tp.username}") serviceUsername3: String,
+    @Value("\${fg.sts.tp.password}") servicePassword3: String
 ) : EgressHeaderBasicAuthController(
     ingressTokenValidator,
     serviceClient,

@@ -14,12 +14,12 @@ import java.util.*
 class StsClient(
     private val expirationChecker: ExpirationChecker,
     @Value("\${sts.url}") private val baseUrl: String,
-    @Value("\${sts.username}") private val serviceUsername1: String,
-    @Value("\${sts.password}") private val servicePassword1: String,
-    @Value("\${sts.username2}") private val serviceUsername2: String,
-    @Value("\${sts.password2}") private val servicePassword2: String,
-    @Value("\${sts.username3}") private val serviceUsername3: String,
-    @Value("\${sts.password3}") private val servicePassword3: String
+    @Value("\${fg.sts.selfservice.username}") private val serviceUsername1: String,
+    @Value("\${fg.sts.selfservice.password}") private val servicePassword1: String,
+    @Value("\${fg.sts.general.username}") private val serviceUsername2: String,
+    @Value("\${fg.sts.general.password}") private val servicePassword2: String,
+    @Value("\${fg.sts.tp.username}") private val serviceUsername3: String,
+    @Value("\${fg.sts.tp.password}") private val servicePassword3: String
 ) : ServiceTokenGetter {
 
     private val webClient: WebClient = WebClient.create()
