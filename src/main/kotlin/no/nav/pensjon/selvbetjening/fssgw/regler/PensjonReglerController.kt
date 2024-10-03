@@ -28,6 +28,7 @@ class PensjonReglerController(
         value = [
             "api/beregnAlderspensjon2025ForsteUttak",
             "api/beregnOpptjening",
+            "api/beregnPensjonsBeholdning",
             "api/beregnPoengtallBatch",
             "api/fastsettTrygdetid",
             "api/hentGrunnbelopListe",
