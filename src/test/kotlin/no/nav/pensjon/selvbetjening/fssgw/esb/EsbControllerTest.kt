@@ -51,7 +51,7 @@ internal class EsbControllerTest {
     }
 
     private fun doTest(path: String, expectedResponseBody: String) {
-        `when`(serviceClient.doPost(anyString(), anyMap(), anyString())).thenReturn(expectedResponseBody)
+        `when`(serviceClient.doPost(anyString(), anyMap(), anyString(), anyBoolean())).thenReturn(expectedResponseBody)
         `when`(callIdGenerator.newCallId()).thenReturn("call ID 1")
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
         val expectedMediaType = MediaType(MediaType.TEXT_XML, StandardCharsets.UTF_8)

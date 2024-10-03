@@ -18,6 +18,15 @@ object WebClientPreparer {
         if (requiresProxy) proxyAwareWebClient(proxyUri)
         else WebClient.create()
 
+    fun externalWebClient(): WebClient = WebClient.builder()
+        .clientConnector(
+            ReactorClientHttpConnector(
+                HttpClient
+                    .create()
+                    .proxyWithSystemProperties()
+            )
+        ).build()
+
     fun largeBufferWebClient(): WebClient {
         val httpClient = HttpClient.create()
 

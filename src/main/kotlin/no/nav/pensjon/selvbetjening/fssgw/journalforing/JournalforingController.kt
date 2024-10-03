@@ -26,7 +26,7 @@ class JournalforingController(
 ) {
     @PostMapping("v1/journalpost")
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> =
-        super.doPost(request, body, serviceUserId = 1)
+        doPost(request, body)
 
     override fun consumerTokenRequired(): Boolean = false
 }

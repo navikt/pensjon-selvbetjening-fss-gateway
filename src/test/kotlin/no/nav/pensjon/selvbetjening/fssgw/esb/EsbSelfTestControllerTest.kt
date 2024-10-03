@@ -5,8 +5,7 @@ import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.anyMap
-import org.mockito.ArgumentMatchers.anyString
+import org.mockito.ArgumentMatchers.*
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
@@ -41,7 +40,7 @@ internal class EsbSelfTestControllerTest {
 
     @Test
     fun `ping request results in ping response XML`() {
-        `when`(serviceClient.doPost(anyString(), anyMap(), anyString())).thenReturn(EsbXml.pingResponseBody)
+        `when`(serviceClient.doPost(anyString(), anyMap(), anyString(), anyBoolean())).thenReturn(EsbXml.pingResponseBody)
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
         val expectedMediaType = MediaType(MediaType.TEXT_XML, StandardCharsets.UTF_8)
 

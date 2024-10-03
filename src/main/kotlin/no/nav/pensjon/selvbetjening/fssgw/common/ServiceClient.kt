@@ -15,6 +15,7 @@ class ServiceClient {
     // Use large buffer, since JournalWSEXP calls sometimes exceed 10 MB
     // (which is more than the default 262 KB)
     private val webClient: WebClient = WebClientPreparer.largeBufferWebClient()
+    private val externalWebClient: WebClient = WebClientPreparer.externalWebClient()
 
     fun doGet(uri: String, headers: Map<String, String>): String {
         if (log.isDebugEnabled) {
@@ -54,13 +55,14 @@ class ServiceClient {
         }
     }
 
-    fun doPost(uri: String, headers: Map<String, String>, body: String): String {
+    fun doPost(uri: String, headers: Map<String, String>, body: String, externalCall: Boolean = false): String {
         if (log.isDebugEnabled) {
             log.debug { "POST to URI: '$uri'" }
         }
+        val client = if (externalCall) externalWebClient else webClient
 
         try {
-            return webClient
+            return client
                 .post()
                 .uri(uri)
                 .headers { copyHeaders(headers, it) }

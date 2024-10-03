@@ -30,5 +30,5 @@ class PepGatewayController(
             "privat.pensjonsrettighetstjeneste/privatPensjonTjenesteV2_0"
         ])
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> =
-        super.doPost(request, body, serviceUserId = 1)
+        doPost(request, body)
 }

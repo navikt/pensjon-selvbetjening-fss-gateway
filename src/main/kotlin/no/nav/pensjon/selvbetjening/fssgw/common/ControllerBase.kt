@@ -70,7 +70,7 @@ abstract class ControllerBase(
         }
     }
 
-    fun doPost(request: HttpServletRequest, body: String, serviceUserId: Int = 1): ResponseEntity<String> {
+    fun doPost(request: HttpServletRequest, body: String, serviceUserId: Int = 1, externalCall: Boolean = false): ResponseEntity<String> {
         val responseContentType: HttpHeaders = getResponseContentType(request)
 
         return try {
@@ -78,7 +78,7 @@ abstract class ControllerBase(
             val headersToRelay = getEgressHeaders(request, serviceUserId)
             val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
             val url = "$egressEndpoint${request.requestURI}$queryPart"
-            val responseBody = serviceClient.doPost(url, headersToRelay, provideBodyAuth(body))
+            val responseBody = serviceClient.doPost(url, headersToRelay, provideBodyAuth(body), externalCall)
             metric("POST ${metricDetail(request)}", authorizedParty)
             ResponseEntity(responseBody, responseContentType, HttpStatus.OK)
         } catch (e: AuthException) {

@@ -37,7 +37,7 @@ class StsController(
 
     @PostMapping("token/exchange")
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest) =
-        super.doPost(request, body,
+        doPost(request, body,
             serviceUserId = request.getHeader("Service-User-Id")?.toIntOrNull() ?: DEFAULT_SERVICE_USER_ID
         )
 

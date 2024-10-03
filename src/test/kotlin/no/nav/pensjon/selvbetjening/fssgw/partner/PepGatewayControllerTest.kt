@@ -37,7 +37,7 @@ class PepGatewayControllerTest {
 
     @Test
     fun `when authenticated request then response is OK`() {
-        `when`(serviceClient.doPost(anyString(), anyMap(), anyString())).thenReturn(RESPONSE_BODY)
+        `when`(serviceClient.doPost(anyString(), anyMap(), anyString(), anyBoolean())).thenReturn(RESPONSE_BODY)
         `when`(callIdGenerator.newCallId()).thenReturn("call ID 1")
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
         val expectedMediaType = MediaType(MediaType.TEXT_XML, StandardCharsets.UTF_8)
