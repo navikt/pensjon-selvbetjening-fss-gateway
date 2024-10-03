@@ -28,7 +28,7 @@ object WebClientPreparer {
         ).build()
 
     fun largeBufferWebClient(): WebClient {
-        val httpClient = HttpClient.create().proxyWithSystemProperties()
+        val httpClient = HttpClient.create()
 
         val strategies = ExchangeStrategies.builder()
             .codecs { it.defaultCodecs().maxInMemorySize(MAX_IN_MEMORY_SIZE) }
