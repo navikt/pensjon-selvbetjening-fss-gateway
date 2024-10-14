@@ -35,8 +35,6 @@ spec:
   env:
     - name: ESB_URL
       value: https://tjenestebuss.adeo.no
-    - name: INNTEKT_URL
-      value: https://app.adeo.no
     - name: JOURNALFORING_URL
       value: https://dokarkiv.nais.adeo.no
     - name: NORG2_URL
