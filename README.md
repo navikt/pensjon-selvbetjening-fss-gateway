@@ -7,7 +7,6 @@ Støttede tjenester:
 - ESB (Enterprise Service Bus, tjenestebuss)
 - Dok-arkiv (JOARK)
 - Gandalf STS
-- Inntektskomponenten
 - Norsk Pensjon (via partner-gateway)
 - PEN (Pensjonsfaglig kjerne)
 - POPP (Pensjonsfaglig opptjeningsregister)
