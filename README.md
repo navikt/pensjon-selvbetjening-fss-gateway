@@ -29,8 +29,8 @@ Se [Swagger/OpenAPI-dokumentasjon](https://pensjon-selvbetjening-fss-gateway.dev
 
 ## Øvrig dokumentasjon
 
-NAV-intern dokumentasjon (Confluence): [FSS-gateway-app](https://confluence.adeo.no/display/PEN/FSS-gateway-app)
+Nav-intern dokumentasjon (Confluence): [FSS-gateway-app](https://confluence.adeo.no/display/PEN/FSS-gateway-app)
 
 ## Henvendelser
 
-NAV-interne henvendelser kan sendes via Slack i kanalen [#pensjonskalkulator](https://nav-it.slack.com/archives/C04M46SPSRL).
+Nav-interne henvendelser kan sendes via Slack i kanalen [#pensjonskalkulator](https://nav-it.slack.com/archives/C04M46SPSRL).

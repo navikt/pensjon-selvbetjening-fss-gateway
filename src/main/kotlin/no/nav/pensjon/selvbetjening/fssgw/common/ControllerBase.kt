@@ -170,7 +170,7 @@ abstract class ControllerBase(
             SERVICE_USER_ID_HEADER_NAME.lowercase(locale)
         )
 
-        // NB: No consensus in NAV regarding call ID header name,
+        // NB: No consensus in Nav regarding call ID header name,
         // ref. https://github.com/navikt/k9-formidling/blob/master/app/src/main/kotlin/no/nav/k9/formidling/app/logging/LoggingHjelper.kt
         val NAV_CALL_ID_HEADER_NAMES =
             setOf(
