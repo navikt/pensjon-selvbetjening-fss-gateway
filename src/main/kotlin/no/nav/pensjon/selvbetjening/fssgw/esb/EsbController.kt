@@ -26,10 +26,8 @@ class EsbController(
     @PostMapping(
         value = [
             "nav-cons-pen-pselv-brukerprofilWeb/sca/PSELVBrukerprofilWSEXP", // sca = Service Component Architecture
-            "nav-cons-pen-pselv-tjenestepensjonWeb/sca/PSELVTjenestepensjonWSEXP",
             "nav-cons-pen-pselv-utbetalingWeb/sca/PSELVUtbetalingWSEXP",
             "nav-tjeneste-behandleTrekk_v1Web/sca/BehandleTrekkWSEXP",
-            "nav-tjeneste-institusjonsopphold_v1Web/sca/InstitusjonsoppholdWSEXP",
             "nav-tjeneste-journal_v2Web/sca/JournalWSEXP",
             "nav-tjeneste-journalbehandling_v1Web/sca/JournalbehandlingWSEXP",
             "nav-tjeneste-trekk_v1Web/sca/TrekkWSEXP",
