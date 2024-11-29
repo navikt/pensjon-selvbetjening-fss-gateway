@@ -13,9 +13,9 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
@@ -33,16 +33,16 @@ internal class PenControllerTest {
     @Mock
     lateinit var claims: Claims
 
-    @MockBean
+    @MockitoBean
     lateinit var ingressTokenValidator: JwsValidator
 
-    @MockBean
+    @MockitoBean
     lateinit var egressTokenGetter: ServiceTokenGetter
 
-    @MockBean
+    @MockitoBean
     lateinit var serviceClient: ServiceClient
 
-    @MockBean
+    @MockitoBean
     lateinit var callIdGenerator: CallIdGenerator
 
     @Test
