@@ -35,8 +35,6 @@ spec:
   env:
     - name: ESB_URL
       value: https://tjenestebuss-q2.adeo.no
-    - name: JOURNALFORING_URL
-      value: https://dokarkiv-q2.dev.intern.nav.no
     - name: NORG2_URL
       value: https://norg2.nais.preprod.local
     - name: OPPGAVE_URL

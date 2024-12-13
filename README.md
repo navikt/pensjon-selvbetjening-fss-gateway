@@ -5,10 +5,11 @@ Gateway-/proxy-applikasjon for at pensjonsrelaterte applikasjoner i allmenn sky 
 Støttede tjenester:
 
 - ESB (Enterprise Service Bus, tjenestebuss)
-- Dok-arkiv (JOARK)
+- JOARK
 - Gandalf STS
 - Norsk Pensjon (via partner-gateway)
 - PEN (Pensjonsfaglig kjerne)
+- Pensjon-regler
 - POPP (Pensjonsfaglig opptjeningsregister)
 - Sporingslogging for pensjon
 - Tjenestepensjonsordninger (via partner-gateway)
