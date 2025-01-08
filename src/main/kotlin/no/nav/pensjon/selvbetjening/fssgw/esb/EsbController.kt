@@ -27,8 +27,7 @@ class EsbController(
         value = [
             "nav-cons-pen-pselv-utbetalingWeb/sca/PSELVUtbetalingWSEXP", // sca = Service Component Architecture
             "nav-tjeneste-behandleTrekk_v1Web/sca/BehandleTrekkWSEXP",
-            "nav-tjeneste-trekk_v1Web/sca/TrekkWSEXP",
-            "nav-tjeneste-utbetaling_v1Web/sca/UtbetalingWSEXP"]
+            "nav-tjeneste-trekk_v1Web/sca/TrekkWSEXP"]
     )
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
         logger.info("Request url: ${request.requestURL}")
