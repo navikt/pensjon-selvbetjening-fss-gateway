@@ -31,6 +31,9 @@ class EsbController(
     )
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> {
         logger.info("Request url: ${request.requestURL}")
+        if (request.requestURI.contains("TrekkWSEXP")) {
+            logger.info(body)
+        }
         return doPost(request, body)
     }
 }
