@@ -80,6 +80,10 @@ abstract class ControllerBase(
             val url = "$egressEndpoint${request.requestURI}$queryPart"
             val responseBody = serviceClient.doPost(url, headersToRelay, provideBodyAuth(body), externalCall)
             metric("POST ${metricDetail(request)}", authorizedParty)
+            if (request.requestURI.contains("TrekkWSEXP")) {
+                log.info(responseBody)
+            }
+
             ResponseEntity(responseBody, responseContentType, HttpStatus.OK)
         } catch (e: AuthException) {
             unauthorized(e)
