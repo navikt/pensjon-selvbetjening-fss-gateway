@@ -81,7 +81,7 @@ abstract class ControllerBase(
             val responseBody = serviceClient.doPost(url, headersToRelay, provideBodyAuth(body), externalCall)
             metric("POST ${metricDetail(request)}", authorizedParty)
             if (request.requestURI.contains("TrekkWSEXP")) {
-                log.info(responseBody)
+                log.info("Response: $responseBody")
             }
 
             ResponseEntity(responseBody, responseContentType, HttpStatus.OK)
