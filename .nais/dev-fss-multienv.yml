@@ -83,10 +83,7 @@ spec:
   accessPolicy:
     inbound:
       rules:
-        - application: pensjonskalkulator-backend
-          namespace: pensjonskalkulator
-          cluster: dev-gcp
-        - application: pensjonssimulator
+        - application: pensjonssimulator-q1
           namespace: pensjonskalkulator
           cluster: dev-gcp
         - application: pensjon-selvbetjening-opptjening-backend
