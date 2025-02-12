@@ -17,7 +17,7 @@ spec:
       cpu: 5m
       memory: 384Mi
   ingresses:
-    - https://pensjon-selvbetjening-fss-gateway.dev.intern.nav.no
+    - https://pensjon-selvbetjening-fss-gateway.intern.dev.nav.no
     - https://pensjon-selvbetjening-fss-gateway.dev-fss-pub.nais.io
   port: 8080
   liveness:
@@ -39,8 +39,6 @@ spec:
       value: https://norg2.nais.preprod.local
     - name: OPPGAVE_URL
       value: https://oppgave-q2.nais.preprod.local
-    - name: PARALLELLESANNHETER_URL
-      value: https://pensjon-parallelle-sannheter.dev.intern.nav.no
     - name: PEN_URL
       value: https://pensjon-pen-q2.dev.adeo.no
     - name: PENSJON_FULLMAKT_URL
