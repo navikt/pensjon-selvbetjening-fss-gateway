@@ -1,9 +1,5 @@
-FROM eclipse-temurin:17-jre AS builder
+FROM ghcr.io/navikt/baseimages/temurin:17-appdynamics
 COPY init.sh /init-scripts/init.sh
 COPY target/selvbetjening-fss-gateway.jar /app/app.jar
-
-FROM eclipse-temurin:17-jre-alpine-3.21
-COPY --from=builder /app/app.jar /app/
-COPY --from=builder /init-scripts/init.sh /init-scripts/
 
 CMD ./init-scripts/init.sh
