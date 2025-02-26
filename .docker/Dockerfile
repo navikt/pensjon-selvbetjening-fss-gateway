@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:17-jre
 ENV TZ="Europe/Oslo"
 COPY init.sh /init-scripts/init.sh
 COPY target/selvbetjening-fss-gateway.jar /app/app.jar
