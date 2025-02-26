@@ -41,7 +41,7 @@ internal class UsernameTokenControllerTest {
         private const val RESPONSE_BODY =
             """<wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" soapenv:mustUnderstand="1">
                 <wsse:UsernameToken>
-                    <wsse:Username>srvpselv</wsse:Username>
+                    <wsse:Username>srv*****</wsse:Username>
                     <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">&amp;secret</wsse:Password>
                 </wsse:UsernameToken>
             </wsse:Security>"""
