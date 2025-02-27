@@ -5,6 +5,4 @@ COPY target/selvbetjening-fss-gateway.jar /app/app.jar
 
 RUN chmod +x /init-scripts/init.sh
 
-#CMD ["./init-scripts/init.sh"]
-#ENTRYPOINT ["java", "-jar", "/app/app.jar"]
 ENTRYPOINT ["sh", "-c", "./init-scripts/init.sh && exec java -jar /app/app.jar"]

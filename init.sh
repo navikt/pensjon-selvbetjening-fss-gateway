@@ -12,4 +12,7 @@ SERVICEUSER3_USERNAME=$(cat /secrets/serviceuser3/username) || true
 export SERVICEUSER3_USERNAME
 SERVICEUSER3_PASSWORD=$(cat /secrets/serviceuser3/password) || true
 export SERVICEUSER3_PASSWORD
+echo $SERVICEUSER_USERNAME
+echo $SERVICEUSER2_USERNAME
+echo $SERVICEUSER3_USERNAME
 echo "Exiting init.sh"
