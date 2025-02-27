@@ -13,6 +13,5 @@ export SERVICEUSER3_USERNAME
 SERVICEUSER3_PASSWORD=$(cat /secrets/serviceuser3/password) || true
 export SERVICEUSER3_PASSWORD
 echo $SERVICEUSER_USERNAME
-echo $SERVICEUSER2_USERNAME
-echo $SERVICEUSER3_USERNAME
+java -jar /app/app.jar
 echo "Exiting init.sh"
