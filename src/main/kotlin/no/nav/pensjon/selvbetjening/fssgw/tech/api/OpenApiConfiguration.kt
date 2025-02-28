@@ -20,21 +20,13 @@ class OpenApiConfiguration {
                 Info()
                     .title("Pensjon FSS gateway API")
                     .description("Gateway til Fagsystemsonen for pensjonsapplikasjoner")
-                    .version("v1.0.0")
+                    .version("v1.1.0")
             )
             .externalDocs(
                 ExternalDocumentation()
                     .description("Confluence-dokumentasjon for Pensjon FSS gateway")
                     .url("https://confluence.adeo.no/display/PEN/FSS-gateway-app")
             )
-    }
-
-    @Bean
-    fun penGroup(): GroupedOpenApi {
-        return GroupedOpenApi.builder()
-            .group("PEN")
-            .pathsToMatch("/pen/**")
-            .build()
     }
 
     @Bean
