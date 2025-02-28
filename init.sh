@@ -1,3 +1,5 @@
+#!/bin/sh
+echo "Starting init.sh"
 SERVICEUSER_USERNAME=$(cat /secrets/serviceuser/username) || true
 export SERVICEUSER_USERNAME
 SERVICEUSER_PASSWORD=$(cat /secrets/serviceuser/password) || true
@@ -10,3 +12,6 @@ SERVICEUSER3_USERNAME=$(cat /secrets/serviceuser3/username) || true
 export SERVICEUSER3_USERNAME
 SERVICEUSER3_PASSWORD=$(cat /secrets/serviceuser3/password) || true
 export SERVICEUSER3_PASSWORD
+echo $SERVICEUSER_USERNAME
+java -jar /app/app.jar
+echo "Exiting init.sh"
