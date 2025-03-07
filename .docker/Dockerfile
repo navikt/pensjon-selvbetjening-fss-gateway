@@ -1,6 +1,5 @@
-FROM ghcr.io/navikt/baseimages/temurin:17-appdynamics
+FROM gcr.io/distroless/java17-debian12
 ENV TZ="Europe/Oslo"
-COPY init.sh /init-scripts/init.sh
 COPY target/selvbetjening-fss-gateway.jar /app/app.jar
 
-CMD ./init-scripts/init.sh
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
