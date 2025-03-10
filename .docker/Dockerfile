@@ -1,5 +1,4 @@
-#FROM gcr.io/distroless/java17-debian12
-FROM ghcr.io/navikt/baseimages/temurin:17-appdynamics
+FROM gcr.io/distroless/java17-debian12
 ENV TZ="Europe/Oslo"
 COPY target/selvbetjening-fss-gateway.jar /app/app.jar
 

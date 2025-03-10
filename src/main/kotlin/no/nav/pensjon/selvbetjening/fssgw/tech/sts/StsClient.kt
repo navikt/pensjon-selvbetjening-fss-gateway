@@ -86,11 +86,9 @@ class StsClient(
 
     private fun authHeader(serviceUserId: Int): String = "$AUTH_TYPE ${encodedCredentials(serviceUserId)}"
 
-    private fun encodedCredentials(serviceUserId: Int): String {
-        log.debug("---Servicebruker---: ${serviceUserCredentials[serviceUserId]}")          //FIXME:Remove
-        return serviceUserCredentials[serviceUserId]?.let(::base64Encode)
+    private fun encodedCredentials(serviceUserId: Int): String =
+        serviceUserCredentials[serviceUserId]?.let(::base64Encode)
             ?: throw IllegalArgumentException("Invalid serviceUserId: $serviceUserId")
-    }
 
     private companion object {
         private const val TOKEN_PATH = "rest/v1/sts/token"
