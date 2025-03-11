@@ -63,6 +63,10 @@ spec:
       value: debug
     - name: STDOUT_LOG_OUTPUT
       value: JSON
+  envFrom:
+    - secret: pensjon-selvbetjening-fss-gateway-srvpselv
+    - secret: pensjon-selvbetjening-fss-gateway-srvpensjon
+    - secret: pensjon-selvbetjening-fss-gateway-srvtjenestepensjon-simulering
   azure:
     application:
       enabled: true
@@ -106,12 +110,3 @@ spec:
         - host: pep-gw-q1.oera-q.local
           ports:
             - port: 9443
-  vault:
-    enabled: true
-    paths:
-      - kvPath: /serviceuser/data/dev/srvpselv
-        mountPath: /secrets/serviceuser
-      - kvPath: /serviceuser/data/dev/srvpensjon
-        mountPath: /secrets/serviceuser2
-      - kvPath: /serviceuser/data/dev/srvtjenestepensjon-simulering
-        mountPath: /secrets/serviceuser3
