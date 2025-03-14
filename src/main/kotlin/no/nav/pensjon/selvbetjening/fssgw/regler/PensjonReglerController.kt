@@ -33,6 +33,7 @@ class PensjonReglerController(
             "api/beregnOpptjening",
             "api/beregnPensjonsBeholdning",
             "api/beregnPoengtallBatch",
+            "api/delingstall",
             "api/fastsettTrygdetid",
             "api/hentGrunnbelopListe",
             "api/hentGyldigSats",
