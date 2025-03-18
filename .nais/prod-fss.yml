@@ -39,14 +39,10 @@ spec:
       value: https://app.adeo.no
     - name: OPPGAVE_URL
       value: https://oppgave.nais.adeo.no
-    - name: PENSJONREGLER_URL
-      value: https://pensjon-regler.intern.nav.no
     - name: PEP_GW_URL
       value: https://pep-gw.oera.no:9443
     - name: POPP_URL
       value: https://pensjon-popp.nais.adeo.no
-    - name: PREG_URL
-      value: https://pensjon-preg.nais.adeo.no
     - name: SPK_URL
       value: https://api.prod.spk.no
     - name: SPORINGSLOGG_URL

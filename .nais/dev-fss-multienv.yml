@@ -39,14 +39,10 @@ spec:
       value: https://norg2.nais.preprod.local
     - name: OPPGAVE_URL
       value: https://oppgave-{{ environment }}.nais.preprod.local
-    - name: PENSJONREGLER_URL
-      value: https://pensjon-regler-{{ environment }}.dev.adeo.no
     - name: PEP_GW_URL
       value: https://pep-gw-q1.oera-q.local:9443
     - name: POPP_URL
       value: https://pensjon-popp-{{ environment }}.dev.intern.nav.no
-    - name: PREG_URL
-      value: https://pensjon-preg-{{ environment }}.nais.preprod.local
     - name: SPK_URL
       value: https://api.preprod.spk.no
     - name: SPORINGSLOGG_URL
