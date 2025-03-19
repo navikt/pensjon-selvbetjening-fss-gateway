@@ -66,7 +66,7 @@ internal class SporingsloggControllerTest {
     }
 
     private companion object {
-        const val SPORINGSLOGG_PATH = "/sporingslogg"
+        const val SPORINGSLOGG_PATH = "/sporingslogg/api/post"
 
         const val REQUEST_BODY = """{
     "person": "12906498357",

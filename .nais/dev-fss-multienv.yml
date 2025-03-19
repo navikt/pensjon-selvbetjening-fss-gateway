@@ -37,16 +37,16 @@ spec:
       value: https://tjenestebuss-{{ environment }}.adeo.no
     - name: NORG2_URL
       value: https://norg2.nais.preprod.local
-    - name: OPPGAVE_URL
-      value: https://oppgave-{{ environment }}.nais.preprod.local
     - name: PEP_GW_URL
       value: https://pep-gw-q1.oera-q.local:9443
     - name: POPP_URL
       value: https://pensjon-popp-{{ environment }}.dev.intern.nav.no
     - name: SPK_URL
       value: https://api.preprod.spk.no
-    - name: SPORINGSLOGG_URL
+    - name: SPORINGSLOGG_INTEGRASJON_URL
       value: https://pensjon-sporingslogg-integrasjon.intern.dev.nav.no
+    - name: SPORINGSLOGG_URL
+      value: https://sporingslogg-q2.dev.intern.nav.no # only in q2
     - name: STS_URL
       value: http://security-token-service.aura.svc.nais.local
     - name: TP_URL

@@ -37,16 +37,16 @@ spec:
       value: https://tjenestebuss.adeo.no
     - name: NORG2_URL
       value: https://app.adeo.no
-    - name: OPPGAVE_URL
-      value: https://oppgave.nais.adeo.no
     - name: PEP_GW_URL
       value: https://pep-gw.oera.no:9443
     - name: POPP_URL
       value: https://pensjon-popp.nais.adeo.no
     - name: SPK_URL
       value: https://api.prod.spk.no
-    - name: SPORINGSLOGG_URL
+    - name: SPORINGSLOGG_INTEGRASJON_URL
       value: https://pensjon-sporingslogg-integrasjon.intern.nav.no
+    - name: SPORINGSLOGG_URL
+      value: https://sporingslogg.intern.nav.no
     - name: STS_URL
       value: http://security-token-service.aura.svc.nais.local
     - name: TP_URL

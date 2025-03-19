@@ -12,16 +12,16 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class SporingsloggController(
+class SporingsloggIntegrasjonController(
     ingressTokenValidator: JwsValidator,
     egressTokenGetter: ServiceTokenGetter,
     serviceClient: ServiceClient,
     callIdGenerator: CallIdGenerator,
-    @Value("\${sporingslogg.url}") egressEndpoint: String
+    @Value("\${sporingslogg.integrasjon.url}") egressEndpoint: String
 ) : EgressHeaderAuthController(
     ingressTokenValidator, serviceClient, callIdGenerator, egressEndpoint, egressTokenGetter
 ) {
-    @PostMapping("sporingslogg/api/post")
+    @PostMapping("sporingslogg")
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest) =
         doPost(request, body, serviceUserId = 2)
 
