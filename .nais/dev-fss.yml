@@ -35,16 +35,12 @@ spec:
   env:
     - name: ESB_URL
       value: https://tjenestebuss-q2.adeo.no
-    - name: NORG2_URL
-      value: https://norg2.nais.preprod.local
     - name: PEP_GW_URL
       value: https://pep-gw-q1.oera-q.local:9443
     - name: POPP_URL
       value: https://pensjon-popp-q2.dev.adeo.no
     - name: SPK_URL
       value: https://api.preprod.spk.no
-    - name: SPORINGSLOGG_INTEGRASJON_URL
-      value: https://pensjon-sporingslogg-integrasjon.intern.dev.nav.no
     - name: SPORINGSLOGG_URL
       value: https://sporingslogg-q2.dev.intern.nav.no
     - name: STS_URL
