@@ -33,8 +33,6 @@ spec:
     enabled: true
     path: /internal/prometheus
   env:
-    - name: ESB_URL
-      value: https://tjenestebuss.adeo.no
     - name: PEP_GW_URL
       value: https://pep-gw.oera.no:9443
     - name: POPP_URL

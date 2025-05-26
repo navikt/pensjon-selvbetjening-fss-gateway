@@ -4,7 +4,6 @@ Gateway-/proxy-applikasjon for at pensjonsrelaterte applikasjoner i allmenn sky 
 
 Støttede tjenester:
 
-- ESB (Enterprise Service Bus, tjenestebuss)
 - JOARK
 - Gandalf STS
 - Norsk Pensjon (via partner-gateway)
