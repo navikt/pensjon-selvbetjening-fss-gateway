@@ -7,7 +7,6 @@ Støttede tjenester:
 - JOARK
 - Gandalf STS
 - Norsk Pensjon (via partner-gateway)
-- POPP (Pensjonsfaglig opptjeningsregister)
 - Sporingslogging for pensjon
 - Tjenestepensjonsordninger (via partner-gateway)
 - TP (Tjenestepensjon)

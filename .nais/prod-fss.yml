@@ -35,8 +35,6 @@ spec:
   env:
     - name: PEP_GW_URL
       value: https://pep-gw.oera.no:9443
-    - name: POPP_URL
-      value: https://pensjon-popp.nais.adeo.no
     - name: SPK_URL
       value: https://api.prod.spk.no
     - name: SPORINGSLOGG_URL

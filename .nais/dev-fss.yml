@@ -35,8 +35,6 @@ spec:
   env:
     - name: PEP_GW_URL
       value: https://pep-gw-q1.oera-q.local:9443
-    - name: POPP_URL
-      value: https://pensjon-popp-q2.dev.adeo.no
     - name: SPK_URL
       value: https://api.preprod.spk.no
     - name: SPORINGSLOGG_URL
