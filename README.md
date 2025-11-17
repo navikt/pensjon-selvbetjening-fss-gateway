@@ -4,7 +4,6 @@ Gateway-/proxy-applikasjon for at pensjonsrelaterte applikasjoner i allmenn sky 
 
 Støttede tjenester:
 
-- JOARK
 - Gandalf STS
 - Norsk Pensjon (via partner-gateway)
 - Sporingslogging for pensjon
