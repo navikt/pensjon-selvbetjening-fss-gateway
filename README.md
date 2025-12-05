@@ -6,11 +6,10 @@ Støttede tjenester:
 
 - Gandalf STS
 - Norsk Pensjon (via partner-gateway)
-- Sporingslogging for pensjon
 - Tjenestepensjonsordninger (via partner-gateway)
 - TP (Tjenestepensjon)
 
-For å benytte endepunktene kreves *bearer*-token (TokenX, Azure AD On-Behalf-Of, eller Client credentials).
+For å benytte endepunktene kreves *bearer*-token (TokenX, Entra ID On-Behalf-Of, eller Client credentials).
 
 ## API
 

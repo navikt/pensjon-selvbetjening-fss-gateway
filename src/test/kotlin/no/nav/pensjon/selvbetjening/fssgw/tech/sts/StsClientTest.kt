@@ -30,8 +30,6 @@ internal class StsClientTest : WebClientTest() {
             baseUrl(),
             serviceUsername1 = "username1",
             servicePassword1 = "password1",
-            serviceUsername2 = "username2",
-            servicePassword2 = "password2",
             serviceUsername3 = "username3",
             servicePassword3 = "password3")
     }
@@ -53,7 +51,7 @@ internal class StsClientTest : WebClientTest() {
         prepare(response1())
 
         val token: ServiceTokenData = consumer.getServiceUserToken(serviceUserId = 1)
-        // Next line will fail if not cached, since only one response is queued:
+        // The next line will fail if not cached, since only one response is queued:
         val cachedToken: ServiceTokenData = consumer.getServiceUserToken(serviceUserId = 1)
 
         assertEquals("j.w.t", token.accessToken)

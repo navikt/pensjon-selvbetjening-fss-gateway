@@ -37,8 +37,6 @@ spec:
       value: https://pep-gw.oera.no:9443
     - name: SPK_URL
       value: https://api.prod.spk.no
-    - name: SPORINGSLOGG_URL
-      value: https://sporingslogg.intern.nav.no
     - name: STS_URL
       value: http://security-token-service.aura.svc.nais.local
     - name: TP_URL
@@ -49,7 +47,6 @@ spec:
       value: JSON
   envFrom:
     - secret: pensjon-selvbetjening-fss-gateway-srvpselv
-    - secret: pensjon-selvbetjening-fss-gateway-srvpensjon
     - secret: pensjon-selvbetjening-fss-gateway-srvtjenestepensjon-simulering
   azure:
     application:
