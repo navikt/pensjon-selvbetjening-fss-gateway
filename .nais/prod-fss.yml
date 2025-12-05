@@ -43,8 +43,6 @@ spec:
       value: http://security-token-service.aura.svc.nais.local
     - name: TP_URL
       value: https://tp.nais.adeo.no
-    - name: WASAPP_URL
-      value: https://wasapp.adeo.no
     - name: FSSGW_LOGGING_LEVEL
       value: info
     - name: STDOUT_LOG_OUTPUT
