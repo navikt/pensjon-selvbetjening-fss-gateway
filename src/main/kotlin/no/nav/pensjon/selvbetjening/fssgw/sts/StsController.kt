@@ -17,8 +17,6 @@ class StsController(
     @Value("\${sts.url}") egressEndpoint: String,
     @Value("\${fg.sts.selfservice.username}") serviceUsername1: String,
     @Value("\${fg.sts.selfservice.password}") servicePassword1: String,
-    @Value("\${fg.sts.general.username}") serviceUsername2: String,
-    @Value("\${fg.sts.general.password}") servicePassword2: String,
     @Value("\${fg.sts.tp.username}") serviceUsername3: String,
     @Value("\${fg.sts.tp.password}") servicePassword3: String
 ) : EgressHeaderBasicAuthController(
@@ -28,7 +26,6 @@ class StsController(
     egressEndpoint,
     mapOf(
         1 to "$serviceUsername1:$servicePassword1",
-        2 to "$serviceUsername2:$servicePassword2",
         3 to "$serviceUsername3:$servicePassword3"
     )
 ) {

@@ -16,8 +16,6 @@ class StsClient(
     @Value("\${sts.url}") private val baseUrl: String,
     @Value("\${fg.sts.selfservice.username}") private val serviceUsername1: String,
     @Value("\${fg.sts.selfservice.password}") private val servicePassword1: String,
-    @Value("\${fg.sts.general.username}") private val serviceUsername2: String,
-    @Value("\${fg.sts.general.password}") private val servicePassword2: String,
     @Value("\${fg.sts.tp.username}") private val serviceUsername3: String,
     @Value("\${fg.sts.tp.password}") private val servicePassword3: String
 ) : ServiceTokenGetter {
@@ -25,13 +23,11 @@ class StsClient(
     private val webClient: WebClient = WebClient.create()
     private val log = LoggerFactory.getLogger(javaClass)
     private var tokenData1: ServiceTokenData? = null
-    private var tokenData2: ServiceTokenData? = null
     private var tokenData3: ServiceTokenData? = null
 
     private val serviceUserCredentials: Map<Int, String> =
         mapOf(
             1 to "$serviceUsername1:$servicePassword1",
-            2 to "$serviceUsername2:$servicePassword2",
             3 to "$serviceUsername3:$servicePassword3"
         )
 
@@ -39,9 +35,6 @@ class StsClient(
         when (serviceUserId) {
             1 -> if (isCachedTokenValid(tokenData1)) tokenData1!!
             else freshTokenData(serviceUserId).also { tokenData1 = it }
-
-            2 -> if (isCachedTokenValid(tokenData2)) tokenData2!!
-            else freshTokenData(serviceUserId).also { tokenData2 = it }
 
             3 -> if (isCachedTokenValid(tokenData3)) tokenData3!!
             else freshTokenData(serviceUserId).also { tokenData3 = it }
