@@ -28,8 +28,6 @@ internal class StsClientTest : WebClientTest() {
         consumer = StsClient(
             expirationChecker,
             baseUrl(),
-            serviceUsername1 = "username1",
-            servicePassword1 = "password1",
             serviceUsername3 = "username3",
             servicePassword3 = "password3")
     }
@@ -38,7 +36,7 @@ internal class StsClientTest : WebClientTest() {
     fun getServiceUserToken_returns_tokenData_when_ok() {
         prepare(response1())
 
-        val token: ServiceTokenData = consumer.getServiceUserToken(serviceUserId = 1)
+        val token: ServiceTokenData = consumer.getServiceUserToken(serviceUserId = 3)
 
         assertEquals("j.w.t", token.accessToken)
         assertEquals(3600L, token.expiresInSeconds)
@@ -50,9 +48,9 @@ internal class StsClientTest : WebClientTest() {
     fun getServiceUserToken_caches_tokenData() {
         prepare(response1())
 
-        val token: ServiceTokenData = consumer.getServiceUserToken(serviceUserId = 1)
+        val token: ServiceTokenData = consumer.getServiceUserToken(serviceUserId = 3)
         // The next line will fail if not cached, since only one response is queued:
-        val cachedToken: ServiceTokenData = consumer.getServiceUserToken(serviceUserId = 1)
+        val cachedToken: ServiceTokenData = consumer.getServiceUserToken(serviceUserId = 3)
 
         assertEquals("j.w.t", token.accessToken)
         assertEquals("j.w.t", cachedToken.accessToken)
@@ -63,9 +61,9 @@ internal class StsClientTest : WebClientTest() {
         prepare(response1())
         prepare(response2())
 
-        val token1: ServiceTokenData = consumer.getServiceUserToken(serviceUserId = 1)
+        val token1: ServiceTokenData = consumer.getServiceUserToken(serviceUserId = 3)
         expireToken()
-        val token2: ServiceTokenData = consumer.getServiceUserToken(serviceUserId = 1)
+        val token2: ServiceTokenData = consumer.getServiceUserToken(serviceUserId = 3)
 
         assertEquals("j.w.t", token1.accessToken)
         assertEquals("jj.ww.tt", token2.accessToken)

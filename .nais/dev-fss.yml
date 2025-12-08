@@ -46,7 +46,6 @@ spec:
     - name: STDOUT_LOG_OUTPUT
       value: JSON
   envFrom:
-    - secret: pensjon-selvbetjening-fss-gateway-srvpselv
     - secret: pensjon-selvbetjening-fss-gateway-srvtjenestepensjon-simulering
   azure:
     application:

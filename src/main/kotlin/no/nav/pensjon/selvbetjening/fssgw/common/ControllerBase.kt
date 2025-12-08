@@ -157,7 +157,7 @@ abstract class ControllerBase(
         const val CALL_ID_HEADER_NAME_1 = "Nav-Call-Id"
         const val CONSUMER_TOKEN_HEADER_NAME = "Nav-Consumer-Token"
         private const val SERVICE_USER_ID_HEADER_NAME = "Service-User-Id"
-        private const val DEFAULT_SERVICE_USER_ID = 1 // srvpselv
+        private const val DEFAULT_SERVICE_USER_ID = 3 // srvtjenestepensjon
         private val locale = Locale.getDefault()
 
         private val notRelayedHeaders = listOf(

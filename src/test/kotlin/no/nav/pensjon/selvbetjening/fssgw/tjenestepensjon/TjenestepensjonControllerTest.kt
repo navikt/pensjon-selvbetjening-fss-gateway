@@ -47,7 +47,7 @@ class TjenestepensjonControllerTest {
     fun `when OK then haveYtelse request returns data`() {
         val egressToken = serviceTokenData()
         `when`(serviceClient.doGet(anyString(), anyMap())).thenReturn("""{ "value": true}""")
-        `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 1)).thenReturn(egressToken)
+        `when`(egressTokenGetter.getServiceUserToken(serviceUserId = 3)).thenReturn(egressToken)
         `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
         `when`(callIdGenerator.newCallId()).thenReturn(CALL_ID)
 
