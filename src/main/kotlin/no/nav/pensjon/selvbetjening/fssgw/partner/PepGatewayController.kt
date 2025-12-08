@@ -26,9 +26,8 @@ class PepGatewayController(
 ) {
     @PostMapping(
         value = [
-            "kalkulator.pensjonsrettighetstjeneste/v3/kalkulatorPensjonTjeneste",
-            "privat.pensjonsrettighetstjeneste/privatPensjonTjenesteV2_0"
+            "kalkulator.pensjonsrettighetstjeneste/v3/kalkulatorPensjonTjeneste"
         ])
     fun handlePostRequest(@RequestBody body: String, request: HttpServletRequest): ResponseEntity<String> =
-        doPost(request, body)
+        doPost(request, body, serviceUserId = 3)
 }

@@ -15,8 +15,6 @@ class StsController(
     serviceClient: ServiceClient,
     callIdGenerator: CallIdGenerator,
     @Value("\${sts.url}") egressEndpoint: String,
-    @Value("\${fg.sts.selfservice.username}") serviceUsername1: String,
-    @Value("\${fg.sts.selfservice.password}") servicePassword1: String,
     @Value("\${fg.sts.tp.username}") serviceUsername3: String,
     @Value("\${fg.sts.tp.password}") servicePassword3: String
 ) : EgressHeaderBasicAuthController(
@@ -25,7 +23,6 @@ class StsController(
     callIdGenerator,
     egressEndpoint,
     mapOf(
-        1 to "$serviceUsername1:$servicePassword1",
         3 to "$serviceUsername3:$servicePassword3"
     )
 ) {
@@ -39,6 +36,6 @@ class StsController(
         )
 
     private companion object {
-        private const val DEFAULT_SERVICE_USER_ID = 1 // srvpselv
+        private const val DEFAULT_SERVICE_USER_ID = 3 // srvtjenestepensjon
     }
 }
