@@ -19,8 +19,9 @@ Se [Swagger/OpenAPI-dokumentasjon](https://pensjon-selvbetjening-fss-gateway.dev
 
 * [Java 17](https://openjdk.org/projects/jdk/17/)
 * [Kotlin](https://kotlinlang.org/)
-* [Spring Boot](https://spring.io/projects/spring-boot)
+* [Spring Boot 4](https://spring.io/projects/spring-boot)
 * [Maven](https://maven.apache.org/)
+* [Nais](https://nais.io/)
 
 ## Øvrig dokumentasjon
 
@@ -28,4 +29,4 @@ Nav-intern dokumentasjon (Confluence): [FSS-gateway-app](https://confluence.adeo
 
 ## Henvendelser
 
-Nav-interne henvendelser kan sendes via Slack i kanalen [#pensjonskalkulator](https://nav-it.slack.com/archives/C04M46SPSRL).
+Nav-interne henvendelser kan sendes via Slack i kanalen [#team-planlegge-pensjon](https://nav-it.slack.com/archives/C09A5SC5KQF).

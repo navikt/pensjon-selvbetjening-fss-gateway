@@ -13,11 +13,11 @@ import java.util.*
 @Component
 class StsClient(
     private val expirationChecker: ExpirationChecker,
-    @Value("\${sts.url}") private val baseUrl: String,
-    @Value("\${fg.sts.selfservice.username}") private val serviceUsername1: String,
-    @Value("\${fg.sts.selfservice.password}") private val servicePassword1: String,
-    @Value("\${fg.sts.tp.username}") private val serviceUsername3: String,
-    @Value("\${fg.sts.tp.password}") private val servicePassword3: String
+    @param:Value("\${sts.url}") private val baseUrl: String,
+    @param:Value("\${fg.sts.selfservice.username}") private val serviceUsername1: String,
+    @param:Value("\${fg.sts.selfservice.password}") private val servicePassword1: String,
+    @param:Value("\${fg.sts.tp.username}") private val serviceUsername3: String,
+    @param:Value("\${fg.sts.tp.password}") private val servicePassword3: String
 ) : ServiceTokenGetter {
 
     private val webClient: WebClient = WebClient.create()
@@ -46,7 +46,7 @@ class StsClient(
         log.debug("Retrieving new token for service user")
 
         val uri = UriComponentsBuilder
-            .fromHttpUrl("$baseUrl/$TOKEN_PATH")
+            .fromUriString("$baseUrl/$TOKEN_PATH")
             .queryParam(Oauth2ParamNames.GRANT_TYPE, GRANT_TYPE)
             .queryParam(Oauth2ParamNames.SCOPE, SCOPE)
             .toUriString()
