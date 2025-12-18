@@ -32,6 +32,17 @@ spec:
   prometheus:
     enabled: true
     path: /internal/prometheus
+  observability:
+    autoInstrumentation:
+      enabled: true
+      runtime: java
+      destinations:
+        - id: "grafana-lgtm"
+        - id: "elastic-apm"
+    logging:
+      destinations:
+        - id: elastic
+        - id: loki
   env:
     - name: PEP_GW_URL
       value: https://pep-gw-q1.oera-q.local:9443
@@ -67,21 +78,12 @@ spec:
         - application: pensjonssimulator-q1
           namespace: pensjonskalkulator
           cluster: dev-gcp
-        - application: pensjon-selvbetjening-opptjening-backend
-          namespace: pensjonselvbetjening
-          cluster: dev-gcp
         - application: pensjon-selvbetjening-soknad-alder-backend
           namespace: pensjonselvbetjening
           cluster: dev-gcp
         - application: pensjon-selvbetjening-soknad-alder-backend-ekstern
           namespace: pensjonselvbetjening
           cluster: dev-gcp
-        - application: pensjon-pselv-{{ environment }}
-          namespace: teampensjon
-          cluster: dev-gcp
-        - application: pensjon-pselv-q2
-          namespace: teampensjon
-          cluster: dev-fss
     outbound:
       external:
         - host: api.preprod.spk.no
