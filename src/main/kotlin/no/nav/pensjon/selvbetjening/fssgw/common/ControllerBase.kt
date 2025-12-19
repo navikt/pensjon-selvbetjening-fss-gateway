@@ -46,30 +46,6 @@ abstract class ControllerBase(
         }
     }
 
-    fun doOptions(request: HttpServletRequest): ResponseEntity<String> {
-        val responseContentType: HttpHeaders = getResponseContentType(request)
-
-        return try {
-            val authorizedParty = checkIngressAuth(request)
-            val headersToRelay = getEgressHeaders(request, DEFAULT_SERVICE_USER_ID)
-            val queryPart = if (hasText(request.queryString)) "?${request.queryString}" else ""
-            val url = "$egressEndpoint${request.requestURI}$queryPart"
-            val responseBody = serviceClient.doOptions(url, headersToRelay)
-            metric("OPTIONS ${metricDetail(request)}", authorizedParty)
-            ResponseEntity(responseBody, responseContentType, HttpStatus.OK)
-        } catch (e: AuthException) {
-            unauthorized(e)
-        } catch (e: JwtException) {
-            unauthorized(e)
-        } catch (e: Oauth2Exception) {
-            unauthorized(e)
-        } catch (e: EgressException) {
-            handleError(request, "OPTIONS", e, responseContentType)
-        } finally {
-            MDC.clear()
-        }
-    }
-
     fun doPost(request: HttpServletRequest, body: String, serviceUserId: Int = 1, externalCall: Boolean = false): ResponseEntity<String> {
         val responseContentType: HttpHeaders = getResponseContentType(request)
 
@@ -143,7 +119,7 @@ abstract class ControllerBase(
     ): ResponseEntity<String> {
         metric("$method ${metricDetail(request)}", "error")
         log.error(e) { "Failed to $method $egressEndpoint${request.requestURI}: ${e.message} (${e.statusCode})" }
-        return ResponseEntity(e.message, responseContentType, statusCode(e))
+        return ResponseEntity(e.message!!, responseContentType, statusCode(e))
     }
 
     private fun resolveCallId(headers: TreeMap<String, String>): String =
