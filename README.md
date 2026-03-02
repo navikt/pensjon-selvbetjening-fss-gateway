@@ -17,7 +17,7 @@ Se [Swagger/OpenAPI-dokumentasjon](https://pensjon-selvbetjening-fss-gateway.dev
 
 ## Teknologi
 
-* [Java 17](https://openjdk.org/projects/jdk/17/)
+* [Java 21](https://openjdk.org/projects/jdk/21/)
 * [Kotlin](https://kotlinlang.org/)
 * [Spring Boot 4](https://spring.io/projects/spring-boot)
 * [Maven](https://maven.apache.org/)
