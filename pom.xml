@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.2</version>
+        <version>4.0.3</version>
         <relativePath/> <!-- lookup parent from the repository -->
     </parent>
     <groupId>no.nav.pensjon</groupId>
@@ -19,9 +19,9 @@
         <maven.compiler.target>21</maven.compiler.target>
         <kotlin.code.style>official</kotlin.code.style>
         <kotlin.compiler.jvmTarget>21</kotlin.compiler.jvmTarget>
-        <kotlin.version>2.2.21</kotlin.version>
+        <kotlin.version>2.3.10</kotlin.version>
         <jjwt-version>0.11.5</jjwt-version>
-        <logback.version>1.5.26</logback.version>
+        <logback.version>1.5.32</logback.version>
         <okhttp3.version>5.3.2</okhttp3.version>
     </properties>
     <dependencies>
@@ -61,7 +61,7 @@
         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>oauth2-oidc-sdk</artifactId>
-            <version>11.31.1</version>
+            <version>11.33</version>
         </dependency>
         <dependency>
             <groupId>io.github.microutils</groupId>
@@ -104,7 +104,7 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>3.0.1</version>
+            <version>3.0.2</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -131,13 +131,13 @@
         <dependency>
             <groupId>io.kotest</groupId>
             <artifactId>kotest-runner-junit5</artifactId>
-            <version>6.1.2</version>
+            <version>6.1.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.kotest</groupId>
             <artifactId>kotest-extensions-spring</artifactId>
-            <version>6.1.2</version>
+            <version>6.1.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
