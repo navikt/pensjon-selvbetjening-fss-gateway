@@ -10,15 +10,15 @@
     </parent>
     <groupId>no.nav.pensjon</groupId>
     <artifactId>selvbetjening-fss-gateway</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
     <name>pensjon-selvbetjening-fss-gateway</name>
     <description>Gateway-/proxy-app for tilgang til systemer i fagsystemsonen</description>
     <properties>
-        <java.version>21</java.version>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <java.version>25</java.version>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
         <kotlin.code.style>official</kotlin.code.style>
-        <kotlin.compiler.jvmTarget>21</kotlin.compiler.jvmTarget>
+        <kotlin.compiler.jvmTarget>25</kotlin.compiler.jvmTarget>
         <kotlin.version>2.3.10</kotlin.version>
         <jjwt-version>0.11.5</jjwt-version>
         <logback.version>1.5.32</logback.version>

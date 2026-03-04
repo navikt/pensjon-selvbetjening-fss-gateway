@@ -20,7 +20,7 @@ class OpenApiConfiguration {
                 Info()
                     .title("Pensjon FSS gateway API")
                     .description("Gateway til Fagsystemsonen for pensjonsapplikasjoner")
-                    .version("v1.1.0")
+                    .version("v1.2.0")
             )
             .externalDocs(
                 ExternalDocumentation()
