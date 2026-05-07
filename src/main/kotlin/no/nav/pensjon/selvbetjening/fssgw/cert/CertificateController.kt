@@ -63,7 +63,7 @@ class CertificateController(private val ingressTokenValidator: JwsValidator) {
     }
 
     private fun credentialsResponseBody() =
-        File("$PATH/credentials.json.2025").readText()
+        File("$PATH/credentials_2024-03.json").readText()
 
     private fun p12ResponseBody() =
         File("$PATH/1956916119612047183131283-2024-03-19.p12.b64").readText()
