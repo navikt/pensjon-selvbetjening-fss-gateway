@@ -1,85 +1,86 @@
 package no.nav.pensjon.selvbetjening.fssgw.partner
 
-import io.jsonwebtoken.Claims
+import com.ninjasquad.springmockk.MockkBean
+import io.kotest.core.spec.style.FunSpec
+import io.mockk.called
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import no.nav.pensjon.selvbetjening.fssgw.common.CallIdGenerator
 import no.nav.pensjon.selvbetjening.fssgw.common.ServiceClient
 import no.nav.pensjon.selvbetjening.fssgw.tech.jwt.JwsValidator
-import org.junit.jupiter.api.Test
-import org.mockito.Mock
-import org.mockito.Mockito.*
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
-import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.nio.charset.StandardCharsets
 
 @WebMvcTest(PepGatewayController::class)
-class PepGatewayControllerTest {
+class PepGatewayControllerTest : FunSpec() {
 
     @Autowired
     lateinit var mvc: MockMvc
 
-    @Mock
-    lateinit var claims: Claims
-
-    @MockitoBean
+    @MockkBean
     lateinit var ingressTokenValidator: JwsValidator
 
-    @MockitoBean
+    @MockkBean
     lateinit var serviceClient: ServiceClient
 
-    @MockitoBean
+    @MockkBean
     lateinit var callIdGenerator: CallIdGenerator
 
-    @Test
-    fun `when authenticated request then response is OK`() {
-        `when`(serviceClient.doPost(anyString(), anyMap(), anyString(), anyBoolean())).thenReturn(RESPONSE_BODY)
-        `when`(callIdGenerator.newCallId()).thenReturn("call ID 1")
-        `when`(ingressTokenValidator.validate(anyString())).thenReturn(claims)
-        val expectedMediaType = MediaType(MediaType.TEXT_XML, StandardCharsets.UTF_8)
+    init {
+        beforeSpec {
+            every { callIdGenerator.newCallId() } returns "call ID 1"
+        }
 
-        mvc.perform(
-            post(URL)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_XML_VALUE)
-                .content(REQUEST_BODY))
-            .andExpect(status().isOk)
-            .andExpect(header().string(HttpHeaders.CONTENT_TYPE, expectedMediaType.toString()))
-            .andExpect(content().xml(RESPONSE_BODY))
+        test("when authenticated request then response is OK") {
+            every { ingressTokenValidator.validate(any()) } returns mockk(relaxed = true)
+            every { serviceClient.doPost(any(), any(), any(), any()) } returns RESPONSE_BODY
+            val expectedMediaType = MediaType(MediaType.TEXT_XML, StandardCharsets.UTF_8)
 
-        verify(serviceClient, times(1)).doPost(
-            URL,
-            mapOf("Content-Type" to "text/xml;charset=UTF-8", "Nav-Call-Id" to "call ID 1"),
-            REQUEST_BODY)
+            mvc.perform(
+                post(URL)
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer jwt")
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_XML_VALUE)
+                    .content(REQUEST_BODY)
+            )
+                .andExpect(status().isOk)
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, expectedMediaType.toString()))
+                .andExpect(content().xml(RESPONSE_BODY))
+
+            verify(exactly = 1) {
+                serviceClient.doPost(
+                    uri = URL,
+                    headers = mapOf("Content-Type" to "text/xml;charset=UTF-8", "Nav-Call-Id" to "call ID 1"),
+                    body = REQUEST_BODY
+                )
+            }
+        }
+
+        test("when no Authorization in request then response is Unauthorized") {
+            mvc.perform(
+                post(URL)
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_XML_VALUE)
+                    .content(REQUEST_BODY)
+            )
+                .andExpect(status().isUnauthorized)
+                .andExpect(content().string("Unauthorized"))
+
+            verify { serviceClient wasNot called }
+        }
     }
+}
 
-    @Test
-    fun `when no Authorization in request then response is Unauthorized`() {
-        `when`(callIdGenerator.newCallId()).thenReturn("call ID 1")
+private const val URL =
+    "https://pep-gw-q1.oera-q.local:9443/kalkulator.pensjonsrettighetstjeneste/v3/kalkulatorPensjonTjeneste"
 
-        mvc.perform(
-            post(URL)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_XML_VALUE)
-                .content(REQUEST_BODY))
-            .andExpect(status().isUnauthorized)
-            .andExpect(content().string("Unauthorized"))
-
-        verify(serviceClient, never()).doPost(
-            URL,
-            mapOf("Content-Type" to "text/xml;charset=UTF-8", "Nav-Call-Id" to "call ID 1"),
-            REQUEST_BODY)
-    }
-
-    companion object {
-        private const val URL =
-            "https://pep-gw-q1.oera-q.local:9443/kalkulator.pensjonsrettighetstjeneste/v3/kalkulatorPensjonTjeneste"
-
-        private const val REQUEST_BODY =
-            """<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:typ="http://x.no/api/pensjonskalkulator/v3/typer">
+private const val REQUEST_BODY =
+    """<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:typ="http://x.no/api/pensjonskalkulator/v3/typer">
     <soapenv:Header>
         <saml2:Assertion xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" ID="x" IssueInstant="2023-06-30T12:22:50.503Z" Version="2.0">
             <saml2:Issuer>x</saml2:Issuer>
@@ -145,8 +146,8 @@ class PepGatewayControllerTest {
     </soapenv:Body>
 </soapenv:Envelope>"""
 
-        private const val RESPONSE_BODY =
-            """<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+private const val RESPONSE_BODY =
+    """<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
     <soap:Header/>
     <soap:Body wsu:Id="x" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
         <ns2:pensjonsrettigheter xmlns:ns2="http://x.no/api/pensjonskalkulator/v3/typer">
@@ -181,5 +182,3 @@ class PepGatewayControllerTest {
         </ns2:pensjonsrettigheter>
     </soap:Body>
 </soap:Envelope>"""
-    }
-}

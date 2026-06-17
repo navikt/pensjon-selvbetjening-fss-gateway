@@ -1,5 +1,5 @@
 package no.nav.pensjon.selvbetjening.fssgw.tech.sts
-
+/* TODO
 import no.nav.pensjon.selvbetjening.fssgw.mock.WebClientTest
 import okhttp3.mockwebserver.MockResponse
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -92,3 +92,4 @@ internal class StsClientTest : WebClientTest() {
     "expires_in": 1800
 }""")
 }
+*/

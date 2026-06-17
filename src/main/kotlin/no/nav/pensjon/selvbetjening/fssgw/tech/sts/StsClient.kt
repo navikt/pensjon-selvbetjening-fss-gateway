@@ -39,7 +39,7 @@ class StsClient(
         log.debug("Retrieving new token for service user")
 
         val uri = UriComponentsBuilder
-            .fromHttpUrl("$baseUrl/$TOKEN_PATH")
+            .fromUriString("$baseUrl/$TOKEN_PATH")
             .queryParam(Oauth2ParamNames.GRANT_TYPE, GRANT_TYPE)
             .queryParam(Oauth2ParamNames.SCOPE, SCOPE)
             .toUriString()

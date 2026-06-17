@@ -19,7 +19,7 @@ jobs:
         # 'java' covers Java and Kotlin
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v4
       with:
@@ -28,7 +28,7 @@ jobs:
       uses: actions/setup-java@v5
       with:
         cache: maven
-        java-version: 17
+        java-version: 25
         distribution: temurin
     - name: Build with Maven
       run: mvn -B package --file pom.xml
