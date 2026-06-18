@@ -23,8 +23,8 @@ import java.nio.charset.StandardCharsets
 @RequestMapping("ws-support")
 class UsernameTokenController(
     private val ingressTokenValidator: JwsValidator,
-    @Value("\${fg.sts.selfservice.username}") private val serviceUsername: String,
-    @Value("\${fg.sts.selfservice.password}") private val servicePassword: String) {
+    @Value("\${fg.sts.tp.username}") private val serviceUsername: String,
+    @Value("\${fg.sts.tp.password}") private val servicePassword: String) {
 
     private val log = KotlinLogging.logger {}
 

@@ -46,7 +46,7 @@ class TjenestepensjonControllerTest : FunSpec() {
             val egressToken = serviceTokenData()
             every { ingressTokenValidator.validate(any()) } returns mockk(relaxed = true)
             every { serviceClient.doGet(any(), any()) } returns """{ "value": true}"""
-            every { egressTokenGetter.getServiceUserToken(serviceUserId = 1) } returns egressToken
+            every { egressTokenGetter.getServiceUserToken(serviceUserId = 3) } returns egressToken
 
             mvc.perform(
                 get(PATH)
