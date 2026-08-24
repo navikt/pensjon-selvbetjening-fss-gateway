@@ -50,14 +50,11 @@ spec:
       value: https://api.prod.spk.no
     - name: STS_URL
       value: http://security-token-service.aura.svc.nais.local
-    - name: TP_URL
-      value: https://tp.nais.adeo.no
     - name: FSSGW_LOGGING_LEVEL
       value: info
     - name: STDOUT_LOG_OUTPUT
       value: JSON
   envFrom:
-    - secret: pensjon-selvbetjening-fss-gateway-srvpselv
     - secret: pensjon-selvbetjening-fss-gateway-srvtjenestepensjon-simulering
   azure:
     application:
@@ -80,9 +77,6 @@ spec:
           cluster: prod-gcp
         - application: pensjonssimulator
           namespace: pensjonskalkulator
-          cluster: prod-gcp
-        - application: pensjon-selvbetjening-soknad-alder-backend
-          namespace: pensjonselvbetjening
           cluster: prod-gcp
     outbound:
       external:

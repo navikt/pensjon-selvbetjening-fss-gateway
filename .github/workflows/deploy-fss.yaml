@@ -27,9 +27,9 @@ jobs:
       security-events: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v4
+        uses: github/codeql-action/init@v4.37.7
         with:
           languages: java
       - name: Setup java
@@ -41,7 +41,7 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
       - name: Perform CodeQL analysis
-        uses: github/codeql-action/analyze@v4
+        uses: github/codeql-action/analyze@v4.37.7
         with:
           category: "/language:java"
       - name: Create Docker image
@@ -63,7 +63,7 @@ jobs:
       id-token: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Deploy to dev-fss
         uses: nais/deploy/actions/deploy@v2
         env:
@@ -82,7 +82,7 @@ jobs:
         environment: [q0, q1]
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Deploy to dev-fss
         uses: nais/deploy/actions/deploy@v2
         env:
@@ -102,7 +102,7 @@ jobs:
       id-token: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Deploy to prod-fss
         uses: nais/deploy/actions/deploy@v2
         env:

@@ -50,14 +50,11 @@ spec:
       value: https://api.preprod.spk.no
     - name: STS_URL
       value: http://security-token-service.aura.svc.nais.local
-    - name: TP_URL
-      value: https://tp-q2.dev.intern.nav.no
     - name: FSSGW_LOGGING_LEVEL
       value: debug
     - name: STDOUT_LOG_OUTPUT
       value: JSON
   envFrom:
-    - secret: pensjon-selvbetjening-fss-gateway-srvpselv
     - secret: pensjon-selvbetjening-fss-gateway-srvtjenestepensjon-simulering
   vault:
     enabled: true
@@ -85,12 +82,6 @@ spec:
           cluster: dev-gcp
         - application: pensjonssimulator
           namespace: pensjonskalkulator
-          cluster: dev-gcp
-        - application: pensjon-selvbetjening-soknad-alder-backend
-          namespace: pensjonselvbetjening
-          cluster: dev-gcp
-        - application: pensjon-selvbetjening-soknad-alder-backend-ekstern
-          namespace: pensjonselvbetjening
           cluster: dev-gcp
     outbound:
       external:
