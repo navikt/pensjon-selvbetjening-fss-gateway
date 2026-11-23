@@ -46,7 +46,7 @@ jobs:
           category: "/language:java"
       - name: Create Docker image
         id: image-creation
-        uses: nais/docker-build-push@v0
+        uses: nais/docker-build-push@v1
         with:
           dockerfile: .docker/Dockerfile
           team: pensjonselvbetjening
